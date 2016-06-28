@@ -16,13 +16,8 @@
      <div id="main">
         <h1>Vue Dragable For</h1>
        
-      <!--   <div v-dragable-for="element in list">
-            {{element.name}}
-        </div> -->
-        <div class="list-group">
-        <template v-dragable-for="element in list">
-            <div class="list-group-item">{{element.name}}</div>
-        </template>
+        <div>
+            <div v-dragable-for="element in list">{{element.name}}</div>
          </div>
 
         <script type="text/javascript" src="..\libs\vue\dist\vue.js"></script>

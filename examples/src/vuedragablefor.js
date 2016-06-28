@@ -30,7 +30,7 @@
 
    mix(clonedForDirective, {
       bind : function () {
-        this.sortable = new Sortable(this.el, {});
+        this.sortable = new Sortable(this.el.parentElement, {});
       },
       update : function(){
         console.log(this.sortable)
