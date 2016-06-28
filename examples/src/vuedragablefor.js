@@ -30,7 +30,14 @@
 
    mix(clonedForDirective, {
       bind : function () {
-        this.sortable = new Sortable(this.el.parentElement, {});
+        var option ={
+            onEnd: function (evt) {
+              evt.oldIndex;  // element's old index within parent
+              evt.newIndex;  // element's new index within parent
+              console.log(evt.oldIndex, evt.newIndex);
+          }
+        };
+        this.sortable = new Sortable(this.el.parentElement, option);
       },
       update : function(){
         console.log(this.sortable)
