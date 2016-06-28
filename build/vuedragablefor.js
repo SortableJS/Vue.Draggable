@@ -1,1 +1,0 @@
-!function(){var e=Vue.directive("for");Vue.directive("dragable-for",e)}();

@@ -5,3 +5,5 @@ dist
 app/bower_components
 test/bower_components
 bower_components
+examples/src
+test/tmp

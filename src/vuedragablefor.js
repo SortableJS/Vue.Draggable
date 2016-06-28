@@ -30,10 +30,17 @@
 
    mix(clonedForDirective, {
       bind : function () {
-        this.sortable = new Sortable(this.el, {});
+        var option ={
+            onEnd: function (evt) {
+              evt.oldIndex;  // element's old index within parent
+              evt.newIndex;  // element's new index within parent
+              console.log(evt.oldIndex, evt.newIndex);
+          }
+        };
+        this.sortable = new Sortable(this.el, option);
       },
-      update : () => console.log('update'),
-      unbind : () => console.log('unbind'),
+      update : function (){},
+      unbind : function (){}
    });
      
   Vue.directive('dragable-for', clonedForDirective);

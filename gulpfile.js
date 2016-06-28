@@ -14,25 +14,26 @@ gulp.task('scripts', function () {
         .pipe($.size());
 });
 
+
+var rename = require('gulp-rename');
+
 gulp.task('js', ['scripts'], function () {
     var jsFilter = $.filter('**/*.js', {restore: true});
 
     return gulp.src('src/**/*.js')
         .pipe($.uglify())
+        .pipe(rename({
+            suffix: '.min'
+        }))
         .pipe(gulp.dest('build'))
         .pipe($.size());
-});
-
-gulp.task('extras', function () {
-    return gulp.src(['src/*.*', '!src/*.html'], { dot: true })
-        .pipe(gulp.dest('build'));
 });
 
 gulp.task('clean', function () {
     return gulp.src(['.tmp', 'dist'], { read: false }).pipe($.clean());
 });
 
-gulp.task('build', ['js', 'copy-js', 'main-bower-files', 'extras']);
+gulp.task('build', ['js', 'copy-js', 'main-bower-files']);
 
 gulp.task('default', ['clean'], function () {
     gulp.start('build');
