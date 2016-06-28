@@ -17,15 +17,27 @@
    mix(dragableForDirective, {
       bind : function () {    
         var ctx = this;    
-        var option ={
-            onEnd: function (evt) {
+        var options = this.params.options;
+        if (typeof options === "string")
+          options = JSON.parse(options);
+        console.log(options);
+        options = _.merge(options,{
+          onUpdate: function (evt) {
               console.log(evt.oldIndex, evt.newIndex);
               var collection = ctx.collection;
               if (!!collection)
                 collection.splice(evt.newIndex, 0, collection.splice(evt.oldIndex, 1)[0] );
+          },
+          onAdd: function (evt) {
+              var itemEl = evt.item;  // dragged HTMLElement
+              evt.from;  // previous list
+          },
+          onRemove: function (evt) {
           }
-        };
-        this.sortable = new Sortable(this.el.parentElement, option);
+        });
+        console.log(options);
+        //var option =
+        this.sortable = new Sortable(this.el.parentElement, options);
       },
       update : function (value){
 

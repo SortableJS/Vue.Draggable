@@ -16,16 +16,16 @@
      <div id="main">
         <h1>Vue Dragable For</h1>
 
-        <a href="complex.html">See other example</a>
+        <a href="index.html">See basic example</a>
        
-        <h2>Dragable</h2>
+        <h2>Dragable list 1</h2>
         <div>
-            <div v-dragable-for="element in list">{{element.name}}</div>
+            <div v-dragable-for="element in list1" options='{"group":"people"}'>{{element.name}}</div>
          </div>
 
-        <h2>Normal</h2>
+        <h2>Dragable list 2</h2>
         <div>
-            <div v-for="element in list">{{element.name}}</div>
+            <div v-dragable-for="element in list2" options='{"group":"people"}'>{{element.name}}</div>
          </div>
 
         <button @click="add">Add</button>
@@ -35,7 +35,7 @@
         <script type="text/javascript" src="..\libs\lodash\lodash.js"></script>
         <script type="text/javascript" src="..\libs\Sortable\Sortable.js"></script>
         <script type="text/javascript" src="src\vuedragablefor.js"></script>
-        <script type="text/javascript" src="script\main.js"></script>
+        <script type="text/javascript" src="script\complex.js"></script>
 
     </div>
     </body>
