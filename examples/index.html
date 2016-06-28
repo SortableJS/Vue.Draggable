@@ -16,9 +16,18 @@
      <div id="main">
         <h1>Vue Dragable For</h1>
        
+        <h2>Dragable</h2>
         <div>
             <div v-dragable-for="element in list">{{element.name}}</div>
          </div>
+
+        <h2>Normal</h2>
+        <div>
+            <div v-for="element in list">{{element.name}}</div>
+         </div>
+
+        <button @click="add">Add</button>
+        <button @click="replace">Replace</button>
 
         <script type="text/javascript" src="..\libs\vue\dist\vue.js"></script>
         <script type="text/javascript" src="..\libs\lodash\lodash.js"></script>
