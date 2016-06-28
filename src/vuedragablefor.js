@@ -20,24 +20,27 @@
         var options = this.params.options;
         if (typeof options === "string")
           options = JSON.parse(options);
-        console.log(options);
         options = _.merge(options,{
           onUpdate: function (evt) {
-              console.log(evt.oldIndex, evt.newIndex);
               var collection = ctx.collection;
               if (!!collection)
                 collection.splice(evt.newIndex, 0, collection.splice(evt.oldIndex, 1)[0] );
           },
           onAdd: function (evt) {
               var itemEl = evt.item;  // dragged HTMLElement
-              evt.from;  // previous list
+              var directive = evt.from.__directive;  // previous list
+              if (!directive)
+                return;
+             ctx.collection.splice(evt.newIndex, 0, directive.collection[evt.oldIndex]);
           },
           onRemove: function (evt) {
           }
         });
+        var parent = this.el.parentElement;
+        parent.__directive = this;
         console.log(options);
         //var option =
-        this.sortable = new Sortable(this.el.parentElement, options);
+        this.sortable = new Sortable(parent, options);
       },
       update : function (value){
 
