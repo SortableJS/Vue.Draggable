@@ -1,0 +1,36 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>Example</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <!-- Place favicon.ico in the root directory -->
+
+        <link rel="stylesheet" href="css/main.css">
+    </head>
+    <body>
+     
+     <div id="main">
+        <h1>Vue Dragable For</h1>
+       
+      <!--   <div v-dragable-for="element in list">
+            {{element.name}}
+        </div> -->
+        <div class="list-group">
+        <template v-dragable-for="element in list">
+            <div class="list-group-item">{{element.name}}</div>
+        </template>
+         </div>
+
+        <script type="text/javascript" src="..\libs\vue\dist\vue.js"></script>
+        <script type="text/javascript" src="..\libs\lodash\lodash.js"></script>
+        <script type="text/javascript" src="..\libs\Sortable\Sortable.js"></script>
+        <script type="text/javascript" src="src\vuedragablefor.js"></script>
+        <script type="text/javascript" src="script\main.js"></script>
+
+    </div>
+    </body>
+</html>

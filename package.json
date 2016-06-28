@@ -1,0 +1,40 @@
+{
+  "name": "vuedragablefor",
+  "version": "1.0.0",
+  "description": "Circular layout for   http://isotope.metafizzy.co",
+  "main": "src\\vuedragablefor.js",
+  "directories": {
+    "example": "examples",
+    "test": "test"
+  },
+  "dependencies": {
+    "bower": "^1.7.9",
+    "gulp": "^3.9.1"
+  },
+  "devDependencies": {
+    "connect": "^3.4.1",
+    "connect-livereload": "^0.5.4",
+    "gulp-clean": "^0.3.2",
+    "gulp-filter": "^4.0.0",
+    "gulp-flatten": "^0.3.0",
+    "gulp-jasmine": "^2.4.0",
+    "gulp-jshint": "^2.0.1",
+    "gulp-livereload": "^3.8.1",
+    "gulp-load-plugins": "^1.2.4",
+    "gulp-main-bower-files": "^1.5.2",
+    "gulp-size": "^2.1.0",
+    "gulp-uglify": "^1.5.4",
+    "gulp-useref": "^3.1.0",
+    "jasmine-istanbul-phantom": "^1.1.1",
+    "jshint": "^2.9.2",
+    "jshint-stylish": "^2.2.0",
+    "opn": "^4.0.2",
+    "serve-index": "^1.8.0",
+    "serve-static": "^1.11.1"
+  },
+  "scripts": {
+    "test": "gulp test"
+  },
+  "author": "desmaisons_david@hotmail.com",
+  "license": "MIT"
+}

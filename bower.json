@@ -1,0 +1,29 @@
+{
+  "name": "vue.dragable.for",
+  "authors": [
+    "desmaisons_david <desmaisons_david@hotmail.com>"
+  ],
+  "description": "",
+  "main": "src\\vuedragablefor.js",
+  "keywords": [
+    "vue",
+    "list",
+    "drag",
+    "and",
+    "drop"
+  ],
+  "license": "MIT",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "vue": "^1.0.25",
+    "lodash": "^4.13.1",
+    "Sortable": "^1.4.2"
+  }
+}
