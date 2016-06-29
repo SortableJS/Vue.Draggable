@@ -18,8 +18,7 @@
       bind : function () {    
         var ctx = this;    
         var options = this.params.options;
-        if (typeof options === "string")
-          options = JSON.parse(options);
+        options = (typeof options === "string") ? JSON.parse(options) : options;
         options = _.merge(options,{
           onUpdate: function (evt) {
               var collection = ctx.collection;
@@ -27,32 +26,29 @@
                 collection.splice(evt.newIndex, 0, collection.splice(evt.oldIndex, 1)[0] );
           },
           onAdd: function (evt) {
-              var itemEl = evt.item;  // dragged HTMLElement
-              var directive = evt.from.__directive;  // previous list
-              if (!directive)
-                return;
-             ctx.collection.splice(evt.newIndex, 0, directive.collection[evt.oldIndex]);
+              var directive = evt.from.__directive;
+              if ((!!directive) && (!!ctx.collection))
+                ctx.collection.splice(evt.newIndex, 0, directive.collection[evt.oldIndex]);
           },
           onRemove: function (evt) {
+            if (!!ctx.collection)
+              ctx.collection.splice(evt.oldIndex, 1);
           }
         });
-        var parent = this.el.parentElement;
+        var parent = (!!this.params.root) ? document.getElementById(this.params.root) : this.el.parentElement;
         parent.__directive = this;
-        console.log(options);
-        //var option =
         this.sortable = new Sortable(parent, options);
       },
       update : function (value){
-
-        if ((value!==null) && (!Array.isArray(value)))
+        if ((!!value) && (!Array.isArray(value)))
           throw new Error('should received an Array');
 
-        console.log('update', value);
         this.collection = value;
       },
-      unbind : function (){}
+      unbind : function (){
+        this.sortable.destroy();
+      }
    });
      
   Vue.directive('dragable-for', dragableForDirective);
-
 })();

@@ -7,3 +7,5 @@ test/bower_components
 bower_components
 examples/src
 test/tmp
+/test/tmp
+/examples/src

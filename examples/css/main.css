@@ -1,0 +1,9 @@
+.normal {
+    background-color: grey;
+}
+.drag {
+    background-color: green;
+}
+.dragArea{
+     min-height: 10px;	
+}

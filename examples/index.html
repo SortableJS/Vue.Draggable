@@ -18,14 +18,18 @@
 
         <a href="complex.html">See other example</a>
        
-        <h2>Dragable</h2>
-        <div>
-            <div v-dragable-for="element in list">{{element.name}}</div>
+        <div class="drag">
+            <h2>Dragable v-dragable-for</h2>
+            <div class="dragArea">
+                <div v-dragable-for="element in list">{{element.name}}</div>
+             </div>
          </div>
 
-        <h2>Normal</h2>
-        <div>
-            <div v-for="element in list">{{element.name}}</div>
+        <div class="normal">
+            <h2>Normal v-for</h2>
+            <div class="dragArea">
+                <div v-for="element in list">{{element.name}}</div>
+             </div>
          </div>
 
         <button @click="add">Add</button>

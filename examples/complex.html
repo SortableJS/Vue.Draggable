@@ -18,14 +18,28 @@
 
         <a href="index.html">See basic example</a>
        
-        <h2>Dragable list 1</h2>
-        <div>
-            <div v-dragable-for="element in list1" options='{"group":"people"}'>{{element.name}}</div>
+        <div class="drag">
+            <h2>List 1 v-dragable-for</h2>
+            <div class="dragArea">
+                <div v-dragable-for="element in list1" options='{"group":"people"}'>{{element.name}}</div>
+             </div>
+
+            <h2>List 2 v-dragable-for</h2>
+            <div class="dragArea">
+                <div v-dragable-for="element in list2" options='{"group":"people"}'>{{element.name}}</div>
+             </div>
          </div>
 
-        <h2>Dragable list 2</h2>
-        <div>
-            <div v-dragable-for="element in list2" options='{"group":"people"}'>{{element.name}}</div>
+        <div class="normal">
+            <h2>List 1 v-for</h2>
+            <div>
+                <div v-for="element in list1" options='{"group":"people"}'>{{element.name}}</div>
+             </div>
+
+            <h2>List 2 v-for</h2>
+            <div>
+                <div v-for="element in list2" options='{"group":"people"}'>{{element.name}}</div>
+             </div>
          </div>
 
         <button @click="add">Add</button>
