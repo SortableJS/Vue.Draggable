@@ -7,8 +7,6 @@
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <!-- Place favicon.ico in the root directory -->
-
         <link rel="stylesheet" href="css/main.css">
     </head>
     <body>
@@ -16,8 +14,6 @@
      <div id="main">
         <h1>Vue Dragable For</h1>
 
-        <a href="index.html">See basic example</a>
-       
         <div class="drag">
             <h2>List 1 v-dragable-for</h2>
             <div class="dragArea">
@@ -39,11 +35,10 @@
             <h2>List 2 v-for</h2>
             <div>
                 <div v-for="element in list2" options='{"group":"people"}'>{{element.name}}</div>
-             </div>
-         </div>
+            </div>
+        </div>
 
-        <button @click="add">Add</button>
-        <button @click="replace">Replace</button>
+        <a href="index.html">See basic example</a>
 
         <script type="text/javascript" src="..\libs\vue\dist\vue.js"></script>
         <script type="text/javascript" src="..\libs\lodash\lodash.js"></script>
