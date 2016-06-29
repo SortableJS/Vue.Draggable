@@ -16,8 +16,10 @@
 
         <div class="drag">
             <h2>List 1 v-dragable-for</h2>
-            <div class="dragArea">
-                <div v-dragable-for="element in list1" options='{"group":"people"}'>{{element.name}}</div>
+            <div class="dragArea" >
+                <template v-dragable-for="element in list1" options='{"group":"people"}'>
+                    <p>{{element.name}}</p>
+                </template>
              </div>
 
             <h2>List 2 v-dragable-for</h2>
