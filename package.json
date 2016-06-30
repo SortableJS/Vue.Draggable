@@ -3,15 +3,25 @@
   "version": "1.0.0",
   "description": "vue dragable for directive",
   "main": "src\\vuedragablefor.js",
+   "files": [
+    "src\\vuedragablefor.js"
+  ],
+  "keywords": [
+    "vue",
+    "vuejs",
+    "drag and drop",
+    "Sortable.js"
+  ],
   "directories": {
     "example": "examples",
     "test": "test"
   },
   "dependencies": {
-    "bower": "^1.7.9",
-    "gulp": "^3.9.1"
+     "lodash": "^4.13.1"
   },
-  "devDependencies": {
+  "devDependencies": {    
+    "bower": "^1.7.9",
+    "gulp": "^3.9.1",
     "connect": "^3.4.1",
     "connect-livereload": "^0.5.4",
     "gulp-clean": "^0.3.2",
@@ -36,6 +46,10 @@
   "scripts": {
     "test": "gulp test"
   },
-  "author": "desmaisons_david@hotmail.com",
-  "license": "MIT"
+  "author": "David Desmaisons",
+  "bugs": {
+    "url": "https://github.com/David-Desmaisons/Vue.Dragable.For/issues"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/David-Desmaisons/Vue.Dragable.For#readme"
 }
