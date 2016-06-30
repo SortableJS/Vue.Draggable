@@ -1,5 +1,4 @@
 node_modules
-dist
 .tmp
 .sass-cache
 app/bower_components
@@ -9,3 +8,4 @@ examples/src
 test/tmp
 /test/tmp
 /examples/src
+/examples/libs/

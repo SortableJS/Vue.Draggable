@@ -25,7 +25,7 @@ gulp.task('js', ['scripts'], function () {
         .pipe(rename({
             suffix: '.min'
         }))
-        .pipe(gulp.dest('build'))
+        .pipe(gulp.dest('dist'))
         .pipe($.size());
 });
 
