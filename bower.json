@@ -1,8 +1,6 @@
 {
   "name": "vue.dragable.for",
-  "authors": [
-    "desmaisons_david <desmaisons_david@hotmail.com>"
-  ],
+  "authors": ["desmaisons_david <desmaisons_david@hotmail.com>"],
   "description": "vue dragable for directive",
   "main": "src\\vuedragablefor.js",
   "keywords": [
@@ -19,7 +17,10 @@
     "node_modules",
     "bower_components",
     "test",
-    "tests"
+    "tests",
+    "examples",
+    "*.json",
+    "*.md"
   ],
   "dependencies": {
     "vue": "^1.0.25",
