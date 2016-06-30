@@ -3,7 +3,7 @@
   "authors": [
     "desmaisons_david <desmaisons_david@hotmail.com>"
   ],
-  "description": "",
+  "description": "vue dragable for directive",
   "main": "src\\vuedragablefor.js",
   "keywords": [
     "vue",
