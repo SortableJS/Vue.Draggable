@@ -55,3 +55,7 @@ Use it exactly as v-for directive, passing optional parameters using 'options' p
 - #### For `<script>` Include
 
   Just include `vue.dragable.for.js` after Vue itself.
+  
+## License
+  
+  [MIT](https://github.com/David-Desmaisons/Vue.Dragable.For/blob/master/LICENSE)
