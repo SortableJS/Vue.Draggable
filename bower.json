@@ -20,7 +20,8 @@
     "tests",
     "examples",
     "*.json",
-    "*.md"
+    "*.md",
+    "gulpfile.js"
   ],
   "dependencies": {
     "vue": "^1.0.25",
