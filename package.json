@@ -1,6 +1,6 @@
 {
   "name": "vuedragablefor",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "vue dragable for directive",
   "main": "src\\vuedragablefor.js",
   "files": [
