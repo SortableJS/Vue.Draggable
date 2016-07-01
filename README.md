@@ -8,6 +8,8 @@ Create a directive that displays a dragable list and keeps in sync the view and 
 
 ##Demo
 
+![demo gif](https://raw.githubusercontent.com/David-Desmaisons/Vue.Dragable.For/master/example.gif)
+
 Simple:
 
 https://jsfiddle.net/dede89/j62g58z7/
@@ -27,9 +29,9 @@ https://jsfiddle.net/dede89/hqxranrd/
 Use it exactly as v-for directive, passing optional parameters using 'options' parameter.
 
   ``` html
- <template v-dragable-for="element in list1" options='{"group":"people"}'>
+  <div v-dragable-for="element in list1" options='{"group":"people"}'>
     <p>{{element.name}}</p>
-  </template>
+  </div>
    ```
 ## Installation
 - Available through:
