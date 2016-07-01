@@ -1,5 +1,5 @@
 (function(){
-  function buildVueDragFor(_){
+  function buildVueDragFor(_, Sortable){
 
     function mix(source, functions){
       _.forEach(['bind', 'update', 'unbind'],function(value){
@@ -40,7 +40,7 @@
             });
             var parent = (!!this.params.root) ? document.getElementById(this.params.root) : this.el.parentElement;
             parent.__directive = this;
-            this.sortable = new Sortable(parent, options);
+            this._sortable = new Sortable(parent, options);
           },
           update : function (value){
             if ((!!value) && (!Array.isArray(value)))
@@ -49,7 +49,7 @@
             this.collection = value;
           },
           unbind : function (){
-            this.sortable.destroy();
+            this._sortable.destroy();
           }
         });
 
@@ -61,11 +61,12 @@
 
   if (typeof exports == "object") {
     var _ = require("lodash.js");
-    module.exports = buildVueDragFor(_);
+    var Sortable =  require("Sortable.js");
+    module.exports = buildVueDragFor(_, Sortable);
   } else if (typeof define == "function" && define.amd) {
-    define(['lodash'], function(_){ return buildVueDragFor(_); });
-  } else if ((window.Vue) && (window._)) {
-    window.vueDragFor = buildVueDragFor(window._);
+    define(['lodash', 'Sortable'], function(_, Sortable){ return buildVueDragFor(_, Sortable; });
+  } else if ((window.Vue) && (window._) && (window.Sortable)) {
+    window.vueDragFor = buildVueDragFor(window._, window.Sortable);
     Vue.use(window.vueDragFor);
   }
 })();

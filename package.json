@@ -17,7 +17,8 @@
     "test": "test"
   },
   "dependencies": {
-     "lodash": "^4.13.1"
+    "lodash": "^4.13.1",
+    "Sortable": "^1.4.2"
   },
   "devDependencies": {    
     "bower": "^1.7.9",
