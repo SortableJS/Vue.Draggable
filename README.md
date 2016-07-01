@@ -8,6 +8,8 @@ Create a directive that displays a dragable list and keeps in sync the view and 
 
 ##Demo
 
+![demo gif](https://raw.githubusercontent.com/David-Desmaisons/Vue.Dragable.For/master/example.gif)
+
 Simple:
 
 https://jsfiddle.net/dede89/j62g58z7/
