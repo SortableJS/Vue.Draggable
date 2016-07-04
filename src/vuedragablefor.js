@@ -64,7 +64,7 @@
     var Sortable =  require("Sortable.js");
     module.exports = buildVueDragFor(_, Sortable);
   } else if (typeof define == "function" && define.amd) {
-    define(['lodash', 'Sortable'], function(_, Sortable){ return buildVueDragFor(_, Sortable; });
+    define(['lodash', 'Sortable'], function(_, Sortable){ return buildVueDragFor(_, Sortable);});
   } else if ((window.Vue) && (window._) && (window.Sortable)) {
     window.vueDragFor = buildVueDragFor(window._, window.Sortable);
     Vue.use(window.vueDragFor);
