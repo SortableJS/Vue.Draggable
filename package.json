@@ -1,6 +1,6 @@
 {
   "name": "vuedragablefor",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "vue dragable for directive",
   "main": "src\\vuedragablefor.js",
   "files": [
@@ -18,7 +18,7 @@
   },
   "dependencies": {
     "lodash": "^4.13.1",
-    "Sortable": "^1.4.2"
+    "sortablejs": "^1.4.2"
   },
   "devDependencies": {
     "bower": "^1.7.9",
