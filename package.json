@@ -52,5 +52,9 @@
     "url": "https://github.com/David-Desmaisons/Vue.Dragable.For/issues"
   },
   "license": "MIT",
-  "homepage": "https://github.com/David-Desmaisons/Vue.Dragable.For#readme"
+  "homepage": "https://github.com/David-Desmaisons/Vue.Dragable.For#readme",
+  "repository":{
+    "type" : "git",
+    "url" : "https://github.com/David-Desmaisons/Vue.Dragable.For.git"
+  }
 }

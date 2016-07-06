@@ -21,7 +21,7 @@
           bind : function () {    
             var ctx = this;    
             var options = this.params.options;
-            options = (typeof options === "string") ? JSON.parse(options) : options;
+            options = _.isString(options)? JSON.parse(options) : options;
             options = _.merge(options,{
               onUpdate: function (evt) {
                 var collection = ctx.collection;
@@ -60,8 +60,8 @@
   }
 
   if (typeof exports == "object") {
-    var _ = require("lodash.js");
-    var Sortable =  require("Sortable.js");
+    var _ = require("lodash");
+    var Sortable =  require("Sortable");
     module.exports = buildVueDragFor(_, Sortable);
   } else if (typeof define == "function" && define.amd) {
     define(['lodash', 'Sortable'], function(_, Sortable){ return buildVueDragFor(_, Sortable);});
