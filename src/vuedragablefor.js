@@ -61,7 +61,7 @@
 
   if (typeof exports == "object") {
     var _ = require("lodash");
-    var Sortable =  require("Sortable");
+    var Sortable =  require("Sortablejs");
     module.exports = buildVueDragFor(_, Sortable);
   } else if (typeof define == "function" && define.amd) {
     define(['lodash', 'Sortable'], function(_, Sortable){ return buildVueDragFor(_, Sortable);});
