@@ -2,9 +2,9 @@
   "name": "vuedragablefor",
   "version": "1.0.5",
   "description": "vue dragable for directive",
-  "main": "src\\vuedragablefor.js",
+  "main": "src/vuedragablefor.js",
   "files": [
-    "src\\vuedragablefor.js"
+    "src/vuedragablefor.js"
   ],
   "keywords": [
     "vue",

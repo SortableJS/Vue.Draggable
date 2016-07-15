@@ -2,7 +2,7 @@
   "name": "vue.dragable.for",
   "authors": ["desmaisons_david <desmaisons_david@hotmail.com>"],
   "description": "vue dragable for directive",
-  "main": "src\\vuedragablefor.js",
+  "main": "src/vuedragablefor.js",
   "keywords": [
     "vue",
     "list",
