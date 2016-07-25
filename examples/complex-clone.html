@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <title>Example two lists</title>
+        <title>Example two lists clone</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -16,32 +16,32 @@
 
         <div class="drag">
             <h2>List 1 v-dragable-for</h2>
-            <div class="dragArea" >
-                <div v-dragable-for="element in list1" options='{"group":"people"}'>
+            <div id="list1" class="dragArea" >
+                <div v-dragable-for="element in list1" options='{"group":{ "name":"people", "pull":"clone", "put":false }}' track-by="$index">
                     {{element.name}}
                 </div>
              </div>
 
             <h2>List 2 v-dragable-for</h2>
-            <div class="dragArea">
-                <div v-dragable-for="element in list2" options='{"group":"people"}'>{{element.name}}</div>
+            <div id="list2" class="dragArea">
+                <div v-dragable-for="element in list2" options='{"group":"people"}' track-by="$index">{{element.name}}</div>
              </div>
          </div>
 
         <div class="normal">
             <h2>List 1 v-for</h2>
             <div>
-                <div v-for="element in list1" >{{element.name}}</div>
+                <div v-for="element in list1" track-by="$index">{{element.name}}</div>
              </div>
 
             <h2>List 2 v-for</h2>
             <div>
-                <div v-for="element in list2" >{{element.name}}</div>
+                <div v-for="element in list2" track-by="$index">{{element.name}}</div>
             </div>
         </div>
 
         <a href="index.html">See basic example</a>
-        <a href="complex-clone.html">See clone element example</a>
+        <a href="complex.html">See 2 lists example</a>
 
         <script type="text/javascript" src="..\libs\vue\dist\vue.js"></script>
         <script type="text/javascript" src="..\libs\lodash\lodash.js"></script>

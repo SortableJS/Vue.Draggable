@@ -28,14 +28,25 @@
                 if (!!collection)
                   collection.splice(evt.newIndex, 0, collection.splice(evt.oldIndex, 1)[0] );
               },
-              onAdd: function (evt) {
+               onAdd: function (evt) {
                 var directive = evt.from.__directive;
                 if ((!!directive) && (!!ctx.collection))
                   ctx.collection.splice(evt.newIndex, 0, directive.collection[evt.oldIndex]);
               },
               onRemove: function (evt) {
-                if (!!ctx.collection)
-                  ctx.collection.splice(evt.oldIndex, 1);
+                var collection = ctx.collection;
+                if (!!collection && !evt.clone)
+                  collection.splice(evt.oldIndex, 1);
+                if (!!evt.clone){
+                  //if cloning mode: replace cloned element by orginal element (with original vue binding information)+
+                  //re-order element as sortablejs may re-order without sending events 
+                  var newIndex = Array.prototype.indexOf.call(evt.from.children, evt.clone), oldIndex = evt.oldIndex;
+                  evt.from.replaceChild(evt.item, evt.clone);
+                  if (!!collection && (newIndex != oldIndex)){
+                    var item = collection.splice(oldIndex, 1);
+                    collection.splice(newIndex, 0, item[0]);
+                  }
+                }
               }
             });
             var parent = (!!this.params.root) ? document.getElementById(this.params.root) : this.el.parentElement;
