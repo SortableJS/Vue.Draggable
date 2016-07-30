@@ -10,6 +10,28 @@
           };
       });
     }
+
+    function getFragment(elt){
+      return elt.__v_frag;
+    }
+
+    function getCollectionFragment(fr){
+      if (!fr || !!fr.forId){
+        return fr;
+      }
+      return getCollectionFragment(fr.parentFrag);
+    }
+
+    function getVmObject(evt){
+      var fragment = getCollectionFragment(getFragment(evt.item));
+      return fragment.raw;
+    }
+
+    function updatePosition(collection, newIndex, oldIndex ){
+      if (!!collection){
+        collection.splice(newIndex, 0, collection.splice(oldIndex, 1)[0] );
+      }
+    }
     
     var vueDragFor = {
       install : function(Vue) {
@@ -24,14 +46,13 @@
             options = _.isString(options)? JSON.parse(options) : options;
             options = _.merge(options,{
               onUpdate: function (evt) {
-                var collection = ctx.collection;
-                if (!!collection)
-                  collection.splice(evt.newIndex, 0, collection.splice(evt.oldIndex, 1)[0] );
+                updatePosition(ctx.collection, evt.newIndex, evt.oldIndex);
               },
                onAdd: function (evt) {
-                var directive = evt.from.__directive;
-                if ((!!directive) && (!!ctx.collection))
-                  ctx.collection.splice(evt.newIndex, 0, directive.collection[evt.oldIndex]);
+                if (!!ctx.collection){
+                  var addElement= getVmObject(evt);
+                  ctx.collection.splice(evt.newIndex, 0, addElement);
+                }
               },
               onRemove: function (evt) {
                 var collection = ctx.collection;
@@ -40,17 +61,15 @@
                 if (!!evt.clone){
                   //if cloning mode: replace cloned element by orginal element (with original vue binding information)+
                   //re-order element as sortablejs may re-order without sending events 
-                  var newIndex = Array.prototype.indexOf.call(evt.from.children, evt.clone), oldIndex = evt.oldIndex;
+                  var newIndex = _.indexOf(evt.from.children, evt.clone), oldIndex = evt.oldIndex;
                   evt.from.replaceChild(evt.item, evt.clone);
-                  if (!!collection && (newIndex != oldIndex)){
-                    var item = collection.splice(oldIndex, 1);
-                    collection.splice(newIndex, 0, item[0]);
+                  if (newIndex != oldIndex){
+                    updatePosition(collection, newIndex, oldIndex);
                   }
                 }
               }
             });
             var parent = (!!this.params.root) ? document.getElementById(this.params.root) : this.el.parentElement;
-            parent.__directive = this;
             this._sortable = new Sortable(parent, options);
           },
           update : function (value){
