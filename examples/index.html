@@ -17,7 +17,7 @@
         <div class="drag">
             <h2>Dragable v-dragable-for</h2>
             <div class="dragArea">
-                <div v-dragable-for="element in list">{{element.name}}</div>
+                <div v-dragable-for="element in list">{{element.name}} {{$index}}</div>
              </div>
          </div>
 
@@ -33,8 +33,9 @@
 
         <br>
 
-        <a href="complex.html">See 2 lists example</a>
-        <a href="complex-clone.html">See clone element example</a>
+        <a href="Two_Lists.html">See 2 lists example</a>
+        <a href="Two_Lists_Clone.html">See clone element example</a>
+        <a href="Two_Lists_Clone_If.html">See clone v-if element example</a>
 
         <script type="text/javascript" src="..\libs\vue\dist\vue.js"></script>
         <script type="text/javascript" src="..\libs\lodash\lodash.js"></script>

@@ -17,10 +17,10 @@
         <div class="drag">
             <h2>List 1 v-dragable-for</h2>
             <div id="list1" class="dragArea" >
-                <div v-dragable-for="element in list1" options='{"group":{ "name":"people", "pull":"clone", "put":false }}' track-by="$index">
-                    {{element.name}}
+                <div v-dragable-for="element in list1" options='{"group":{ "name":"people", "put":false}}' v-if="element.id > 2">
+                    {{element.name}} {{$index}}
                 </div>
-             </div>
+             </div>                
 
             <h2>List 2 v-dragable-for</h2>
             <div id="list2" class="dragArea">
@@ -41,7 +41,8 @@
         </div>
 
         <a href="index.html">See basic example</a>
-        <a href="complex.html">See 2 lists example</a>
+        <a href="Two_Lists.html">See 2 lists example</a>
+        <a href="Two_Lists.html">See 2 lists example</a>
 
         <script type="text/javascript" src="..\libs\vue\dist\vue.js"></script>
         <script type="text/javascript" src="..\libs\lodash\lodash.js"></script>

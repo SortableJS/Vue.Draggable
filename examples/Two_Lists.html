@@ -17,14 +17,14 @@
         <div class="drag">
             <h2>List 1 v-dragable-for</h2>
             <div class="dragArea" >
-                <div v-dragable-for="element in list1" options='{"group":"people"}'>
-                    {{element.name}}
+                <div v-dragable-for="element in list1" options='{"group":"people"}' >
+                    {{element.name}} {{$index}}
                 </div>
              </div>
 
             <h2>List 2 v-dragable-for</h2>
             <div class="dragArea">
-                <div v-dragable-for="element in list2" options='{"group":"people"}'>{{element.name}}</div>
+                <div v-dragable-for="element in list2" options='{"group":"people"}' track-by="$index">{{element.name}}</div>
              </div>
          </div>
 
@@ -41,7 +41,8 @@
         </div>
 
         <a href="index.html">See basic example</a>
-        <a href="complex-clone.html">See clone element example</a>
+        <a href="Two_Lists_Clone.html">See clone element example</a>
+        <a href="Two_Lists_Clone_If.html">See clone v-if element example</a>
 
         <script type="text/javascript" src="..\libs\vue\dist\vue.js"></script>
         <script type="text/javascript" src="..\libs\lodash\lodash.js"></script>

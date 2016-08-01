@@ -22,15 +22,28 @@
       return getCollectionFragment(fr.parentFrag);
     }
 
-    function getVmObject(evt){
-      var fragment = getCollectionFragment(getFragment(evt.item));
-      return fragment.raw;
+    function getRootFragment(elt){
+      return getCollectionFragment(getFragment(elt));
     }
 
-    function updatePosition(collection, newIndex, oldIndex ){
-      if (!!collection){
-        collection.splice(newIndex, 0, collection.splice(oldIndex, 1)[0] );
-      }
+    function getVmObject(elt){
+      var fragment = getRootFragment(elt);
+      return fragment.scope.element;
+    }
+
+    function removeNode(node){
+      node.parentElement.removeChild(node);
+    }
+
+    function insertNodeAt(fatherNode, node, position){
+      if (position<fatherNode.children.length)
+        fatherNode.insertBefore(node, fatherNode.children[position]);
+      else
+        fatherNode.appendChild(node);
+    }
+
+    function computeIndexes(nodes){
+      return nodes.map(getRootFragment).filter(function(elt){return !!elt;}).map(function (elt){return (elt).scope.$index;}).value();
     }
     
     var vueDragFor = {
@@ -43,30 +56,55 @@
           bind : function () {    
             var ctx = this;    
             var options = this.params.options;
+            var indexes;
+
+            function updatePosition(collection, newIndex, oldIndex ){
+              var realnew = indexes[newIndex], realOld = indexes[oldIndex];
+              if (!!collection){
+                collection.splice(realnew, 0, collection.splice(realOld, 1)[0] );
+              }
+            }
+
             options = _.isString(options)? JSON.parse(options) : options;
             options = _.merge(options,{
+              onStart: function (evt) {
+                indexes = computeIndexes(_.chain(evt.from.children));
+              },
               onUpdate: function (evt) {
                 updatePosition(ctx.collection, evt.newIndex, evt.oldIndex);
               },
-               onAdd: function (evt) {
+              onAdd: function (evt) {
+                indexes =  computeIndexes(_.chain(evt.to.children).filter(function(elt){return elt!==evt.item;}));
+                console.log(indexes);
                 if (!!ctx.collection){
-                  var addElement= getVmObject(evt);
-                  ctx.collection.splice(evt.newIndex, 0, addElement);
+                  var addElement= getVmObject(evt.item);
+                  var length = indexes.length;
+                  if (evt.newIndex>= length){
+                    ctx.collection.push(addElement);
+                  }
+                  else{
+                    var newIndex =  indexes[evt.newIndex];
+                    ctx.collection.splice(newIndex, 0, addElement);
+                  }            
                 }
               },
               onRemove: function (evt) {
                 var collection = ctx.collection;
-                if (!!collection && !evt.clone)
-                  collection.splice(evt.oldIndex, 1);
-                if (!!evt.clone){
-                  //if cloning mode: replace cloned element by orginal element (with original vue binding information)+
-                  //re-order element as sortablejs may re-order without sending events 
-                  var newIndex = _.indexOf(evt.from.children, evt.clone), oldIndex = evt.oldIndex;
-                  evt.from.replaceChild(evt.item, evt.clone);
-                  if (newIndex != oldIndex){
-                    updatePosition(collection, newIndex, oldIndex);
-                  }
+                if (!!collection && !evt.clone){
+                  var realOld = indexes[evt.oldIndex];
+                  collection.splice(realOld, 1);
                 }
+                if (!!evt.clone){    
+                  removeNode(evt.clone);           
+                  insertNodeAt(evt.from, evt.item, evt.oldIndex)
+                }
+                else{
+                  //remove added node: Vue will add it for us
+                  var elt = evt.item
+                  if (!!getFragment(elt).parentFrag){
+                    removeNode(elt);
+                  }
+                } 
               }
             });
             var parent = (!!this.params.root) ? document.getElementById(this.params.root) : this.el.parentElement;
