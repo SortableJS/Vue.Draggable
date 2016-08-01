@@ -18,7 +18,11 @@ Two Lists:
 
 https://jsfiddle.net/dede89/hqxranrd/
 
-##Feature
+Example with list clone:
+
+https://jsfiddle.net/dede89/u5ecgtsj/
+
+##Features
 
 * Full support of [Sortable.js](https://github.com/RubaXa/Sortable) options via options parameters
 * Keeps in sync view model and view
@@ -27,12 +31,19 @@ https://jsfiddle.net/dede89/hqxranrd/
 ##Usage
 
 Use it exactly as v-for directive, passing optional parameters using 'options' parameter.
+Option parameter can be json string or a full javascript object.
 
   ``` html
   <div v-dragable-for="element in list1" options='{"group":"people"}'>
     <p>{{element.name}}</p>
   </div>
    ```
+   
+##Limitation
+
+This directive works only when applied to arrays and not to javascript objects.
+
+
 ## Installation
 - Available through:
 ``` js
