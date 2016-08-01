@@ -69,37 +69,43 @@
             options = _.merge(options,{
               onStart: function (evt) {
                 indexes = computeIndexes(_.chain(evt.from.children));
+                console.log(indexes);
               },
               onUpdate: function (evt) {
+                if (ctx.params.trackBy==="$index"){
+                  removeNode(evt.item);           
+                  insertNodeAt(evt.from, evt.item, evt.oldIndex);
+                }
                 updatePosition(ctx.collection, evt.newIndex, evt.oldIndex);
               },
-              onAdd: function (evt) {
-                indexes =  computeIndexes(_.chain(evt.to.children).filter(function(elt){return elt!==evt.item;}));
-                console.log(indexes);
-                if (!!ctx.collection){
+              onAdd: function (evt) {             
+                if (!!ctx.collection){                  
                   var addElement= getVmObject(evt.item);
-                  var length = indexes.length;
+                  var localIndexes =  computeIndexes(_.chain(evt.to.children).filter(function(elt){return elt!==evt.item;}));
+                  var length = localIndexes.length;
                   if (evt.newIndex>= length){
                     ctx.collection.push(addElement);
                   }
                   else{
-                    var newIndex =  indexes[evt.newIndex];
+                    var newIndex =  localIndexes[evt.newIndex];
                     ctx.collection.splice(newIndex, 0, addElement);
                   }            
                 }
               },
               onRemove: function (evt) {
                 var collection = ctx.collection;
-                if (!!collection && !evt.clone){
+                var isCloning = !!evt.clone;
+                if (!!collection && !isCloning){
+                  //If is cloning is set no need to remove element from collection
                   var realOld = indexes[evt.oldIndex];
                   collection.splice(realOld, 1);
                 }
-                if (!!evt.clone){    
+                if (isCloning){    
                   removeNode(evt.clone);           
-                  insertNodeAt(evt.from, evt.item, evt.oldIndex)
+                  insertNodeAt(evt.from, evt.item, evt.oldIndex);
                 }
                 else{
-                  //remove added node: Vue will add it for us
+                  //Need to remove added node if Vue is not tracking it: Vue will add it for us
                   var elt = evt.item
                   if (!!getFragment(elt).parentFrag){
                     removeNode(elt);
