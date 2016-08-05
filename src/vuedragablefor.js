@@ -77,6 +77,8 @@
                   insertNodeAt(evt.from, evt.item, evt.oldIndex);
                 }
                 updatePosition(ctx.collection, evt.newIndex, evt.oldIndex);
+                removeNode(evt.item);
+                insertNodeAt(evt.from, evt.item, evt.oldIndex) 
               },
               onAdd: function (evt) {             
                 if (!!ctx.collection){                  
@@ -89,7 +91,9 @@
                   else{
                     var newIndex =  localIndexes[evt.newIndex];
                     ctx.collection.splice(newIndex, 0, addElement);
-                  }            
+                  }
+                  removeNode(evt.item);
+                  insertNodeAt(evt.from, evt.item, evt.oldIndex)            
                 }
               },
               onRemove: function (evt) {
