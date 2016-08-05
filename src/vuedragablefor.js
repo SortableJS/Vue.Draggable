@@ -72,6 +72,8 @@
               },
               onUpdate: function (evt) {
                 updatePosition(ctx.collection, evt.newIndex, evt.oldIndex);
+                removeNode(evt.item);
+                insertNodeAt(evt.from, evt.item, evt.oldIndex) 
               },
               onAdd: function (evt) {
                 indexes =  computeIndexes(_.chain(evt.to.children).filter(function(elt){return elt!==evt.item;}));
@@ -85,7 +87,9 @@
                   else{
                     var newIndex =  indexes[evt.newIndex];
                     ctx.collection.splice(newIndex, 0, addElement);
-                  }            
+                  }
+                  removeNode(evt.item);
+                  insertNodeAt(evt.from, evt.item, evt.oldIndex)            
                 }
               },
               onRemove: function (evt) {
