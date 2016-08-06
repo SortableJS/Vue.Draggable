@@ -35,9 +35,9 @@
       node.parentElement.removeChild(node);
     }
 
-    function insertNodeAt(fatherNode, node, position){
-      if (position<fatherNode.children.length)
-        fatherNode.insertBefore(node, fatherNode.children[position]);
+    function insertNodeBefore(fatherNode, node, beforeNode){
+      if (!!beforeNode)
+        fatherNode.insertBefore(node, beforeNode);
       else
         fatherNode.appendChild(node);
     }
@@ -51,6 +51,12 @@
         var forDirective = Vue.directive('for');
         var dragableForDirective = _.clone(forDirective);
         dragableForDirective.params = dragableForDirective.params.concat('root', 'options');
+        var rightElement;
+
+        function insertAtOriginalPlace(evt){
+          removeNode(evt.item);
+          insertNodeBefore(evt.from, evt.item, rightElement) 
+        }
 
         mix(dragableForDirective, {
           bind : function () {    
@@ -68,16 +74,15 @@
             options = _.isString(options)? JSON.parse(options) : options;
             options = _.merge(options,{
               onStart: function (evt) {
+                rightElement = evt.item.nextSibling;
                 indexes = computeIndexes(_.chain(evt.from.children));
               },
               onUpdate: function (evt) {
                 updatePosition(ctx.collection, evt.newIndex, evt.oldIndex);
-                removeNode(evt.item);
-                insertNodeAt(evt.from, evt.item, evt.oldIndex) 
+                insertAtOriginalPlace(evt);
               },
               onAdd: function (evt) {
                 indexes =  computeIndexes(_.chain(evt.to.children).filter(function(elt){return elt!==evt.item;}));
-                console.log(indexes);
                 if (!!ctx.collection){
                   var addElement= getVmObject(evt.item);
                   var length = indexes.length;
@@ -88,27 +93,18 @@
                     var newIndex =  indexes[evt.newIndex];
                     ctx.collection.splice(newIndex, 0, addElement);
                   }
-                  removeNode(evt.item);
-                  insertNodeAt(evt.from, evt.item, evt.oldIndex)            
+                  insertAtOriginalPlace(evt);            
                 }
               },
               onRemove: function (evt) {
-                var collection = ctx.collection;
-                if (!!collection && !evt.clone){
+                var collection = ctx.collection, cloning = !!evt.clone;
+                if (!!collection && !cloning){
                   var realOld = indexes[evt.oldIndex];
                   collection.splice(realOld, 1);
                 }
-                if (!!evt.clone){    
+                if (cloning){    
                   removeNode(evt.clone);           
-                  insertNodeAt(evt.from, evt.item, evt.oldIndex)
                 }
-                else{
-                  //remove added node: Vue will add it for us
-                  var elt = evt.item
-                  if (!!getFragment(elt).parentFrag){
-                    removeNode(elt);
-                  }
-                } 
               }
             });
             var parent = (!!this.params.root) ? document.getElementById(this.params.root) : this.el.parentElement;
