@@ -41,8 +41,14 @@ Option parameter can be json string or a full javascript object.
    
 ##Limitation
 
-This directive works only when applied to arrays and not to javascript objects.
-
+* This directive works only when applied to arrays and not to objects.
+* `onStart`, `onUpdate`, `onAdd`, `onRemove` Sortable.js options hooks are used by v-dragable-for to update VM. As such these four options are not usable with v-dragable-for. If you need to listen to re-order events, you can watch the underlying view model collection. For example:
+``` js
+        watch: {
+            'list1': function () {
+                console.log('Colection updated!');
+            },
+```
 
 ## Installation
 - Available through:
