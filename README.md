@@ -46,7 +46,7 @@ Option parameter can be json string or a full javascript object.
 ``` js
         watch: {
             'list1': function () {
-                console.log('Colection updated!');
+                console.log('Collection updated!');
             },
 ```
 
