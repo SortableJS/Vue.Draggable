@@ -131,7 +131,9 @@
           }
         });
 
+        //With typo: should be removed in next release
         Vue.directive('dragable-for', dragableForDirective);
+        Vue.directive('draggable-for', dragableForDirective);
       }
     };
     return vueDragFor;
@@ -139,7 +141,7 @@
 
   if (typeof exports == "object") {
     var _ = require("lodash");
-    var Sortable =  require("Sortablejs");
+    var Sortable =  require("sortablejs");
     module.exports = buildVueDragFor(_, Sortable);
   } else if (typeof define == "function" && define.amd) {
     define(['lodash', 'Sortable'], function(_, Sortable){ return buildVueDragFor(_, Sortable);});
