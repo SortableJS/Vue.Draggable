@@ -1,4 +1,8 @@
 # Vue.Dragable.For
+
+[![MIT License](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/David-Desmaisons/Vue.Dragable.For/blob/master/LICENSE)
+
+
 Vue directive for lists allowing drag-and-drop sorting in sync with View-Model. Based on [Sortable.js](https://github.com/RubaXa/Sortable)
 
 
