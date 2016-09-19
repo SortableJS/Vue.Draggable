@@ -1,5 +1,10 @@
 # Vue.Dragable.For
 
+
+[![GitHub open issues](https://img.shields.io/github/issues/David-Desmaisons/Vue.Dragable.For.svg?maxAge=2592000)]()
+[![GitHub closed issues](https://img.shields.io/github/issues-closed/David-Desmaisons/Vue.Dragable.For.svg?maxAge=2592000)]()
+[![Npm download](https://img.shields.io/npm/dt/vuedragablefor.svg?maxAge=2592000)](https://www.npmjs.com/package/vuedragablefor)
+[![Npm version](https://img.shields.io/npm/v/vuedragablefor.svg?maxAge=2592000)](https://www.npmjs.com/package/vuedragablefor)
 [![MIT License](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/David-Desmaisons/Vue.Dragable.For/blob/master/LICENSE)
 
 
