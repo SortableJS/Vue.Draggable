@@ -24,8 +24,7 @@
     "gulpfile.js"
   ],
   "dependencies": {
-    "vue": "^1.0.25",
-    "lodash": "^4.13.1",
+    "vue": "^2.0.1",
     "Sortable": "^1.4.2"
   }
 }

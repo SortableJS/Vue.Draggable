@@ -1,10 +1,10 @@
 {
   "name": "vuedragablefor",
-  "version": "1.0.9",
-  "description": "vue dragable for directive",
+  "version": "2.0.0",
+  "description": "draggable component for vue",
   "main": "src/vuedragablefor.js",
   "files": [
-    "src/vuedragablefor.js"
+    "src/index.js"
   ],
   "keywords": [
     "vue",
@@ -17,14 +17,15 @@
     "test": "test"
   },
   "dependencies": {
-    "lodash": "^4.13.1",
     "sortablejs": "^1.4.2"
   },
   "devDependencies": {
+    "babel-preset-es2015": "^6.16.0",
     "bower": "^1.7.9",
-    "gulp": "^3.9.1",
     "connect": "^3.4.1",
     "connect-livereload": "^0.5.4",
+    "gulp": "^3.9.1",
+    "gulp-babel": "^6.1.2",
     "gulp-clean": "^0.3.2",
     "gulp-filter": "^4.0.0",
     "gulp-flatten": "^0.3.0",
@@ -53,8 +54,8 @@
   },
   "license": "MIT",
   "homepage": "https://github.com/David-Desmaisons/Vue.Dragable.For#readme",
-  "repository":{
-    "type" : "git",
-    "url" : "https://github.com/David-Desmaisons/Vue.Dragable.For.git"
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/David-Desmaisons/Vue.Dragable.For.git"
   }
 }

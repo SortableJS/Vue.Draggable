@@ -12,18 +12,18 @@
     <body>
      
      <div id="main">
-        <h1>Vue Dragable For</h1>
-       
-        <div class="drag">
-            <h2>Dragable v-dragable-for</h2>
-            <div class="dragArea">
-                <div v-dragable-for="element in list">{{element.name}} {{$index}}</div>
-             </div>
+        <h1>Vue Draggable</h1>
+
+        <div>
+            <h2>Draggable</h2>
+            <draggable class="drag" :list="list">
+                <div v-for="element in list">{{element.name}}</div>
+             </draggable>
          </div>
 
-        <div class="normal">
+         <div>
             <h2>Normal v-for</h2>
-            <div class="dragArea">
+            <div class="normal">
                 <div v-for="element in list">{{element.name}}</div>
              </div>
          </div>
@@ -37,12 +37,11 @@
         <a href="Two_Lists_Clone.html">See clone element example</a>
         <a href="Two_Lists_Clone_If.html">See clone v-if element example</a>
 
+    </div>
+
         <script type="text/javascript" src="..\libs\vue\dist\vue.js"></script>
-        <script type="text/javascript" src="..\libs\lodash\lodash.js"></script>
         <script type="text/javascript" src="..\libs\Sortable\Sortable.js"></script>
         <script type="text/javascript" src="src\vuedragablefor.js"></script>
         <script type="text/javascript" src="script\main.js"></script>
-
-    </div>
     </body>
 </html>

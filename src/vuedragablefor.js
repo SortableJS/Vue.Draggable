@@ -1,152 +1,144 @@
-(function(){
-  function buildVueDragFor(_, Sortable){
+(function() {
+  "use strict";
 
-    function mix(source, functions){
-      _.forEach(['bind', 'update', 'unbind'],function(value){
-          var original = source[value];
-          source[value] = function(){
-            functions[value].apply(this, arguments);
-            return original.apply(this, arguments);
-          };
-      });
-    }
+  function buildDraggable(Sortable) {
 
-    function getFragment(elt){
-      return elt.__v_frag;
-    }
-
-    function getCollectionFragment(fr){
-      if (!fr || !!fr.forId){
-        return fr;
+      function removeNode (node) {
+        node.parentElement.removeChild(node)
       }
-      return getCollectionFragment(fr.parentFrag);
-    }
 
-    function getRootFragment(elt){
-      return getCollectionFragment(getFragment(elt));
-    }
+      function insertNodeAt (fatherNode, node, position) {
+        if (position < fatherNode.children.length) {
+          fatherNode.insertBefore(node, fatherNode.children[position])
+        } else {
+          fatherNode.appendChild(node)
+        }
+      }
 
-    function getVmObject(elt){
-      var fragment = getRootFragment(elt);
-      return fragment.scope.element;
-    }
+      function computeVmIndex (vnodes, element) {
+        return vnodes.map(elt => elt.elm).indexOf(element)
+      }
 
-    function removeNode(node){
-      node.parentElement.removeChild(node);
-    }
+      function updatePosition (collection, oldIndex, newIndex) {
+        if (collection) {
+          collection.splice(newIndex, 0, collection.splice(oldIndex, 1)[0])
+        }
+      }
 
-    function insertNodeAt(fatherNode, node, position){
-      if (position<fatherNode.children.length)
-        fatherNode.insertBefore(node, fatherNode.children[position]);
-      else
-        fatherNode.appendChild(node);
-    }
+      function computeIndexes (slots, children) {
+        return Array.prototype.map.call(children, elt => computeVmIndex(slots, elt))
+      }
 
-    function computeIndexes(nodes){
-      return nodes.map(getRootFragment).filter(function(elt){return !!elt;}).map(function (elt){return (elt).scope.$index;}).value();
+      function merge (target, source) {
+        var output = Object(target)
+        for (var nextKey in source) {
+          if (source.hasOwnProperty(nextKey)) {
+            output[nextKey] = source[nextKey]
+          }
+        }
+        return output
+      }
+    
+    function install (Vue) {
+      const props = {
+        options: Object,
+        list: Array
+      }
+
+      const draggableComponent = {
+        props,
+
+        render (h) {
+          return h('div', null, this.$slots.default)
+        },
+
+        mounted () {
+          var optionsAdded = {};
+          ['Start', 'Add', 'Remove', 'Update', 'End'].forEach(elt => {
+            optionsAdded['on' + elt] = this['onDrag' + elt].bind(this)
+          })
+
+          const options = merge(this.options, optionsAdded)
+          this._sortable = new Sortable(this.$el, options)
+        },
+
+        methods: {
+
+          onDragStart (evt) {
+            if (!this.list) {
+              return
+            }
+            const slots = this.$slots.default
+            const currentIndex = computeVmIndex(slots, evt.item)
+            const element = this.list[currentIndex]
+            this.context = {
+              visibleIndexes: computeIndexes(slots, this.$el.children),
+              currentIndex,
+              element
+            }
+            evt.item._underlying_vm_ = element
+          },
+
+          onDragAdd (evt) {
+            const element = evt.item._underlying_vm_
+            if (!this.list || element === undefined) {
+              return
+            }
+            removeNode(evt.item)
+            const indexes = computeIndexes(this.$slots.default, this.$el.children)
+            const domNewIndex = evt.newIndex
+            const numberIndexes = indexes.length
+            const newIndex = (domNewIndex > numberIndexes - 1) ? numberIndexes : indexes[domNewIndex]
+            this.list.splice(newIndex, 0, element)
+          },
+
+          onDragRemove (evt) {
+            if (!this.list) {
+              return
+            }
+            insertNodeAt(this.$el, evt.item, evt.oldIndex)
+            const isCloning = !!evt.clone
+            if (isCloning) {
+              removeNode(evt.clone)
+              return
+            }
+            const oldIndex = this.context.currentIndex
+            this.list.splice(oldIndex, 1)
+          },
+
+          onDragUpdate (evt) {
+            if (!this.list) {
+              return
+            }
+            removeNode(evt.item)
+            insertNodeAt(evt.from, evt.item, evt.oldIndex)
+            const oldIndexVM = this.context.currentIndex
+            const newIndexVM = this.context.visibleIndexes[evt.newIndex]
+            updatePosition(this.list, oldIndexVM, newIndexVM)
+          },
+
+          onDragEnd (evt) {
+          }
+        }
+      }
+      
+      Vue.component('draggable', draggableComponent)
     }
     
-    var vueDragFor = {
-      install : function(Vue) {
-        var forDirective = Vue.directive('for');
-        var dragableForDirective = _.clone(forDirective);
-        dragableForDirective.params = dragableForDirective.params.concat('root', 'options');
+    const vueDraggable = {
+      install
+    }
 
-        mix(dragableForDirective, {
-          bind : function () {    
-            var ctx = this;    
-            var options = this.params.options;
-            var indexes;
-
-            function updatePosition(collection, newIndex, oldIndex ){
-              var realnew = indexes[newIndex], realOld = indexes[oldIndex];
-              if (!!collection){
-                collection.splice(realnew, 0, collection.splice(realOld, 1)[0] );
-              }
-            }
-
-            options = _.isString(options)? JSON.parse(options) : options;
-            options = _.merge(options,{
-              onStart: function (evt) {
-                indexes = computeIndexes(_.chain(evt.from.children));
-                console.log(indexes);
-              },
-              onUpdate: function (evt) {
-                if (ctx.params.trackBy==="$index"){
-                  removeNode(evt.item);           
-                  insertNodeAt(evt.from, evt.item, evt.oldIndex);
-                }
-                updatePosition(ctx.collection, evt.newIndex, evt.oldIndex);
-                removeNode(evt.item);
-                insertNodeAt(evt.from, evt.item, evt.oldIndex) 
-              },
-              onAdd: function (evt) {             
-                if (!!ctx.collection){                  
-                  var addElement= getVmObject(evt.item);
-                  var localIndexes =  computeIndexes(_.chain(evt.to.children).filter(function(elt){return elt!==evt.item;}));
-                  var length = localIndexes.length;
-                  if (evt.newIndex>= length){
-                    ctx.collection.push(addElement);
-                  }
-                  else{
-                    var newIndex =  localIndexes[evt.newIndex];
-                    ctx.collection.splice(newIndex, 0, addElement);
-                  }
-                  removeNode(evt.item);
-                  insertNodeAt(evt.from, evt.item, evt.oldIndex)            
-                }
-              },
-              onRemove: function (evt) {
-                var collection = ctx.collection;
-                var isCloning = !!evt.clone;
-                if (!!collection && !isCloning){
-                  //If is cloning is set no need to remove element from collection
-                  var realOld = indexes[evt.oldIndex];
-                  collection.splice(realOld, 1);
-                }
-                if (isCloning){    
-                  removeNode(evt.clone);           
-                  insertNodeAt(evt.from, evt.item, evt.oldIndex);
-                }
-                else{
-                  //Need to remove added node if Vue is not tracking it: Vue will add it for us
-                  var elt = evt.item
-                  if (!!getFragment(elt).parentFrag){
-                    removeNode(elt);
-                  }
-                } 
-              }
-            });
-            var parent = (!!this.params.root) ? document.getElementById(this.params.root) : this.el.parentElement;
-            this._sortable = new Sortable(parent, options);
-          },
-          update : function (value){
-            if ((!!value) && (!Array.isArray(value)))
-              throw new Error('should received an Array');
-
-            this.collection = value;
-          },
-          unbind : function (){
-            this._sortable.destroy();
-          }
-        });
-
-        //With typo: should be removed in next release
-        Vue.directive('dragable-for', dragableForDirective);
-        Vue.directive('draggable-for', dragableForDirective);
-      }
-    };
-    return vueDragFor;
+    return vueDraggable
   }
 
   if (typeof exports == "object") {
-    var _ = require("lodash");
-    var Sortable =  require("sortablejs");
-    module.exports = buildVueDragFor(_, Sortable);
+    var Sortable =  require("sortablejs")
+    module.exports = buildDraggable(Sortable)
   } else if (typeof define == "function" && define.amd) {
-    define(['lodash', 'Sortable'], function(_, Sortable){ return buildVueDragFor(_, Sortable);});
-  } else if ((window.Vue) && (window._) && (window.Sortable)) {
-    window.vueDragFor = buildVueDragFor(window._, window.Sortable);
-    Vue.use(window.vueDragFor);
+    define(['Sortable'], function(Sortable) { return buildDraggable(Sortable);});
+  } else if ( window && (window.Vue) && (window.Sortable)) {
+    var draggable = buildDraggable(window.Sortable)
+    Vue.use(draggable)
   }
 })();

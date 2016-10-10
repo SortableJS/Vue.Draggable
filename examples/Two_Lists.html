@@ -15,17 +15,17 @@
         <h1>Vue Dragable For</h1>
 
         <div class="drag">
-            <h2>List 1 v-dragable-for</h2>
-            <div class="dragArea" >
-                <div v-dragable-for="element in list1" options='{"group":"people"}' >
-                    {{element.name}} {{$index}}
+            <h2>List 1 draggable</h2>
+            <draggable class="dragArea" :list="list1" :options="{group:'people'}">
+                <div v-for="(element, index) in list1"  >
+                    {{element.name}} {{index}}
                 </div>
-             </div>
+             </draggable>
 
-            <h2>List 2 v-dragable-for</h2>
-            <div class="dragArea">
-                <div v-dragable-for="element in list2" options='{"group":"people"}' track-by="$index">{{element.name}}</div>
-             </div>
+            <h2>List 2 draggable</h2>
+            <draggable class="dragArea" :list="list2" :options="{group:'people'}" >
+                <div v-for="(element, index) in list2" :key="index">{{element.name}}</div>
+            </draggable>
          </div>
 
         <div class="normal">
@@ -43,13 +43,11 @@
         <a href="index.html">See basic example</a>
         <a href="Two_Lists_Clone.html">See clone element example</a>
         <a href="Two_Lists_Clone_If.html">See clone v-if element example</a>
-
-        <script type="text/javascript" src="..\libs\vue\dist\vue.js"></script>
+    </div>
+      <script type="text/javascript" src="..\libs\vue\dist\vue.js"></script>
         <script type="text/javascript" src="..\libs\lodash\lodash.js"></script>
         <script type="text/javascript" src="..\libs\Sortable\Sortable.js"></script>
         <script type="text/javascript" src="src\vuedragablefor.js"></script>
         <script type="text/javascript" src="script\complex.js"></script>
-
-    </div>
     </body>
 </html>

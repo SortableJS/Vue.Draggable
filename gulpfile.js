@@ -5,10 +5,13 @@ var gulp = require('gulp');
 
 // load plugins
 var $ = require('gulp-load-plugins')();
-
+const babel = require('gulp-babel');
 
 gulp.task('scripts', function () {
     return gulp.src('src/**/*.js')
+        .pipe(babel({
+            presets: ['es2015']
+        }))
         .pipe($.jshint())
         .pipe($.jshint.reporter(require('jshint-stylish')))
         .pipe($.size());
@@ -21,6 +24,9 @@ gulp.task('js', ['scripts'], function () {
     var jsFilter = $.filter('**/*.js', {restore: true});
 
     return gulp.src('src/**/*.js')
+        .pipe(babel({
+            presets: ['es2015']
+        }))    
         .pipe($.uglify())
         .pipe(rename({
             suffix: '.min'
@@ -33,7 +39,10 @@ gulp.task('clean', function () {
     return gulp.src(['.tmp', 'dist'], { read: false }).pipe($.clean());
 });
 
-gulp.task('build', ['js', 'copy-js', 'main-bower-files']);
+gulp.task('build', ['js', 'copy-js', 'main-bower-files'],function(){
+        return gulp.src('./bower_components/vue/dist/vue.js')
+        .pipe(gulp.dest('./examples/libs/vue/dist'));
+        });
 
 gulp.task('default', ['clean'], function () {
     gulp.start('build');
@@ -69,7 +78,10 @@ gulp.task('main-bower-files', function() {
 });
 
 gulp.task('copy-js', function() {
-    return gulp.src('src/**/*.js')
+    return gulp.src('src/**/*.js')        
+        .pipe(babel({
+            presets: ['es2015']
+        }))   
         .pipe(gulp.dest('./examples/src'));
 });
 
