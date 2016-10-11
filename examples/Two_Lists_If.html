@@ -15,28 +15,28 @@
         <h1>Vue Dragable For</h1>
 
         <div class="drag">
-            <h2>List 1 v-dragable-for</h2>
-            <div id="list1" class="dragArea" >
-                <div v-dragable-for="element in list1" options='{"group":{ "name":"people", "put":false}}' v-if="element.id > 2">
-                    {{element.name}} {{$index}}
+            <h2>List 1 dragable</h2>
+            <draggable id="list1" class="dragArea" :list="list1" :options="{group:{name:'people', pull:'clone', put:false }}">
+                <div v-for="(element, index) in list1" v-if="element.id > 2">
+                    {{element.name}} {{index}}
                 </div>
-             </div>                
+             </draggable>                
 
-            <h2>List 2 v-dragable-for</h2>
-            <div id="list2" class="dragArea">
-                <div v-dragable-for="element in list2" options='{"group":"people"}' track-by="$index">{{element.name}}</div>
-             </div>
+            <h2>List 2 dragable</h2>
+            <draggable id="list2" class="dragArea" :options="{group:'people'}" :list="list2">
+                <div v-for="(element, index) in list2" :key="index">{{element.name}}</div>
+             </draggable>
          </div>
 
         <div class="normal">
             <h2>List 1 v-for</h2>
             <div>
-                <div v-for="element in list1" track-by="$index">{{element.name}}</div>
+                <div v-for="(element, index) in list1" :key="index">{{element.name}}</div>
              </div>
 
             <h2>List 2 v-for</h2>
             <div>
-                <div v-for="element in list2" track-by="$index">{{element.name}}</div>
+                <div v-for="(element, index) in list2" :key="index">{{element.name}}</div>
             </div>
         </div>
 

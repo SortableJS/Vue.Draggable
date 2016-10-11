@@ -14,16 +14,16 @@
      <div id="main">
         <h1>Vue Draggable</h1>
 
-        <div>
+        <div class="drag">
             <h2>Draggable</h2>
-            <draggable class="drag" :list="list">
+            <draggable  :list="list">
                 <div v-for="element in list">{{element.name}}</div>
              </draggable>
          </div>
 
-         <div>
+         <div class="normal">
             <h2>Normal v-for</h2>
-            <div class="normal">
+            <div >
                 <div v-for="element in list">{{element.name}}</div>
              </div>
          </div>
