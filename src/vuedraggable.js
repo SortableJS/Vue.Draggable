@@ -62,6 +62,10 @@
           this.computeIndexes()
         },
 
+        beforeDestroy () {
+          this._sortable.destroy()
+        },
+
         methods: {
 
           computeIndexes () {
