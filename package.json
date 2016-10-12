@@ -2,9 +2,9 @@
   "name": "vuedragablefor",
   "version": "2.0.0",
   "description": "draggable component for vue",
-  "main": "src/vuedraggable.js",
+  "main": "dist/vuedraggable.min.js",
   "files": [
-    "src/vuedraggable.js"
+    "dist/vuedraggable.min.js"
   ],
   "keywords": [
     "vue",
