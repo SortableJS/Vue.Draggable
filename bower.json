@@ -2,7 +2,7 @@
   "name": "vue.dragable.for",
   "authors": ["desmaisons_david <desmaisons_david@hotmail.com>"],
   "description": "vue vuedraggable component",
-  "main": "src/vuedraggable.js",
+  "main": "dist/vuedraggable.min.js",
   "keywords": [
     "vue",
     "list",
