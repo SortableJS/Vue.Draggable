@@ -2,43 +2,42 @@
   "use strict";
 
   function buildDraggable(Sortable) {
+    function removeNode (node) {
+      node.parentElement.removeChild(node)
+    }
 
-      function removeNode (node) {
-        node.parentElement.removeChild(node)
+    function insertNodeAt (fatherNode, node, position) {
+      if (position < fatherNode.children.length) {
+        fatherNode.insertBefore(node, fatherNode.children[position])
+      } else {
+        fatherNode.appendChild(node)
       }
+    }
 
-      function insertNodeAt (fatherNode, node, position) {
-        if (position < fatherNode.children.length) {
-          fatherNode.insertBefore(node, fatherNode.children[position])
-        } else {
-          fatherNode.appendChild(node)
+    function computeVmIndex (vnodes, element) {
+      return vnodes.map(elt => elt.elm).indexOf(element)
+    }
+
+    function updatePosition (collection, oldIndex, newIndex) {
+      if (collection) {
+        collection.splice(newIndex, 0, collection.splice(oldIndex, 1)[0])
+      }
+    }
+
+    function computeIndexes (slots, children) {
+      return Array.prototype.map.call(children, elt => computeVmIndex(slots, elt))
+    }
+
+    function merge (target, source) {
+      var output = Object(target)
+      for (var nextKey in source) {
+        if (source.hasOwnProperty(nextKey)) {
+          output[nextKey] = source[nextKey]
         }
       }
+      return output
+    }
 
-      function computeVmIndex (vnodes, element) {
-        return vnodes.map(elt => elt.elm).indexOf(element)
-      }
-
-      function updatePosition (collection, oldIndex, newIndex) {
-        if (collection) {
-          collection.splice(newIndex, 0, collection.splice(oldIndex, 1)[0])
-        }
-      }
-
-      function computeIndexes (slots, children) {
-        return Array.prototype.map.call(children, elt => computeVmIndex(slots, elt))
-      }
-
-      function merge (target, source) {
-        var output = Object(target)
-        for (var nextKey in source) {
-          if (source.hasOwnProperty(nextKey)) {
-            output[nextKey] = source[nextKey]
-          }
-        }
-        return output
-      }
-    
     function install (Vue) {
       const props = {
         options: Object,
@@ -60,19 +59,25 @@
 
           const options = merge(this.options, optionsAdded)
           this._sortable = new Sortable(this.$el, options)
+          this.computeIndexes()
         },
 
         methods: {
 
+          computeIndexes () {
+            this.$nextTick( () =>{
+               const slots = this.$slots.default
+               this.visibleIndexes = computeIndexes(slots, this.$el.children)
+            })
+          },
+
           onDragStart (evt) {
             if (!this.list) {
               return
-            }
-            const slots = this.$slots.default
-            const currentIndex = computeVmIndex(slots, evt.item)
+            }         
+            const currentIndex = computeVmIndex(this.$slots.default, evt.item)
             const element = this.list[currentIndex]
             this.context = {
-              visibleIndexes: computeIndexes(slots, this.$el.children),
               currentIndex,
               element
             }
@@ -85,11 +90,12 @@
               return
             }
             removeNode(evt.item)
-            const indexes = computeIndexes(this.$slots.default, this.$el.children)
+            const indexes = this.visibleIndexes
             const domNewIndex = evt.newIndex
             const numberIndexes = indexes.length
             const newIndex = (domNewIndex > numberIndexes - 1) ? numberIndexes : indexes[domNewIndex]
             this.list.splice(newIndex, 0, element)
+            this.computeIndexes()
           },
 
           onDragRemove (evt) {
@@ -113,11 +119,12 @@
             removeNode(evt.item)
             insertNodeAt(evt.from, evt.item, evt.oldIndex)
             const oldIndexVM = this.context.currentIndex
-            const newIndexVM = this.context.visibleIndexes[evt.newIndex]
+            const newIndexVM = this.visibleIndexes[evt.newIndex]
             updatePosition(this.list, oldIndexVM, newIndexVM)
           },
 
           onDragEnd (evt) {
+            this.computeIndexes()
           }
         }
       }
