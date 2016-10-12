@@ -38,6 +38,18 @@
       return output
     }
 
+    function emit (evtName, evtData) {
+      this.$emit( evtName.toLowerCase(), evtData)
+    }
+
+    function delegateAndEmit (evtName) {
+      const ctx = this
+      return function (evtData) {
+        ctx['onDrag' + evtName].call(ctx, evtData)
+        emit.call(ctx, evtName, evtData)
+      }
+    }
+
     function install (Vue) {
       const props = {
         options: Object,
@@ -53,9 +65,13 @@
 
         mounted () {
           var optionsAdded = {};
-          ['Start', 'Add', 'Remove', 'Update', 'End'].forEach(elt => {
-            optionsAdded['on' + elt] = this['onDrag' + elt].bind(this)
-          })
+          ['Start', 'Add', 'Remove', 'Update', 'End'].forEach( elt => {
+            optionsAdded['on' + elt] = delegateAndEmit.call(this, elt)
+          });
+
+          ['Choose', 'Sort', 'Filter', 'Move', 'Clone'].forEach( elt => {
+            optionsAdded['on' + elt] = emit.bind(this, elt)
+          });
 
           const options = merge(this.options, optionsAdded)
           this._sortable = new Sortable(this.$el, options)
@@ -69,9 +85,8 @@
         methods: {
 
           computeIndexes () {
-            this.$nextTick( () =>{
-               const slots = this.$slots.default
-               this.visibleIndexes = computeIndexes(slots, this.$el.children)
+            this.$nextTick( () => {
+               this.visibleIndexes = computeIndexes(this.$slots.default, this.$el.children)
             })
           },
 
