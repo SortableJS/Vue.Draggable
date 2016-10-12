@@ -43,10 +43,9 @@
     }
 
     function delegateAndEmit (evtName) {
-      const ctx = this
-      return function (evtData) {
-        ctx['onDrag' + evtName].call(ctx, evtData)
-        emit.call(ctx, evtName, evtData)
+      return (evtData) => {
+        this['onDrag' + evtName](evtData)
+        emit.call(this, evtName, evtData)
       }
     }
 
@@ -80,6 +79,10 @@
 
         beforeDestroy () {
           this._sortable.destroy()
+        },
+
+        updated () {
+          this.computeIndexes()
         },
 
         methods: {
