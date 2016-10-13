@@ -3,10 +3,10 @@
 
 [![GitHub open issues](https://img.shields.io/github/issues/David-Desmaisons/Vue.Dragable.For.svg?maxAge=2592000)]()
 [![GitHub closed issues](https://img.shields.io/github/issues-closed/David-Desmaisons/Vue.Dragable.For.svg?maxAge=2592000)]()
-[![Npm download](https://img.shields.io/npm/dt/vuedragablefor.svg?maxAge=2592000)](https://www.npmjs.com/package/vuedragablefor)
-[![Npm version](https://img.shields.io/npm/v/vuedragablefor.svg?maxAge=2592000)](https://www.npmjs.com/package/vuedragablefor)
-[![Package Quality](http://npm.packagequality.com/shield/vuedragablefor.svg)](http://packagequality.com/#?package=vuedragablefor)
-[![MIT License](https://img.shields.io/github/license/David-Desmaisons/Vue.Dragable.For.svg)](https://github.com/David-Desmaisons/Vue.Dragable.For/blob/master/LICENSE)
+[![Npm download](https://img.shields.io/npm/dt/vuedraggablefor.svg?maxAge=2592000)](https://www.npmjs.com/package/vuedraggable)
+[![Npm version](https://img.shields.io/npm/v/vuedragablefor.svg?maxAge=2592000)](https://www.npmjs.com/package/vuedraggable)
+[![Package Quality](http://npm.packagequality.com/shield/vuedraggable.svg)](http://packagequality.com/#?package=vuedraggable)
+[![MIT License](https://img.shields.io/github/license/David-Desmaisons/Vue.Draggable.svg)](https://github.com/David-Desmaisons/Vue.Draggable/blob/master/LICENSE)
 
 
 Vue component (Vue2.0) or directive (Vue1.0) allowing drag-and-drop and synchronization with view model array.
@@ -64,6 +64,7 @@ Simple:
 https://jsfiddle.net/dede89/sqssmhtz/
 
 Two Lists:
+https://jsfiddle.net/dede89/32ao2rpm/
 
 ##For Vue.js 1.0
 
@@ -99,7 +100,7 @@ https://jsfiddle.net/dede89/u5ecgtsj/
 ## Installation
 - Available through:
 ``` js
- npm install vuedragabble
+ npm install vuedraggabble
 ```
 ``` js
  Bower install vue.draggable
