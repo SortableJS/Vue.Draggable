@@ -37,19 +37,17 @@ Use draggable component:
 ### Props
 #### list
 Type: `Array`<br>
-Required: `false`
+Required: `false`<br>
 Default: `null`
 
-Array to be synchronized with drag-and-drop. Typically same array as refrenced by inner element v-for directive.
-
+Array to be synchronized with drag-and-drop. Typically same array as refrenced by inner element v-for directive.<br>
 Note that draggabe component can be used with a list prop
 
 #### options
 Type: `Object`<br>
 Required: `true`
 
-Option used to inicialize the sortable object see: [sortable option documentation](https://github.com/RubaXa/Sortable#options)
-
+Option used to inicialize the sortable object see: [sortable option documentation](https://github.com/RubaXa/Sortable#options)<br>
 Note that all the method starting by "on" will be ignored as draggable component expose the same API via events.
 
 #### Events
@@ -69,7 +67,7 @@ https://jsfiddle.net/dede89/32ao2rpm/
 ##For Vue.js 1.0
 
 Use it exactly as v-for directive, passing optional parameters using 'options' parameter.
-Option parameter can be json string or a full javascript object.
+Options parameter can be json string or a full javascript object.
 
   ``` html
   <div v-dragable-for="element in list1" options='{"group":"people"}'>
