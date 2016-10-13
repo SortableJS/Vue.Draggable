@@ -99,7 +99,7 @@ https://jsfiddle.net/dede89/u5ecgtsj/
 ## Installation
 - Available through:
 ``` js
- npm install vuedraggabble
+ npm install vuedraggable
 ```
 ``` js
  Bower install vue.draggable
