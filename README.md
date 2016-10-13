@@ -1,4 +1,4 @@
-# Vue.Dragable.For
+# Vue.Draggable
 
 
 [![GitHub open issues](https://img.shields.io/github/issues/David-Desmaisons/Vue.Dragable.For.svg?maxAge=2592000)]()
