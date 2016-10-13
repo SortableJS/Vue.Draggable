@@ -9,34 +9,58 @@
 [![MIT License](https://img.shields.io/github/license/David-Desmaisons/Vue.Dragable.For.svg)](https://github.com/David-Desmaisons/Vue.Dragable.For/blob/master/LICENSE)
 
 
-Vue directive for lists allowing drag-and-drop sorting in sync with View-Model. Based on [Sortable.js](https://github.com/RubaXa/Sortable)
+Vue component (Vue2.0) or directive (Vue1.0) allowing drag-and-drop and synchronization with view model array.
 
-
-##Motivation
-
-Create a directive that displays a dragable list and keeps in sync the view and underlying view model.
+Based on and offering all features of [Sortable.js](https://github.com/RubaXa/Sortable)
 
 ##Demo
 
 ![demo gif](https://raw.githubusercontent.com/David-Desmaisons/Vue.Dragable.For/master/example.gif)
 
-Simple:
-
-https://jsfiddle.net/dede89/j62g58z7/
-
-Two Lists:
-
-https://jsfiddle.net/dede89/hqxranrd/
-
-Example with list clone:
-
-https://jsfiddle.net/dede89/u5ecgtsj/
 
 ##Features
 
-* Full support of [Sortable.js](https://github.com/RubaXa/Sortable) options via options parameters
+* Full support of [Sortable.js](https://github.com/RubaXa/Sortable) features
 * Keeps in sync view model and view
 * No jquery dependency
+
+##For Vue.js 2.0
+
+Use draggable component:
+
+``` html
+<draggable  :list="list" :option="{group:'people'}" @start="dragging=true" @end="dragging=false">
+   <div v-for="element in list">{{element.name}}</div>
+</draggable>
+```
+
+### Props
+#### list
+Type: `Array`<br>
+Required: `false`
+Default: `null`
+
+Array to be synchronized with drag-and-drop. Typically same array as refrenced by inner element v-for directive.
+
+Note that draggabe component can be used with a list prop
+
+#### option
+Type: `Object`<br>
+Required: `true`
+
+Option used to inicialize the sortable object see: [sortable option documentation](https://github.com/RubaXa/Sortable#options)
+
+Note that all the method starting by "on" will be ignored as draggable component expose the same API via events.
+
+#### Events
+`start`, `add`, `remove`, `update`, `end`, `choose`, `sort`, `filter`, `move`, `clone`
+
+Called when there equivalent onStart, onAdd, .... are fired by Sortabe.js with the same argument.
+
+[See here for reference](https://github.com/RubaXa/Sortable#event-object-demo)
+
+
+##For Vue.js 1.0
 
 ##Usage
 
@@ -59,28 +83,41 @@ Option parameter can be json string or a full javascript object.
                 console.log('Collection updated!');
             },
 ```
+##Vue.js 1.0 fiddle
+
+Simple:
+
+https://jsfiddle.net/dede89/j62g58z7/
+
+Two Lists:
+
+https://jsfiddle.net/dede89/hqxranrd/
+
+Example with list clone:
+
+https://jsfiddle.net/dede89/u5ecgtsj/
 
 ## Installation
 - Available through:
 ``` js
- npm install vuedragablefor
+ npm install vuedragabble
 ```
 ``` js
- Bower install vue.dragable.for
+ Bower install vue.draggable
 ```
 - #### For Modules
 
   ``` js
   // ES6
   import Vue from 'vue'
-  import VueDragableFor from 'vuedragablefor'
-  Vue.use(VueDragableFor)
+  import VueDraggable from 'vuedraggable'
+  Vue.use(VueDraggable)
 
   // ES5
   var Vue = require('vue')
-  Vue.use(require('vuedragablefor'))
+  Vue.use(require('vuedraggable'))
   ```
 
 - #### For `<script>` Include
 
-  Just include `vue.dragable.for.js` after Vue and lodash(version >=3).
+  Just include `vuedraggable.min.js` or 'vue.dragable.for' after Vue. lodash(version >=3) is needed only for Vuejs. 1.0 version of the library.
