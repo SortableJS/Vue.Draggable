@@ -51,10 +51,8 @@ Option used to inicialize the sortable object see: [sortable option documentatio
 Note that all the method starting by "on" will be ignored as draggable component expose the same API via events.
 
 #### Events
-`start`, `add`, `remove`, `update`, `end`, `choose`, `sort`, `filter`, `move`, `clone`
-
-Called when there equivalent onStart, onAdd, .... are fired by Sortabe.js with the same argument.
-
+`start`, `add`, `remove`, `update`, `end`, `choose`, `sort`, `filter`, `move`, `clone`<br>
+Called when there equivalent onStart, onAdd, .... are fired by Sortabe.js with the same argument.<br>
 [See here for reference](https://github.com/RubaXa/Sortable#event-object-demo)
 
 ###Fiddle
