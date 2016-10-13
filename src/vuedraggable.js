@@ -52,7 +52,11 @@
     function install (Vue) {
       const props = {
         options: Object,
-        list: Array
+        list: { 
+          type: Array,
+          required: false,
+          default: null
+        }
       }
 
       const draggableComponent = {
