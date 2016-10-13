@@ -114,6 +114,13 @@ Version 2.0.2 is Vue.js 2.0 compatible
   // ES6
   //For Vue.js 2.0
   import draggable from 'vuedraggable'
+  ...
+  export default {
+        components: {
+            draggable,
+            ...
+        }
+        ...
   
   //For Vue.js 1.0 only
   import VueDraggable from 'vuedraggable'
