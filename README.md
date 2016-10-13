@@ -29,7 +29,7 @@ Based on and offering all features of [Sortable.js](https://github.com/RubaXa/So
 Use draggable component:
 
 ``` html
-<draggable  :list="list" :option="{group:'people'}" @start="dragging=true" @end="dragging=false">
+<draggable  :list="list" :options="{group:'people'}" @start="dragging=true" @end="dragging=false">
    <div v-for="element in list">{{element.name}}</div>
 </draggable>
 ```
@@ -44,7 +44,7 @@ Array to be synchronized with drag-and-drop. Typically same array as refrenced b
 
 Note that draggabe component can be used with a list prop
 
-#### option
+#### options
 Type: `Object`<br>
 Required: `true`
 
@@ -59,10 +59,13 @@ Called when there equivalent onStart, onAdd, .... are fired by Sortabe.js with t
 
 [See here for reference](https://github.com/RubaXa/Sortable#event-object-demo)
 
+###Fiddle
+Simple:
+https://jsfiddle.net/dede89/sqssmhtz/
+
+Two Lists:
 
 ##For Vue.js 1.0
-
-##Usage
 
 Use it exactly as v-for directive, passing optional parameters using 'options' parameter.
 Option parameter can be json string or a full javascript object.
@@ -73,7 +76,7 @@ Option parameter can be json string or a full javascript object.
   </div>
    ```
    
-##Limitation
+###Limitation
 
 * This directive works only when applied to arrays and not to objects.
 * `onStart`, `onUpdate`, `onAdd`, `onRemove` Sortable.js options hooks are used by v-dragable-for to update VM. As such these four options are not usable with v-dragable-for. If you need to listen to re-order events, you can watch the underlying view model collection. For example:
@@ -83,13 +86,7 @@ Option parameter can be json string or a full javascript object.
                 console.log('Collection updated!');
             },
 ```
-##fiddle
-
-#Vue.js 2.0
-Simple:
-https://jsfiddle.net/dede89/sqssmhtz/
-
-#Vue.js 1.0
+###fiddle
 Simple:
 https://jsfiddle.net/dede89/j62g58z7/
 
