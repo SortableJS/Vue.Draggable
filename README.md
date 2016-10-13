@@ -83,18 +83,20 @@ Option parameter can be json string or a full javascript object.
                 console.log('Collection updated!');
             },
 ```
-##Vue.js 1.0 fiddle
+##fiddle
 
+#Vue.js 2.0
 Simple:
+https://jsfiddle.net/dede89/sqssmhtz/
 
+#Vue.js 1.0
+Simple:
 https://jsfiddle.net/dede89/j62g58z7/
 
 Two Lists:
-
 https://jsfiddle.net/dede89/hqxranrd/
 
 Example with list clone:
-
 https://jsfiddle.net/dede89/u5ecgtsj/
 
 ## Installation
