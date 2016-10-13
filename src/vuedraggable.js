@@ -49,7 +49,6 @@
       }
     }
 
-    function install (Vue) {
       const props = {
         options: Object,
         list: { 
@@ -154,15 +153,8 @@
           }
         }
       }
-      
-      Vue.component('draggable', draggableComponent)
-    }
     
-    const vueDraggable = {
-      install
-    }
-
-    return vueDraggable
+    return draggableComponent
   }
 
   if (typeof exports == "object") {
@@ -172,6 +164,6 @@
     define(['Sortable'], function(Sortable) { return buildDraggable(Sortable);});
   } else if ( window && (window.Vue) && (window.Sortable)) {
     var draggable = buildDraggable(window.Sortable)
-    Vue.use(draggable)
+    Vue.component('draggable', draggable)
   }
 })();
