@@ -9,7 +9,7 @@
 [![MIT License](https://img.shields.io/github/license/David-Desmaisons/Vue.Draggable.svg)](https://github.com/David-Desmaisons/Vue.Draggable/blob/master/LICENSE)
 
 
-Vue component (Vue2.0) or directive (Vue1.0) allowing drag-and-drop and synchronization with view model array.
+Vue component (Vue.js 2.0) or directive (Vue.js 1.0) allowing drag-and-drop and synchronization with view model array.
 
 Based on and offering all features of [Sortable.js](https://github.com/RubaXa/Sortable)
 
@@ -104,19 +104,32 @@ https://jsfiddle.net/dede89/u5ecgtsj/
 ``` js
  Bower install vue.draggable
 ```
+
+Version 1.0.9 is Vue.js 1.0 compatible <br>
+Version 2.0.2 is Vue.js 2.0 compatible 
+
 - #### For Modules
 
   ``` js
   // ES6
-  import Vue from 'vue'
+  //For Vue.js 2.0
+  import draggable from 'vuedraggable'
+  
+  //For Vue.js 1.0 only
   import VueDraggable from 'vuedraggable'
+  import Vue from 'vue'
   Vue.use(VueDraggable)
 
-  // ES5
+  // ES5 
+  //For Vue.js 1.0
   var Vue = require('vue')
   Vue.use(require('vuedraggable'))
+  
+  //For Vue.js 2.0
+  var draggable = require('vuedraggable')
   ```
 
 - #### For `<script>` Include
 
-  Just include `vuedraggable.min.js` or 'vue.dragable.for' after Vue. lodash(version >=3) is needed only for Vuejs. 1.0 version of the library.
+  Just include `vuedraggable.min.js` or 'vue.dragable.for' after Vue.<br>
+  lodash(version >=3) is needed only for Vuejs. 1.0 version of the library.
