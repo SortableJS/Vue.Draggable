@@ -62,6 +62,9 @@ https://jsfiddle.net/dede89/sqssmhtz/
 Two Lists:
 https://jsfiddle.net/dede89/32ao2rpm/
 
+Example with list clone:
+https://jsfiddle.net/dede89/t3m5krea/
+
 ##For Vue.js 1.0
 
 Use it exactly as v-for directive, passing optional parameters using 'options' parameter.
