@@ -20,7 +20,18 @@ gulp.task('scripts', function () {
 
 var rename = require('gulp-rename');
 
-gulp.task('js', ['scripts'], function () {
+gulp.task('buildjs', ['scripts'], function () {
+    var jsFilter = $.filter('**/*.js', {restore: true});
+
+    return gulp.src('src/**/*.js')
+        .pipe(babel({
+            presets: ['es2015']
+        }))    
+        .pipe(gulp.dest('dist'))
+        .pipe($.size());
+});
+
+gulp.task('js', ['buildjs'], function () {
     var jsFilter = $.filter('**/*.js', {restore: true});
 
     return gulp.src('src/**/*.js')
