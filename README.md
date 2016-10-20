@@ -45,12 +45,20 @@ Note that draggabe component can be used with a list prop
 
 #### options
 Type: `Object`<br>
-Required: `true`
+Required: `false`
 
 Option used to inicialize the sortable object see: [sortable option documentation](https://github.com/RubaXa/Sortable#options)<br>
 Note that all the method starting by "on" will be ignored as draggable component expose the same API via events.
 
-#### Events
+#### clone
+Type: `Function`<br>
+Required: `false`<br>
+Default: `(original) => { return original;}`<br>
+
+Function called on the source component to clone element when clone option is true. The unique argument is the viewModel element to be cloned and the returned value should be its cloned version.<br>
+By default vue.draggable reuse the viewmodel element, so you have to use this hook if you want to clone or deep clone it.
+
+### Events
 `start`, `add`, `remove`, `update`, `end`, `choose`, `sort`, `filter`, `move`, `clone`<br>
 Called when there equivalent onStart, onAdd, .... are fired by Sortabe.js with the same argument.<br>
 [See here for reference](https://github.com/RubaXa/Sortable#event-object-demo)
