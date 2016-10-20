@@ -55,6 +55,10 @@
           type: Array,
           required: false,
           default: null
+        },
+        clone: {
+          type: Function,
+          default : (original) => { return original;}
         }
       }
 
@@ -106,7 +110,7 @@
               currentIndex,
               element
             }
-            evt.item._underlying_vm_ = element
+            evt.item._underlying_vm_ = this.clone(element)
           },
 
           onDragAdd (evt) {

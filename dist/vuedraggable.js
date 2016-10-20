@@ -65,6 +65,12 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         type: Array,
         required: false,
         default: null
+      },
+      clone: {
+        type: Function,
+        default: function _default(original) {
+          return original;
+        }
       }
     };
 
@@ -116,7 +122,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             currentIndex: currentIndex,
             element: element
           };
-          evt.item._underlying_vm_ = element;
+          evt.item._underlying_vm_ = this.clone(element);
         },
         onDragAdd: function onDragAdd(evt) {
           var element = evt.item._underlying_vm_;
@@ -163,13 +169,15 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     return draggableComponent;
   }
 
-  if (typeof exports == "object") {
-    var Sortable =  require("sortablejs")
-    module.exports = buildDraggable(Sortable)
+  if (typeof exports == "object")  {
+    var Sortable = require("sortablejs");
+    module.exports = buildDraggable(Sortable);
   } else if (typeof define == "function" && define.amd) {
-    define(['Sortable'], function(Sortable) { return buildDraggable(Sortable);});
-  } else if ( window && (window.Vue) && (window.Sortable)) {
-    var draggable = buildDraggable(window.Sortable)
-    Vue.component('draggable', draggable)
+    define(['Sortable'], function (Sortable) {
+      return buildDraggable(Sortable);
+    });
+  } else if (window && window.Vue && window.Sortable) {
+    var draggable = buildDraggable(window.Sortable);
+    Vue.component('draggable', draggable);
   }
 })();

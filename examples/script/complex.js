@@ -15,6 +15,11 @@ var vm = new Vue({
 			},
 			replace: function(){
 				this.list=[{name:'Edgard'}]
+			},
+			clone: function(el){
+				return {
+					name : el.name + ' cloned'
+				}
 			}
 		}
 	});
