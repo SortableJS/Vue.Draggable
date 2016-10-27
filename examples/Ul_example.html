@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <title>Example two lists</title>
+        <title>Example ul element</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -16,16 +16,11 @@
 
         <div class="drag">
             <h2>List 1 draggable</h2>
-            <draggable class="dragArea" :list="list1" :options="{group:'people'}">
-                <div v-for="(element, index) in list1"  >
+            <draggable element="ul" class="dragArea" :list="list1" :options="{group:'people'}">
+                <li v-for="(element, index) in list1"  >
                     {{element.name}} {{index}}
-                </div>
+                </li>
              </draggable>
-
-            <h2>List 2 draggable</h2>
-            <draggable class="dragArea" :list="list2" :options="{group:'people'}" >
-                <div v-for="(element, index) in list2" :key="index">{{element.name}}</div>
-            </draggable>
          </div>
 
         <div class="normal">
@@ -33,11 +28,6 @@
             <div>
                 <div v-for="element in list1" >{{element.name}}</div>
              </div>
-
-            <h2>List 2 v-for</h2>
-            <div>
-                <div v-for="element in list2" >{{element.name}}</div>
-            </div>
         </div>
 
         <a href="index.html">See basic example</a>

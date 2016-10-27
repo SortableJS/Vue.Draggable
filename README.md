@@ -50,6 +50,12 @@ Required: `false`
 Option used to inicialize the sortable object see: [sortable option documentation](https://github.com/RubaXa/Sortable#options)<br>
 Note that all the method starting by "on" will be ignored as draggable component expose the same API via events.
 
+#### element
+Type: `String`<br>
+Default: `'div'`
+
+HTML root element that draggable component create as outer element for the included slot.
+
 #### clone
 Type: `Function`<br>
 Required: `false`<br>

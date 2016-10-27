@@ -71,6 +71,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         default: function _default(original) {
           return original;
         }
+      },
+      element: {
+        type: String,
+        default: 'div'
       }
     };
 
@@ -78,7 +82,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       props: props,
 
       render: function render(h) {
-        return h('div', null, this.$slots.default);
+        return h(this.element, null, this.$slots.default);
       },
       mounted: function mounted() {
         var _this2 = this;
@@ -169,7 +173,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     return draggableComponent;
   }
 
-  if (typeof exports == "object")  {
+  if (typeof exports == "object") {
     var Sortable = require("sortablejs");
     module.exports = buildDraggable(Sortable);
   } else if (typeof define == "function" && define.amd) {

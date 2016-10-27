@@ -59,6 +59,10 @@
         clone: {
           type: Function,
           default : (original) => { return original;}
+        },
+        element:{
+          type: String,
+          default: 'div'
         }
       }
 
@@ -66,7 +70,7 @@
         props,
 
         render (h) {
-          return h('div', null, this.$slots.default)
+          return h(this.element, null, this.$slots.default)
         },
 
         mounted () {
