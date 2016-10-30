@@ -23,14 +23,27 @@ Based on and offering all features of [Sortable.js](https://github.com/RubaXa/So
 * Full support of [Sortable.js](https://github.com/RubaXa/Sortable) features
 * Keeps in sync view model and view
 * No jquery dependency
+* Plays nicely with Vue.js 2.0 transition-group
 
 ##For Vue.js 2.0
 
 Use draggable component:
 
+Tipical use:
 ``` html
 <draggable  :list="list" :options="{group:'people'}" @start="dragging=true" @end="dragging=false">
    <div v-for="element in list">{{element.name}}</div>
+</draggable>
+```
+
+With `transition-group`:
+``` html
+<draggable :list="list"> 
+	<transition-group>
+		<div v-for="element in list" :key="element.id">
+			{{element.name}}
+		</div>
+	</transition-group>
 </draggable>
 ```
 
