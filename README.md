@@ -47,6 +47,8 @@ With `transition-group`:
 </draggable>
 ```
 
+Draggable component should directly wrap the draggable elements, or a `transition-component` containing the draggable elements.
+
 ### Props
 #### list
 Type: `Array`<br>
@@ -91,6 +93,9 @@ https://jsfiddle.net/dede89/32ao2rpm/
 
 Example with list clone:
 https://jsfiddle.net/dede89/t3m5krea/
+
+Example with transition-group:
+https://jsfiddle.net/dede89/m2v0orcn/
 
 ##For Vue.js 1.0
 
