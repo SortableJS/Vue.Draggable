@@ -1,7 +1,5 @@
 'use strict';
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
 (function () {
   "use strict";
 
@@ -31,6 +29,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     }
 
     function _computeIndexes(slots, children) {
+      if (!slots) {
+        return [];
+      }
       return Array.prototype.map.call(children, function (elt) {
         return computeVmIndex(slots, elt);
       });
@@ -81,7 +82,18 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     var draggableComponent = {
       props: props,
 
+      data: function data() {
+        return {
+          transitionMode: false
+        };
+      },
       render: function render(h) {
+        if (this.$slots.default.length === 1) {
+          var child = this.$slots.default[0];
+          if (child.componentOptions && child.componentOptions.tag === "transition-group") {
+            this.transitionMode = true;
+          }
+        }
         return h(this.element, null, this.$slots.default);
       },
       mounted: function mounted() {
@@ -97,7 +109,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         });
 
         var options = merge(this.options, optionsAdded);
-        this._sortable = new Sortable(this.$el, options);
+        this._sortable = new Sortable(this.rootContainer, options);
         this.computeIndexes();
       },
       beforeDestroy: function beforeDestroy() {
@@ -108,19 +120,29 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       },
 
 
+      computed: {
+        rootContainer: function rootContainer() {
+          return this.transitionMode ? this.$el.children[0] : this.$el;
+        }
+      },
+
       methods: {
+        getChildrenNodes: function getChildrenNodes() {
+          var rawNodes = this.$slots.default;
+          return this.transitionMode ? rawNodes[0].child.$slots.default : rawNodes;
+        },
         computeIndexes: function computeIndexes() {
           var _this3 = this;
 
           this.$nextTick(function () {
-            _this3.visibleIndexes = _computeIndexes(_this3.$slots.default, _this3.$el.children);
+            _this3.visibleIndexes = _computeIndexes(_this3.getChildrenNodes(), _this3.rootContainer.children);
           });
         },
         onDragStart: function onDragStart(evt) {
           if (!this.list) {
             return;
           }
-          var currentIndex = computeVmIndex(this.$slots.default, evt.item);
+          var currentIndex = computeVmIndex(this.getChildrenNodes(), evt.item);
           var element = this.list[currentIndex];
           this.context = {
             currentIndex: currentIndex,
@@ -145,7 +167,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           if (!this.list) {
             return;
           }
-          insertNodeAt(this.$el, evt.item, evt.oldIndex);
+          insertNodeAt(this.rootContainer, evt.item, evt.oldIndex);
           var isCloning = !!evt.clone;
           if (isCloning) {
             removeNode(evt.clone);
@@ -169,7 +191,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         }
       }
     };
-
     return draggableComponent;
   }
 

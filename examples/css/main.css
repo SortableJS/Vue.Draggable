@@ -10,3 +10,18 @@
 .blue{
 	background-color: blue;
 }
+.list-complete-item {
+  padding: 4px;
+  margin-top: 4px;
+  border: solid 1px;
+  transition: all 1s;
+  height: 60px;
+}
+
+.list-complete-enter, .list-complete-leave-active {
+  opacity: 0;
+  height: 0px;
+  margin-top: 0px;
+  padding: 0px;
+  border: solid 0px;
+}
