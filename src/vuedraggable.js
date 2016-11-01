@@ -79,7 +79,7 @@
       },
 
       render (h) {
-        if (this.$slots.default.length===1) {
+        if (this.$slots.default && this.$slots.default.length===1) {
           const child = this.$slots.default[0]
           if (child.componentOptions && child.componentOptions.tag==="transition-group") { 
             this.transitionMode = true
