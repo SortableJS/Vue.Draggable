@@ -51,6 +51,10 @@
         emit.call(this, evtName, evtData)
       }
     }
+
+    const eventsListened = ['Start', 'Add', 'Remove', 'Update', 'End'];
+    const eventsToEmit = ['Choose', 'Sort', 'Filter', 'Move', 'Clone'];
+    const readonlyProperties = eventsListened.concat(eventsToEmit).map(evt => 'on'+evt);
   
     const props = {
       options: Object,
@@ -89,7 +93,17 @@
       },
 
       mounted () {
-        this._sortable = new Sortable(this.rootContainer, this.computedOptions)
+        var optionsAdded = {};
+        eventsListened.forEach( elt => {
+          optionsAdded['on' + elt] = delegateAndEmit.call(this, elt)
+        });
+
+        eventsToEmit.forEach( elt => {
+          optionsAdded['on' + elt] = emit.bind(this, elt)
+        });
+
+        const options = merge(this.options, optionsAdded);
+        this._sortable = new Sortable(this.rootContainer, options)
         this.computeIndexes()
       },
 
@@ -104,26 +118,15 @@
       computed : {
         rootContainer () {
           return this.transitionMode? this.$el.children[0] : this.$el;
-        },
-
-        computedOptions () {
-          var optionsAdded = {};
-          ['Start', 'Add', 'Remove', 'Update', 'End'].forEach( elt => {
-            optionsAdded['on' + elt] = delegateAndEmit.call(this, elt)
-          });
-
-          ['Choose', 'Sort', 'Filter', 'Move', 'Clone'].forEach( elt => {
-            optionsAdded['on' + elt] = emit.bind(this, elt)
-          });
-
-          return merge(this.options, optionsAdded);
         }
       },
 
       watch: {
-        computedOptions (newValue){
-          for(var property in newValue){
-            this._sortable.option(property, newValue[property]);
+        options (newOptionValue){
+          for(var property in newOptionValue) {
+            if (readonlyProperties.indexOf(property)==-1) {
+              this._sortable.option(property, newOptionValue[property] );
+            }        
           }         
         }
       },

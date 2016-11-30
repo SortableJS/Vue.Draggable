@@ -16,13 +16,8 @@ var vm = new Vue({
     }]
   },
   methods: {
-    removeJob: function(machineId, jobNumber, jobs, index) {
-      // Remove job from GUI
-      jobs.splice(index, 1);
-    },
-    test: function() {
+    enableEdit: function() {
       this.edit = !this.edit
-      alert(this.edit)
     },
     update: function(evt){
     	console.log(evt);

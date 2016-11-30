@@ -12,7 +12,10 @@
     <body>
      
     <div class="container-fluid" id="app">
-      <button @click="test">click here</button>
+      <button @click="enableEdit">Toggle Edit</button>
+      <div>
+      Drag enabled: {{!edit}}
+      </div>
       <div v-for="machine in machines">
 
         <div class="container-fluid machine-contents">

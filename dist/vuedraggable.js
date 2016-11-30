@@ -62,6 +62,12 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       };
     }
 
+    var eventsListened = ['Start', 'Add', 'Remove', 'Update', 'End'];
+    var eventsToEmit = ['Choose', 'Sort', 'Filter', 'Move', 'Clone'];
+    var readonlyProperties = eventsListened.concat(eventsToEmit).map(function (evt) {
+      return 'on' + evt;
+    });
+
     var props = {
       options: Object,
       list: {
@@ -99,7 +105,19 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         return h(this.element, null, this.$slots.default);
       },
       mounted: function mounted() {
-        this._sortable = new Sortable(this.rootContainer, this.computedOptions);
+        var _this2 = this;
+
+        var optionsAdded = {};
+        eventsListened.forEach(function (elt) {
+          optionsAdded['on' + elt] = delegateAndEmit.call(_this2, elt);
+        });
+
+        eventsToEmit.forEach(function (elt) {
+          optionsAdded['on' + elt] = emit.bind(_this2, elt);
+        });
+
+        var options = merge(this.options, optionsAdded);
+        this._sortable = new Sortable(this.rootContainer, options);
         this.computeIndexes();
       },
       beforeDestroy: function beforeDestroy() {
@@ -113,26 +131,16 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       computed: {
         rootContainer: function rootContainer() {
           return this.transitionMode ? this.$el.children[0] : this.$el;
-        },
-        computedOptions: function computedOptions() {
-          var _this2 = this;
-
-          var optionsAdded = {};
-          ['Start', 'Add', 'Remove', 'Update', 'End'].forEach(function (elt) {
-            optionsAdded['on' + elt] = delegateAndEmit.call(_this2, elt);
-          });
-
-          ['Choose', 'Sort', 'Filter', 'Move', 'Clone'].forEach(function (elt) {
-            optionsAdded['on' + elt] = emit.bind(_this2, elt);
-          });
-
-          return merge(this.options, optionsAdded);
         }
       },
 
       watch: {
-        computedOptions: function computedOptions(newValue) {
-          this._sortable(this.rootContainer, newValue);
+        options: function options(newOptionValue) {
+          for (var property in newOptionValue) {
+            if (readonlyProperties.indexOf(property) == -1) {
+              this._sortable.option(property, newOptionValue[property]);
+            }
+          }
         }
       },
 
@@ -204,7 +212,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     return draggableComponent;
   }
 
-  if ((typeof exports === 'undefined' ? 'undefined' : _typeof(exports)) == "object") {
+  if (typeof exports == "object") {
     var Sortable = require("sortablejs");
     module.exports = buildDraggable(Sortable);
   } else if (typeof define == "function" && define.amd) {
