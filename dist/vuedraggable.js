@@ -1,5 +1,7 @@
 'use strict';
 
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
 (function () {
   "use strict";
 
@@ -97,19 +99,7 @@
         return h(this.element, null, this.$slots.default);
       },
       mounted: function mounted() {
-        var _this2 = this;
-
-        var optionsAdded = {};
-        ['Start', 'Add', 'Remove', 'Update', 'End'].forEach(function (elt) {
-          optionsAdded['on' + elt] = delegateAndEmit.call(_this2, elt);
-        });
-
-        ['Choose', 'Sort', 'Filter', 'Move', 'Clone'].forEach(function (elt) {
-          optionsAdded['on' + elt] = emit.bind(_this2, elt);
-        });
-
-        var options = merge(this.options, optionsAdded);
-        this._sortable = new Sortable(this.rootContainer, options);
+        this._sortable = new Sortable(this.rootContainer, this.computedOptions);
         this.computeIndexes();
       },
       beforeDestroy: function beforeDestroy() {
@@ -123,6 +113,26 @@
       computed: {
         rootContainer: function rootContainer() {
           return this.transitionMode ? this.$el.children[0] : this.$el;
+        },
+        computedOptions: function computedOptions() {
+          var _this2 = this;
+
+          var optionsAdded = {};
+          ['Start', 'Add', 'Remove', 'Update', 'End'].forEach(function (elt) {
+            optionsAdded['on' + elt] = delegateAndEmit.call(_this2, elt);
+          });
+
+          ['Choose', 'Sort', 'Filter', 'Move', 'Clone'].forEach(function (elt) {
+            optionsAdded['on' + elt] = emit.bind(_this2, elt);
+          });
+
+          return merge(this.options, optionsAdded);
+        }
+      },
+
+      watch: {
+        computedOptions: function computedOptions(newValue) {
+          this._sortable(this.rootContainer, newValue);
         }
       },
 
@@ -194,7 +204,7 @@
     return draggableComponent;
   }
 
-  if (typeof exports == "object") {
+  if ((typeof exports === 'undefined' ? 'undefined' : _typeof(exports)) == "object") {
     var Sortable = require("sortablejs");
     module.exports = buildDraggable(Sortable);
   } else if (typeof define == "function" && define.amd) {

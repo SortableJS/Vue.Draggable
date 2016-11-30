@@ -89,17 +89,7 @@
       },
 
       mounted () {
-        var optionsAdded = {};
-        ['Start', 'Add', 'Remove', 'Update', 'End'].forEach( elt => {
-          optionsAdded['on' + elt] = delegateAndEmit.call(this, elt)
-        });
-
-        ['Choose', 'Sort', 'Filter', 'Move', 'Clone'].forEach( elt => {
-          optionsAdded['on' + elt] = emit.bind(this, elt)
-        });
-
-        const options = merge(this.options, optionsAdded)
-        this._sortable = new Sortable(this.rootContainer, options)
+        this._sortable = new Sortable(this.rootContainer, this.computedOptions)
         this.computeIndexes()
       },
 
@@ -113,7 +103,28 @@
 
       computed : {
         rootContainer () {
-          return this.transitionMode? this.$el.children[0] : this.$el
+          return this.transitionMode? this.$el.children[0] : this.$el;
+        },
+
+        computedOptions () {
+          var optionsAdded = {};
+          ['Start', 'Add', 'Remove', 'Update', 'End'].forEach( elt => {
+            optionsAdded['on' + elt] = delegateAndEmit.call(this, elt)
+          });
+
+          ['Choose', 'Sort', 'Filter', 'Move', 'Clone'].forEach( elt => {
+            optionsAdded['on' + elt] = emit.bind(this, elt)
+          });
+
+          return merge(this.options, optionsAdded);
+        }
+      },
+
+      watch: {
+        computedOptions (newValue){
+          for(var property in newValue){
+            this._sortable.option(property, newValue[property]);
+          }         
         }
       },
 
