@@ -10,7 +10,8 @@
     "vue",
     "vuejs",
     "drag and drop",
-    "Sortable.js"
+    "Sortable.js",
+    "web-components"
   ],
   "directories": {
     "example": "examples",
