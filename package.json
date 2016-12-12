@@ -1,6 +1,6 @@
 {
   "name": "vuedraggable",
-  "version": "2.4.0",
+  "version": "2.5.0-rc0",
   "description": "draggable component for vue",
   "main": "dist/vuedraggable.js",
   "files": [
@@ -18,7 +18,7 @@
     "test": "test"
   },
   "dependencies": {
-    "sortablejs": "^1.4.2"
+    "sortablejs": "^1.5.0-rc1"
   },
   "devDependencies": {
     "babel-preset-es2015": "^6.16.0",
