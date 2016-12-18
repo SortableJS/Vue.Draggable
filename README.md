@@ -55,8 +55,8 @@ Type: `Array`<br>
 Required: `false`<br>
 Default: `null`
 
-Array to be synchronized with drag-and-drop. Typically same array as refrenced by inner element v-for directive.<br>
-Note that draggabe component can be used with a list prop
+Array to be synchronized with drag-and-drop. Typically same array as referenced by inner element v-for directive.<br>
+Note that this prop is not required and that draggable component can be used without a list prop.
 
 #### options
 Type: `Object`<br>
