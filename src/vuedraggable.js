@@ -47,13 +47,16 @@
 
     function delegateAndEmit (evtName) {
       return (evtData) => {
-        this['onDrag' + evtName](evtData)
-        emit.call(this, evtName, evtData)
+        const res = this['onDrag' + evtName](evtData)
+        if (res) {
+          emit.call(this, evtName, evtData)
+        }    
+        return res  
       }
     }
 
-    const eventsListened = ['Start', 'Add', 'Remove', 'Update', 'End'];
-    const eventsToEmit = ['Choose', 'Sort', 'Filter', 'Move', 'Clone'];
+    const eventsListened = ['Start', 'Add', 'Remove', 'Update', 'Move', 'End'];
+    const eventsToEmit = ['Choose', 'Sort', 'Filter', 'Clone'];
     const readonlyProperties = eventsListened.concat(eventsToEmit).map(evt => 'on'+evt);
   
     const props = {
@@ -70,6 +73,10 @@
       element: {
         type: String,
         default: 'div'
+      },
+      validateMove: {
+        type: Function,
+        default: null
       }
     }
 
@@ -154,6 +161,7 @@
             element
           }
           evt.item._underlying_vm_ = this.clone(element)
+          return true
         },
 
         onDragAdd (evt) {
@@ -168,6 +176,7 @@
           const newIndex = (domNewIndex > numberIndexes - 1) ? numberIndexes : indexes[domNewIndex]
           this.list.splice(newIndex, 0, element)
           this.computeIndexes()
+          return true
         },
 
         onDragRemove (evt) {
@@ -182,6 +191,7 @@
           }
           const oldIndex = this.context.currentIndex
           this.list.splice(oldIndex, 1)
+          return true
         },
 
         onDragUpdate (evt) {
@@ -193,10 +203,20 @@
           const oldIndexVM = this.context.currentIndex
           const newIndexVM = this.visibleIndexes[evt.newIndex]
           updatePosition(this.list, oldIndexVM, newIndexVM)
+          return true
+        },
+
+        onDragMove (evt) {
+          const validate = this.validateMove
+          if (!validate){
+            return true;
+          }
+          return validate(evt);
         },
 
         onDragEnd (evt) {
           this.computeIndexes()
+          return true
         }
       }
     }    

@@ -212,7 +212,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     return draggableComponent;
   }
 
-  if (typeof exports == "object") {
+  if ((typeof exports === 'undefined' ? 'undefined' : _typeof(exports)) == "object") {
     var Sortable = require("sortablejs");
     module.exports = buildDraggable(Sortable);
   } else if (typeof define == "function" && define.amd) {
