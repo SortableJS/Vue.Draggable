@@ -41,7 +41,6 @@
 
     const eventsListened = ['Start', 'Add', 'Remove', 'Update', 'End'];
     const eventsToEmit = ['Choose', 'Sort', 'Filter', 'Clone'];
-    const eventsSpecial = []
     const readonlyProperties = ['Move', ..eventsListened, .. eventsToEmit].map(evt => 'on'+evt);
   
     const props = {
