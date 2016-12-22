@@ -163,23 +163,23 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             _this3.visibleIndexes = _computeIndexes(_this3.getChildrenNodes(), _this3.rootContainer.children);
           });
         },
+        getUnderlyingVm: function getUnderlyingVm(htmlElt) {
+          var currentIndex = computeVmIndex(this.getChildrenNodes(), htmlElt);
+          var element = this.list[currentIndex];
+          return { currentIndex: currentIndex, element: element };
+        },
         onDragStart: function onDragStart(evt) {
           if (!this.list) {
-            return;
+            return true;
           }
-          var currentIndex = computeVmIndex(this.getChildrenNodes(), evt.item);
-          var element = this.list[currentIndex];
-          this.context = {
-            currentIndex: currentIndex,
-            element: element
-          };
-          evt.item._underlying_vm_ = this.clone(element);
+          this.context = this.getUnderlyingVm(evt.item);
+          evt.item._underlying_vm_ = this.clone(this.context.element);
           return true;
         },
         onDragAdd: function onDragAdd(evt) {
           var element = evt.item._underlying_vm_;
           if (!this.list || element === undefined) {
-            return;
+            return true;
           }
           removeNode(evt.item);
           var indexes = this.visibleIndexes;
@@ -192,13 +192,13 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         },
         onDragRemove: function onDragRemove(evt) {
           if (!this.list) {
-            return;
+            return true;
           }
           insertNodeAt(this.rootContainer, evt.item, evt.oldIndex);
           var isCloning = !!evt.clone;
           if (isCloning) {
             removeNode(evt.clone);
-            return;
+            return true;
           }
           var oldIndex = this.context.currentIndex;
           this.list.splice(oldIndex, 1);
@@ -206,7 +206,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         },
         onDragUpdate: function onDragUpdate(evt) {
           if (!this.list) {
-            return;
+            return true;
           }
           removeNode(evt.item);
           insertNodeAt(evt.from, evt.item, evt.oldIndex);
@@ -217,9 +217,16 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         },
         onDragMove: function onDragMove(evt) {
           var validate = this.validateMove;
-          if (!validate) {
+          if (!validate || !list) {
             return true;
           }
+
+          var targetComponent = evt.to.__vue__;
+          if (targetComponent) {
+            var destination = targetComponent.getUnderlyingVm(evt.related);
+            console.log('destination', destination);
+          }
+          console.log('source', this.context);
           return validate(evt);
         },
         onDragEnd: function onDragEnd(evt) {

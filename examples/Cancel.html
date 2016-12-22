@@ -16,17 +16,19 @@
 
         <div class="drag">
             <h2>List 1 draggable</h2>
-            <draggable element="ul" class="dragArea" :list="list" :options="{group:'people'}" :validate-move="checkMove">
-                <li v-for="(element, index) in list"  >
-                    {{element.name}} {{index}}
+            <draggable element="ul" class="dragArea" :list="list" :options="{group:'people'}" :validate-move="checkMove">           
+                <li v-for="(element, index) in list" >
+                    {{element.name}}
                 </li>
              </draggable>
 
            <h2>List 2 draggable</h2>
             <draggable class="dragArea" :list="list2" :options="{group:'people'}">
-                <div v-for="(element, index) in list2"  >
-                    {{element.name}} {{index}}
-                </div>
+                <transition-group tag="div" class="dragArea" name="list-complete">
+                    <div v-for="(element, index) in list2"  :key="element.name" >
+                        {{element.name}}
+                    </div>
+                </transition-group>
              </draggable>
          </div>
 

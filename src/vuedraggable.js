@@ -25,20 +25,7 @@
     }
 
     function computeIndexes (slots, children) {
-      if (!slots){
-        return []
-      }
-      return Array.prototype.map.call(children, elt => computeVmIndex(slots, elt))
-    }
-
-    function merge (target, source) {
-      var output = Object(target)
-      for (var nextKey in source) {
-        if (source.hasOwnProperty(nextKey)) {
-          output[nextKey] = source[nextKey]
-        }
-      }
-      return output
+      return (!slots)? [] : Array.prototype.map.call(children, elt => computeVmIndex(slots, elt))
     }
 
     function emit (evtName, evtData) {
@@ -47,17 +34,15 @@
 
     function delegateAndEmit (evtName) {
       return (evtData) => {
-        const res = this['onDrag' + evtName](evtData)
-        if (res) {
-          emit.call(this, evtName, evtData)
-        }    
-        return res  
+        this['onDrag' + evtName](evtData)
+        emit.call(this, evtName, evtData)
       }
     }
 
-    const eventsListened = ['Start', 'Add', 'Remove', 'Update', 'Move', 'End'];
+    const eventsListened = ['Start', 'Add', 'Remove', 'Update', 'End'];
     const eventsToEmit = ['Choose', 'Sort', 'Filter', 'Clone'];
-    const readonlyProperties = eventsListened.concat(eventsToEmit).map(evt => 'on'+evt);
+    const eventsSpecial = []
+    const readonlyProperties = ['Move', ..eventsListened, .. eventsToEmit].map(evt => 'on'+evt);
   
     const props = {
       options: Object,
@@ -109,7 +94,7 @@
           optionsAdded['on' + elt] = emit.bind(this, elt)
         });
 
-        const options = merge(this.options, optionsAdded);
+        const options = Object.assign({}, this.options, optionsAdded, { onMove: evt => {return this.onDragMove(evt);} })
         this._sortable = new Sortable(this.rootContainer, options)
         this.computeIndexes()
       },
@@ -156,19 +141,46 @@
           return {currentIndex, element}
         },
 
+        getUnderlyingPotencialDraggableComponent ({__vue__}) {
+          if (!__vue__){
+            return __vue__
+          }
+
+          if (__vue__.$options._componentTag==="transition-group") {
+            return __vue__.$parent
+          }
+
+          return __vue__
+        },
+
+        getRelatedContextFromMoveEvent({to, related}) {
+          const component = this.getUnderlyingPotencialDraggableComponent(to)
+          if (!component) {
+            return {component}
+          }
+          const list = component.list
+          const context = {list, component}
+          if (to !== related && list && component.getUnderlyingVm) {
+            const destination = component.getUnderlyingVm(related)
+            Object.assign(destination, context)
+            return destination
+          }
+
+          return context
+        },
+
         onDragStart (evt) {
           if (!this.list) {
-            return true
+            return
           }         
           this.context = this.getUnderlyingVm(evt.item)
           evt.item._underlying_vm_ = this.clone(this.context.element)
-          return true
         },
 
         onDragAdd (evt) {
           const element = evt.item._underlying_vm_
           if (!this.list || element === undefined) {
-            return true
+            return
           }
           removeNode(evt.item)
           const indexes = this.visibleIndexes
@@ -177,53 +189,47 @@
           const newIndex = (domNewIndex > numberIndexes - 1) ? numberIndexes : indexes[domNewIndex]
           this.list.splice(newIndex, 0, element)
           this.computeIndexes()
-          return true
         },
 
         onDragRemove (evt) {
           if (!this.list) {
-            return true
+            return
           }
           insertNodeAt(this.rootContainer, evt.item, evt.oldIndex)
           const isCloning = !!evt.clone
           if (isCloning) {
             removeNode(evt.clone)
-            return true
+            return
           }
           const oldIndex = this.context.currentIndex
           this.list.splice(oldIndex, 1)
-          return true
         },
 
         onDragUpdate (evt) {
           if (!this.list) {
-            return true
+            return
           }
           removeNode(evt.item)
           insertNodeAt(evt.from, evt.item, evt.oldIndex)
           const oldIndexVM = this.context.currentIndex
           const newIndexVM = this.visibleIndexes[evt.newIndex]
           updatePosition(this.list, oldIndexVM, newIndexVM)
-          return true
         },
 
         onDragMove (evt) {
           const validate = this.validateMove
-          if (!validate || !list) {
+          if (!validate || !this.list) {
             return true
           }
 
-          if (evt.to === evt.from) {
-            const destination = this.getUnderlyingVm(evt.related)
-            console.log('destination', destination)
-          }
-          console.log('source', this.context)
-          return validate(evt);
+          const relatedContext = this.getRelatedContextFromMoveEvent(evt)
+          const draggedContext = this.context
+          Object.assign(evt, {relatedContext, draggedContext})
+          return validate(evt)
         },
 
         onDragEnd (evt) {
           this.computeIndexes()
-          return true
         }
       }
     }    
