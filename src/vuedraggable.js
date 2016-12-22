@@ -158,7 +158,7 @@
 
         onDragStart (evt) {
           if (!this.list) {
-            return
+            return true
           }         
           this.context = this.getUnderlyingVm(evt.item)
           evt.item._underlying_vm_ = this.clone(this.context.element)
@@ -168,7 +168,7 @@
         onDragAdd (evt) {
           const element = evt.item._underlying_vm_
           if (!this.list || element === undefined) {
-            return
+            return true
           }
           removeNode(evt.item)
           const indexes = this.visibleIndexes
@@ -182,13 +182,13 @@
 
         onDragRemove (evt) {
           if (!this.list) {
-            return
+            return true
           }
           insertNodeAt(this.rootContainer, evt.item, evt.oldIndex)
           const isCloning = !!evt.clone
           if (isCloning) {
             removeNode(evt.clone)
-            return
+            return true
           }
           const oldIndex = this.context.currentIndex
           this.list.splice(oldIndex, 1)
@@ -197,7 +197,7 @@
 
         onDragUpdate (evt) {
           if (!this.list) {
-            return
+            return true
           }
           removeNode(evt.item)
           insertNodeAt(evt.from, evt.item, evt.oldIndex)
@@ -209,9 +209,10 @@
 
         onDragMove (evt) {
           const validate = this.validateMove
-          if (!validate) {
+          if (!validate || !list) {
             return true
           }
+
           if (evt.to === evt.from) {
             const destination = this.getUnderlyingVm(evt.related)
             console.log('destination', destination)
