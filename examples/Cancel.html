@@ -21,12 +21,24 @@
                     {{element.name}} {{index}}
                 </li>
              </draggable>
+
+           <h2>List 2 draggable</h2>
+            <draggable class="dragArea" :list="list2" :options="{group:'people'}">
+                <div v-for="(element, index) in list2"  >
+                    {{element.name}} {{index}}
+                </div>
+             </draggable>
          </div>
 
         <div class="normal">
             <h2>List 1 v-for</h2>
             <div>
                 <div v-for="element in list" >{{element.name}}</div>
+             </div>
+
+            <h2>List 2 v-for</h2>
+            <div>
+                <div v-for="element in list2" >{{element.name}}</div>
              </div>
         </div>
 

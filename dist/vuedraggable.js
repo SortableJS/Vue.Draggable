@@ -57,13 +57,16 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       var _this = this;
 
       return function (evtData) {
-        _this['onDrag' + evtName](evtData);
-        emit.call(_this, evtName, evtData);
+        var res = _this['onDrag' + evtName](evtData);
+        if (res) {
+          emit.call(_this, evtName, evtData);
+        }
+        return res;
       };
     }
 
-    var eventsListened = ['Start', 'Add', 'Remove', 'Update', 'End'];
-    var eventsToEmit = ['Choose', 'Sort', 'Filter', 'Move', 'Clone'];
+    var eventsListened = ['Start', 'Add', 'Remove', 'Update', 'Move', 'End'];
+    var eventsToEmit = ['Choose', 'Sort', 'Filter', 'Clone'];
     var readonlyProperties = eventsListened.concat(eventsToEmit).map(function (evt) {
       return 'on' + evt;
     });
@@ -84,6 +87,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       element: {
         type: String,
         default: 'div'
+      },
+      validateMove: {
+        type: Function,
+        default: null
       }
     };
 
@@ -167,6 +174,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             element: element
           };
           evt.item._underlying_vm_ = this.clone(element);
+          return true;
         },
         onDragAdd: function onDragAdd(evt) {
           var element = evt.item._underlying_vm_;
@@ -180,6 +188,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           var newIndex = domNewIndex > numberIndexes - 1 ? numberIndexes : indexes[domNewIndex];
           this.list.splice(newIndex, 0, element);
           this.computeIndexes();
+          return true;
         },
         onDragRemove: function onDragRemove(evt) {
           if (!this.list) {
@@ -193,6 +202,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           }
           var oldIndex = this.context.currentIndex;
           this.list.splice(oldIndex, 1);
+          return true;
         },
         onDragUpdate: function onDragUpdate(evt) {
           if (!this.list) {
@@ -203,9 +213,18 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           var oldIndexVM = this.context.currentIndex;
           var newIndexVM = this.visibleIndexes[evt.newIndex];
           updatePosition(this.list, oldIndexVM, newIndexVM);
+          return true;
+        },
+        onDragMove: function onDragMove(evt) {
+          var validate = this.validateMove;
+          if (!validate) {
+            return true;
+          }
+          return validate(evt);
         },
         onDragEnd: function onDragEnd(evt) {
           this.computeIndexes();
+          return true;
         }
       }
     };

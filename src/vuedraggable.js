@@ -150,17 +150,18 @@
           })
         },
 
+        getUnderlyingVm (htmlElt) {
+          const currentIndex = computeVmIndex(this.getChildrenNodes(), htmlElt)
+          const element = this.list[currentIndex]
+          return {currentIndex, element}
+        },
+
         onDragStart (evt) {
           if (!this.list) {
             return
           }         
-          const currentIndex = computeVmIndex(this.getChildrenNodes(), evt.item)
-          const element = this.list[currentIndex]
-          this.context = {
-            currentIndex,
-            element
-          }
-          evt.item._underlying_vm_ = this.clone(element)
+          this.context = this.getUnderlyingVm(evt.item)
+          evt.item._underlying_vm_ = this.clone(this.context.element)
           return true
         },
 
@@ -208,9 +209,14 @@
 
         onDragMove (evt) {
           const validate = this.validateMove
-          if (!validate){
-            return true;
+          if (!validate) {
+            return true
           }
+          if (evt.to === evt.from) {
+            const destination = this.getUnderlyingVm(evt.related)
+            console.log('destination', destination)
+          }
+          console.log('source', this.context)
           return validate(evt);
         },
 
