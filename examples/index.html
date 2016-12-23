@@ -14,7 +14,7 @@
      <div id="main">
         <h1>Vue Draggable</h1>
 
-        <div :class="dragging? 'blue' : 'drag'">
+        <div :class="dragging? 'list-dragging' : 'drag'">
             <h2>Draggable</h2>
             <draggable  :list="list" @start="dragging=true" @end="dragging=false">
                 <div v-for="element in list">{{element.name}}</div>

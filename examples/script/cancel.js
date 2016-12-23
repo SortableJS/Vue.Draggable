@@ -9,25 +9,32 @@ var vm = new Vue({
 			{name: "strawberry"},
 		],
 		list2: [],
-		dragging: false
+		dragging: false,
+		targetElement: null,
+		canDrag:null
 	},
 	methods:{
 		checkMove: function(evt){
-			console.log(evt)
+			var res = true
+			this.targetElement = evt.relatedContext.element
 
 			if (evt.draggedContext.element.name=='apple'){
-				return false;
+				res = false
 			}
 
 			if (evt.relatedContext.element && evt.relatedContext.element.name=='strawberry'){
-				return false;
+				res = false
 			}
 
 			if (evt.relatedContext.list.length==2){
-				return false;
+				res = false
 			}
-
-			return true;
+			this.canDrag=res;
+			return res;
+		},
+		endDrag: function () {
+			this.canDrag=null;
+			this.targetElement=null;
 		}
 	}
 });

@@ -41,7 +41,7 @@
 
     const eventsListened = ['Start', 'Add', 'Remove', 'Update', 'End'];
     const eventsToEmit = ['Choose', 'Sort', 'Filter', 'Clone'];
-    const readonlyProperties = ['Move', ..eventsListened, .. eventsToEmit].map(evt => 'on'+evt);
+    const readonlyProperties = ['Move'].concat(eventsListened).concat(eventsToEmit).map(evt => 'on'+evt);
   
     const props = {
       options: Object,
@@ -58,7 +58,7 @@
         type: String,
         default: 'div'
       },
-      validateMove: {
+      move: {
         type: Function,
         default: null
       }
@@ -161,8 +161,7 @@
           const context = {list, component}
           if (to !== related && list && component.getUnderlyingVm) {
             const destination = component.getUnderlyingVm(related)
-            Object.assign(destination, context)
-            return destination
+            return Object.assign(destination, context)
           }
 
           return context
@@ -216,15 +215,15 @@
         },
 
         onDragMove (evt) {
-          const validate = this.validateMove
-          if (!validate || !this.list) {
+          const onMove = this.move
+          if (!onMove || !this.list) {
             return true
           }
 
           const relatedContext = this.getRelatedContextFromMoveEvent(evt)
           const draggedContext = this.context
           Object.assign(evt, {relatedContext, draggedContext})
-          return validate(evt)
+          return onMove(evt)
         },
 
         onDragEnd (evt) {

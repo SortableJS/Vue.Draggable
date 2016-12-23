@@ -4,12 +4,30 @@
 .drag {
     background-color: green;
 }
-.dragArea{
+.dragArea {
      min-height: 10px;	
 }
-.blue{
+
+.list-dragging {
 	background-color: blue;
 }
+
+.target {
+  background-color: yellow;
+}
+
+.status {
+  height: 10px;
+}
+
+.status .ok {
+  background-color: green;
+}
+
+.status .ko {
+  background-color: red;
+}
+
 .list-complete-item {
   padding: 4px;
   margin-top: 4px;
