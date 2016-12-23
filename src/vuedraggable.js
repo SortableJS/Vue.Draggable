@@ -34,7 +34,9 @@
 
     function delegateAndEmit (evtName) {
       return (evtData) => {
-        this['onDrag' + evtName](evtData)
+        if (this.list!==null) {
+          this['onDrag' + evtName](evtData)
+        }
         emit.call(this, evtName, evtData)
       }
     }
@@ -102,10 +104,6 @@
         this._sortable.destroy()
       },
 
-      updated () {
-        this.computeIndexes()
-      },
-
       computed : {
         rootContainer () {
           return this.transitionMode? this.$el.children[0] : this.$el;
@@ -119,6 +117,10 @@
               this._sortable.option(property, newOptionValue[property] );
             }        
           }         
+        },
+
+        list(){
+          this.computeIndexes()
         }
       },
 
@@ -167,17 +169,14 @@
           return context
         },
 
-        onDragStart (evt) {
-          if (!this.list) {
-            return
-          }         
+        onDragStart (evt) {      
           this.context = this.getUnderlyingVm(evt.item)
           evt.item._underlying_vm_ = this.clone(this.context.element)
         },
 
         onDragAdd (evt) {
           const element = evt.item._underlying_vm_
-          if (!this.list || element === undefined) {
+          if (element === undefined) {
             return
           }
           removeNode(evt.item)
@@ -190,9 +189,6 @@
         },
 
         onDragRemove (evt) {
-          if (!this.list) {
-            return
-          }
           insertNodeAt(this.rootContainer, evt.item, evt.oldIndex)
           const isCloning = !!evt.clone
           if (isCloning) {
@@ -204,9 +200,6 @@
         },
 
         onDragUpdate (evt) {
-          if (!this.list) {
-            return
-          }
           removeNode(evt.item)
           insertNodeAt(evt.from, evt.item, evt.oldIndex)
           const oldIndexVM = this.context.currentIndex

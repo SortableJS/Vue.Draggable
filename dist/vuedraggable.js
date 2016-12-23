@@ -72,7 +72,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         type: String,
         default: 'div'
       },
-      validateMove: {
+      move: {
         type: Function,
         default: null
       }
@@ -179,8 +179,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           var context = { list: list, component: component };
           if (to !== related && list && component.getUnderlyingVm) {
             var destination = component.getUnderlyingVm(related);
-            Object.assign(destination, context);
-            return destination;
+            return Object.assign(destination, context);
           }
 
           return context;
@@ -229,15 +228,15 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           updatePosition(this.list, oldIndexVM, newIndexVM);
         },
         onDragMove: function onDragMove(evt) {
-          var validate = this.validateMove;
-          if (!validate || !this.list) {
+          var onMove = this.move;
+          if (!onMove || !this.list) {
             return true;
           }
 
           var relatedContext = this.getRelatedContextFromMoveEvent(evt);
           var draggedContext = this.context;
           Object.assign(evt, { relatedContext: relatedContext, draggedContext: draggedContext });
-          return validate(evt);
+          return onMove(evt);
         },
         onDragEnd: function onDragEnd(evt) {
           this.computeIndexes();
