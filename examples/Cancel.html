@@ -28,6 +28,7 @@
             <h2>List 1 draggable</h2>
             <draggable element="ul" class="dragArea" :list="list" :options="{group:'people'}" :move="checkMove" @end="endDrag">           
                 <li v-for="(element, index) in list" :class="{'target': element===targetElement}">
+                <!--  > -->
                     {{element.name}}
                 </li>
              </draggable>
