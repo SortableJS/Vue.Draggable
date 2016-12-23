@@ -44,14 +44,17 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       var _this = this;
 
       return function (evtData) {
-        _this['onDrag' + evtName](evtData);
+        if (_this.list !== null) {
+          _this['onDrag' + evtName](evtData);
+        }
         emit.call(_this, evtName, evtData);
       };
     }
 
     var eventsListened = ['Start', 'Add', 'Remove', 'Update', 'End'];
     var eventsToEmit = ['Choose', 'Sort', 'Filter', 'Clone'];
-    var readonlyProperties = ['Move'].concat(eventsListened).concat(eventsToEmit).map(function (evt) {
+    // const readonlyProperties = ['Move'].concat(eventsListened).concat(eventsToEmit).map(evt => 'on'+evt);
+    var readonlyProperties = ['Move'].concat(eventsListened, eventsToEmit).map(function (evt) {
       return 'on' + evt;
     });
 
@@ -72,7 +75,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         type: String,
         default: 'div'
       },
-      validateMove: {
+      move: {
         type: Function,
         default: null
       }
@@ -116,9 +119,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       beforeDestroy: function beforeDestroy() {
         this._sortable.destroy();
       },
-      updated: function updated() {
-        this.computeIndexes();
-      },
 
 
       computed: {
@@ -134,6 +134,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
               this._sortable.option(property, newOptionValue[property]);
             }
           }
+        },
+        list: function list() {
+          this.computeIndexes();
         }
       },
 
@@ -179,22 +182,18 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           var context = { list: list, component: component };
           if (to !== related && list && component.getUnderlyingVm) {
             var destination = component.getUnderlyingVm(related);
-            Object.assign(destination, context);
-            return destination;
+            return Object.assign(destination, context);
           }
 
           return context;
         },
         onDragStart: function onDragStart(evt) {
-          if (!this.list) {
-            return;
-          }
           this.context = this.getUnderlyingVm(evt.item);
           evt.item._underlying_vm_ = this.clone(this.context.element);
         },
         onDragAdd: function onDragAdd(evt) {
           var element = evt.item._underlying_vm_;
-          if (!this.list || element === undefined) {
+          if (element === undefined) {
             return;
           }
           removeNode(evt.item);
@@ -206,9 +205,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           this.computeIndexes();
         },
         onDragRemove: function onDragRemove(evt) {
-          if (!this.list) {
-            return;
-          }
           insertNodeAt(this.rootContainer, evt.item, evt.oldIndex);
           var isCloning = !!evt.clone;
           if (isCloning) {
@@ -219,9 +215,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           this.list.splice(oldIndex, 1);
         },
         onDragUpdate: function onDragUpdate(evt) {
-          if (!this.list) {
-            return;
-          }
           removeNode(evt.item);
           insertNodeAt(evt.from, evt.item, evt.oldIndex);
           var oldIndexVM = this.context.currentIndex;
@@ -229,15 +222,15 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           updatePosition(this.list, oldIndexVM, newIndexVM);
         },
         onDragMove: function onDragMove(evt) {
-          var validate = this.validateMove;
-          if (!validate || !this.list) {
+          var onMove = this.move;
+          if (!onMove || !this.list) {
             return true;
           }
 
           var relatedContext = this.getRelatedContextFromMoveEvent(evt);
           var draggedContext = this.context;
           Object.assign(evt, { relatedContext: relatedContext, draggedContext: draggedContext });
-          return validate(evt);
+          return onMove(evt);
         },
         onDragEnd: function onDragEnd(evt) {
           this.computeIndexes();

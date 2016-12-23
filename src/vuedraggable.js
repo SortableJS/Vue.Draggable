@@ -34,14 +34,16 @@
 
     function delegateAndEmit (evtName) {
       return (evtData) => {
-        this['onDrag' + evtName](evtData)
+        if (this.list!==null) {
+          this['onDrag' + evtName](evtData)
+        }
         emit.call(this, evtName, evtData)
       }
     }
 
     const eventsListened = ['Start', 'Add', 'Remove', 'Update', 'End'];
     const eventsToEmit = ['Choose', 'Sort', 'Filter', 'Clone'];
-    const readonlyProperties = ['Move'].concat(eventsListened).concat(eventsToEmit).map(evt => 'on'+evt);
+    const readonlyProperties = ['Move', ...eventsListened, ...eventsToEmit].map(evt => 'on'+evt);
   
     const props = {
       options: Object,
@@ -102,10 +104,6 @@
         this._sortable.destroy()
       },
 
-      updated () {
-        this.computeIndexes()
-      },
-
       computed : {
         rootContainer () {
           return this.transitionMode? this.$el.children[0] : this.$el;
@@ -119,6 +117,10 @@
               this._sortable.option(property, newOptionValue[property] );
             }        
           }         
+        },
+
+        list(){
+          this.computeIndexes()
         }
       },
 
@@ -135,21 +137,17 @@
         },
 
         getUnderlyingVm (htmlElt) {
-          const currentIndex = computeVmIndex(this.getChildrenNodes(), htmlElt)
-          const element = this.list[currentIndex]
-          return {currentIndex, element}
+          const index = computeVmIndex(this.getChildrenNodes(), htmlElt)
+          const element = this.list[index]
+          return {index, element}
         },
 
         getUnderlyingPotencialDraggableComponent ({__vue__}) {
-          if (!__vue__){
+          if (!__vue__ || !__vue__.$options || __vue__.$options._componentTag!=="transition-group"){
             return __vue__
           }
 
-          if (__vue__.$options._componentTag==="transition-group") {
-            return __vue__.$parent
-          }
-
-          return __vue__
+          return __vue__.$parent
         },
 
         getRelatedContextFromMoveEvent({to, related}) {
@@ -167,17 +165,14 @@
           return context
         },
 
-        onDragStart (evt) {
-          if (!this.list) {
-            return
-          }         
+        onDragStart (evt) {      
           this.context = this.getUnderlyingVm(evt.item)
           evt.item._underlying_vm_ = this.clone(this.context.element)
         },
 
         onDragAdd (evt) {
           const element = evt.item._underlying_vm_
-          if (!this.list || element === undefined) {
+          if (element === undefined) {
             return
           }
           removeNode(evt.item)
@@ -190,26 +185,20 @@
         },
 
         onDragRemove (evt) {
-          if (!this.list) {
-            return
-          }
           insertNodeAt(this.rootContainer, evt.item, evt.oldIndex)
           const isCloning = !!evt.clone
           if (isCloning) {
             removeNode(evt.clone)
             return
           }
-          const oldIndex = this.context.currentIndex
+          const oldIndex = this.context.index
           this.list.splice(oldIndex, 1)
         },
 
         onDragUpdate (evt) {
-          if (!this.list) {
-            return
-          }
           removeNode(evt.item)
           insertNodeAt(evt.from, evt.item, evt.oldIndex)
-          const oldIndexVM = this.context.currentIndex
+          const oldIndexVM = this.context.index
           const newIndexVM = this.visibleIndexes[evt.newIndex]
           updatePosition(this.list, oldIndexVM, newIndexVM)
         },
