@@ -24,6 +24,7 @@ Based on and offering all features of [Sortable.js](https://github.com/RubaXa/So
 * Keeps in sync view model and view
 * No jquery dependency
 * Plays nicely with Vue.js 2.0 transition-group
+* cancelation support
 
 ##For Vue.js 2.0
 
