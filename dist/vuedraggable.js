@@ -1,7 +1,5 @@
 'use strict';
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
 (function () {
   "use strict";
 
@@ -53,7 +51,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
     var eventsListened = ['Start', 'Add', 'Remove', 'Update', 'End'];
     var eventsToEmit = ['Choose', 'Sort', 'Filter', 'Clone'];
-    // const readonlyProperties = ['Move'].concat(eventsListened).concat(eventsToEmit).map(evt => 'on'+evt);
     var readonlyProperties = ['Move'].concat(eventsListened, eventsToEmit).map(function (evt) {
       return 'on' + evt;
     });
@@ -153,22 +150,18 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           });
         },
         getUnderlyingVm: function getUnderlyingVm(htmlElt) {
-          var currentIndex = computeVmIndex(this.getChildrenNodes(), htmlElt);
-          var element = this.list[currentIndex];
-          return { currentIndex: currentIndex, element: element };
+          var index = computeVmIndex(this.getChildrenNodes(), htmlElt);
+          var element = this.list[index];
+          return { index: index, element: element };
         },
         getUnderlyingPotencialDraggableComponent: function getUnderlyingPotencialDraggableComponent(_ref) {
           var __vue__ = _ref.__vue__;
 
-          if (!__vue__) {
+          if (!__vue__ || !__vue__.$options || __vue__.$options._componentTag !== "transition-group") {
             return __vue__;
           }
 
-          if (__vue__.$options._componentTag === "transition-group") {
-            return __vue__.$parent;
-          }
-
-          return __vue__;
+          return __vue__.$parent;
         },
         getRelatedContextFromMoveEvent: function getRelatedContextFromMoveEvent(_ref2) {
           var to = _ref2.to;
@@ -211,13 +204,13 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             removeNode(evt.clone);
             return;
           }
-          var oldIndex = this.context.currentIndex;
+          var oldIndex = this.context.index;
           this.list.splice(oldIndex, 1);
         },
         onDragUpdate: function onDragUpdate(evt) {
           removeNode(evt.item);
           insertNodeAt(evt.from, evt.item, evt.oldIndex);
-          var oldIndexVM = this.context.currentIndex;
+          var oldIndexVM = this.context.index;
           var newIndexVM = this.visibleIndexes[evt.newIndex];
           updatePosition(this.list, oldIndexVM, newIndexVM);
         },
@@ -240,7 +233,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     return draggableComponent;
   }
 
-  if ((typeof exports === 'undefined' ? 'undefined' : _typeof(exports)) == "object") {
+  if (typeof exports == "object") {
     var Sortable = require("sortablejs");
     module.exports = buildDraggable(Sortable);
   } else if (typeof define == "function" && define.amd) {
