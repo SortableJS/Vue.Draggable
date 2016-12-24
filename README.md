@@ -79,10 +79,58 @@ Default: `(original) => { return original;}`<br>
 Function called on the source component to clone element when clone option is true. The unique argument is the viewModel element to be cloned and the returned value should be its cloned version.<br>
 By default vue.draggable reuse the viewmodel element, so you have to use this hook if you want to clone or deep clone it.
 
+#### move
+Type: `Function`<br>
+Required: `false`<br>
+Default: `null`<br>
+
+If not null this function will be called in a similar way as [Sortable onMove callback](https://github.com/RubaXa/Sortable#move-event-object).
+Returning false will cancel the drag operation.
+
+```javascript
+function onMoveCallback(evt, originalEvent){
+   ...
+    // return false; — for cancel
+}
+```
+evt object has same property as [Sortable onMove event](https://github.com/RubaXa/Sortable#move-event-object), plus two addicional properties:
+`move event` object addicional properties:
+ - `draggedContext`:  context linked to dragged element
+ 	- `index`: dragged element index
+	- `element`: dragged element underlying view model element
+ - `relatedContext`: context linked to current drag position
+ 	- `index`: target element index
+	- `element`: target element view model element
+	- `list`: target list
+	- `component`: target VueComponent
+	
+Ex:
+
+HTML:
+```HTML
+	<draggable :list="list" :move="checkMove"> 
+```
+javascript:
+```javascript
+checkMove: function(evt){
+	return (evt.draggedContext.element.name!=='apple');
+}
+```
+See complete example: [Cancel.html](https://github.com/SortableJS/Vue.Draggable/blob/master/examples/Cancel.html), [cancel.js](https://github.com/SortableJS/Vue.Draggable/blob/master/examples/script/cancel.js)
+
+
 ### Events
-`start`, `add`, `remove`, `update`, `end`, `choose`, `sort`, `filter`, `move`, `clone`<br>
-Called when there equivalent onStart, onAdd, .... are fired by Sortabe.js with the same argument.<br>
+`start`, `add`, `remove`, `update`, `end`, `choose`, `sort`, `filter`, `clone`<br>
+events are called when respectivelly onStart, onAdd, onRemove, onUpdate, onEnd, onChoose, onSort, onClone are fired by Sortabe.js with the same argument.<br>
 [See here for reference](https://github.com/RubaXa/Sortable#event-object-demo)
+
+The OnMove callback is mapped with the [move prop]()
+
+Ex:
+HTML:
+```HTML
+	<draggable :list="list" @end="onEnd"> 
+```
 
 ###Fiddle
 Simple:
