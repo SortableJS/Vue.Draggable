@@ -124,7 +124,7 @@ See complete example: [Cancel.html](https://github.com/SortableJS/Vue.Draggable/
 events are called when respectivelly onStart, onAdd, onRemove, onUpdate, onEnd, onChoose, onSort, onClone are fired by Sortabe.js with the same argument.<br>
 [See here for reference](https://github.com/RubaXa/Sortable#event-object-demo)
 
-The OnMove callback is mapped with the [move prop]()
+The OnMove callback is mapped with the [move prop](https://github.com/SortableJS/Vue.Draggable/blob/master/README.md#move)
 
 Ex:
 HTML:
