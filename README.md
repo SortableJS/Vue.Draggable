@@ -47,6 +47,16 @@ With `transition-group`:
 	</transition-group>
 </draggable>
 ```
+.vue file:
+``` js
+  import draggable from 'vuedraggable'
+  ...
+  export default {
+        components: {
+            draggable,
+        },
+	...
+``` 
 
 Draggable component should directly wrap the draggable elements, or a `transition-component` containing the draggable elements.
 
