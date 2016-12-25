@@ -18,12 +18,6 @@
       return vnodes.map(elt => elt.elm).indexOf(element)
     }
 
-    function updatePosition (collection, oldIndex, newIndex) {
-      if (collection) {
-        collection.splice(newIndex, 0, collection.splice(oldIndex, 1)[0])
-      }
-    }
-
     function computeIndexes (slots, children) {
       return (!slots)? [] : Array.prototype.map.call(children, elt => computeVmIndex(slots, elt))
     }
@@ -150,6 +144,14 @@
           return __vue__.$parent
         },
 
+        spliceList () {
+          this.list.splice(...arguments)
+        },
+
+        updatePosition (oldIndex, newIndex) {
+          this.list.splice(newIndex, 0, this.list.splice(oldIndex, 1)[0])
+        },
+
         getRelatedContextFromMoveEvent({to, related}) {
           const component = this.getUnderlyingPotencialDraggableComponent(to)
           if (!component) {
@@ -180,7 +182,7 @@
           const domNewIndex = evt.newIndex
           const numberIndexes = indexes.length
           const newIndex = (domNewIndex > numberIndexes - 1) ? numberIndexes : indexes[domNewIndex]
-          this.list.splice(newIndex, 0, element)
+          this.spliceList(newIndex, 0, element)
           this.computeIndexes()
         },
 
@@ -192,7 +194,7 @@
             return
           }
           const oldIndex = this.context.index
-          this.list.splice(oldIndex, 1)
+          this.spliceList(oldIndex, 1)
         },
 
         onDragUpdate (evt) {
@@ -200,7 +202,7 @@
           insertNodeAt(evt.from, evt.item, evt.oldIndex)
           const oldIndexVM = this.context.index
           const newIndexVM = this.visibleIndexes[evt.newIndex]
-          updatePosition(this.list, oldIndexVM, newIndexVM)
+          this.updatePosition(oldIndexVM, newIndexVM)
         },
 
         onDragMove (evt) {

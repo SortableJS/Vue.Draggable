@@ -1,5 +1,7 @@
 'use strict';
 
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
 (function () {
   "use strict";
 
@@ -22,11 +24,11 @@
       }).indexOf(element);
     }
 
-    function updatePosition(collection, oldIndex, newIndex) {
-      if (collection) {
-        collection.splice(newIndex, 0, collection.splice(oldIndex, 1)[0]);
-      }
-    }
+    // function updatePosition (collection, oldIndex, newIndex) {
+    //   if (collection) {
+    //     collection.splice(newIndex, 0, collection.splice(oldIndex, 1)[0])
+    //   }
+    // }
 
     function _computeIndexes(slots, children) {
       return !slots ? [] : Array.prototype.map.call(children, function (elt) {
@@ -149,6 +151,11 @@
             _this3.visibleIndexes = _computeIndexes(_this3.getChildrenNodes(), _this3.rootContainer.children);
           });
         },
+        updatePosition: function updatePosition(oldIndex, newIndex) {
+          if (this.list) {
+            this.list.splice(newIndex, 0, this.list.splice(oldIndex, 1)[0]);
+          }
+        },
         getUnderlyingVm: function getUnderlyingVm(htmlElt) {
           var index = computeVmIndex(this.getChildrenNodes(), htmlElt);
           var element = this.list[index];
@@ -212,7 +219,7 @@
           insertNodeAt(evt.from, evt.item, evt.oldIndex);
           var oldIndexVM = this.context.index;
           var newIndexVM = this.visibleIndexes[evt.newIndex];
-          updatePosition(this.list, oldIndexVM, newIndexVM);
+          this.updatePosition(oldIndexVM, newIndexVM);
         },
         onDragMove: function onDragMove(evt) {
           var onMove = this.move;
@@ -233,7 +240,7 @@
     return draggableComponent;
   }
 
-  if (typeof exports == "object") {
+  if ((typeof exports === 'undefined' ? 'undefined' : _typeof(exports)) == "object") {
     var Sortable = require("sortablejs");
     module.exports = buildDraggable(Sortable);
   } else if (typeof define == "function" && define.amd) {
