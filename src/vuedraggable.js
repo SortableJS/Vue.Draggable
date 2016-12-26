@@ -140,8 +140,13 @@
           if (!__vue__ || !__vue__.$options || __vue__.$options._componentTag!=="transition-group"){
             return __vue__
           }
-
           return __vue__.$parent
+        },
+
+        emitChanges (evt) {
+          this.$nextTick( ()=>{
+            this.$emit('change', evt)
+          });       
         },
 
         spliceList () {
@@ -184,6 +189,8 @@
           const newIndex = (domNewIndex > numberIndexes - 1) ? numberIndexes : indexes[domNewIndex]
           this.spliceList(newIndex, 0, element)
           this.computeIndexes()
+          const added = {element, newIndex}
+          this.emitChanges({added})
         },
 
         onDragRemove (evt) {
@@ -195,14 +202,18 @@
           }
           const oldIndex = this.context.index
           this.spliceList(oldIndex, 1)
+          const removed = {element: this.context.element, oldIndex}
+          this.emitChanges({removed})
         },
 
         onDragUpdate (evt) {
           removeNode(evt.item)
           insertNodeAt(evt.from, evt.item, evt.oldIndex)
-          const oldIndexVM = this.context.index
-          const newIndexVM = this.visibleIndexes[evt.newIndex]
-          this.updatePosition(oldIndexVM, newIndexVM)
+          const oldIndex = this.context.index
+          const newIndex = this.visibleIndexes[evt.newIndex]
+          this.updatePosition(oldIndex, newIndex)
+          const moved = {element: this.context.element, oldIndex, newIndex}
+          this.emitChanges({moved})
         },
 
         onDragMove (evt) {

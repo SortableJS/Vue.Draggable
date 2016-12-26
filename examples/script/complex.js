@@ -20,6 +20,9 @@ var vm = new Vue({
 				return {
 					name : el.name + ' cloned'
 				}
+			},
+			log: function (evt){
+				console.log(evt)
 			}
 		}
 	});

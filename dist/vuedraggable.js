@@ -24,12 +24,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       }).indexOf(element);
     }
 
-    // function updatePosition (collection, oldIndex, newIndex) {
-    //   if (collection) {
-    //     collection.splice(newIndex, 0, collection.splice(oldIndex, 1)[0])
-    //   }
-    // }
-
     function _computeIndexes(slots, children) {
       return !slots ? [] : Array.prototype.map.call(children, function (elt) {
         return computeVmIndex(slots, elt);
@@ -151,11 +145,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             _this3.visibleIndexes = _computeIndexes(_this3.getChildrenNodes(), _this3.rootContainer.children);
           });
         },
-        updatePosition: function updatePosition(oldIndex, newIndex) {
-          if (this.list) {
-            this.list.splice(newIndex, 0, this.list.splice(oldIndex, 1)[0]);
-          }
-        },
         getUnderlyingVm: function getUnderlyingVm(htmlElt) {
           var index = computeVmIndex(this.getChildrenNodes(), htmlElt);
           var element = this.list[index];
@@ -167,8 +156,22 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           if (!__vue__ || !__vue__.$options || __vue__.$options._componentTag !== "transition-group") {
             return __vue__;
           }
-
           return __vue__.$parent;
+        },
+        emitChanges: function emitChanges(evt) {
+          var _this4 = this;
+
+          this.$nextTick(function () {
+            _this4.$emit('changes', evt);
+          });
+        },
+        spliceList: function spliceList() {
+          var _list;
+
+          (_list = this.list).splice.apply(_list, arguments);
+        },
+        updatePosition: function updatePosition(oldIndex, newIndex) {
+          this.list.splice(newIndex, 0, this.list.splice(oldIndex, 1)[0]);
         },
         getRelatedContextFromMoveEvent: function getRelatedContextFromMoveEvent(_ref2) {
           var to = _ref2.to;
@@ -201,8 +204,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           var domNewIndex = evt.newIndex;
           var numberIndexes = indexes.length;
           var newIndex = domNewIndex > numberIndexes - 1 ? numberIndexes : indexes[domNewIndex];
-          this.list.splice(newIndex, 0, element);
+          this.spliceList(newIndex, 0, element);
           this.computeIndexes();
+          var added = { element: element, newIndex: newIndex };
+          this.emitChanges({ added: added });
         },
         onDragRemove: function onDragRemove(evt) {
           insertNodeAt(this.rootContainer, evt.item, evt.oldIndex);
@@ -212,14 +217,18 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
             return;
           }
           var oldIndex = this.context.index;
-          this.list.splice(oldIndex, 1);
+          this.spliceList(oldIndex, 1);
+          var removed = { element: this.context.element, oldIndex: oldIndex };
+          this.emitChanges({ removed: removed });
         },
         onDragUpdate: function onDragUpdate(evt) {
           removeNode(evt.item);
           insertNodeAt(evt.from, evt.item, evt.oldIndex);
-          var oldIndexVM = this.context.index;
-          var newIndexVM = this.visibleIndexes[evt.newIndex];
-          this.updatePosition(oldIndexVM, newIndexVM);
+          var oldIndex = this.context.index;
+          var newIndex = this.visibleIndexes[evt.newIndex];
+          this.updatePosition(oldIndex, newIndex);
+          var updated = { element: this.context.element, oldIndex: oldIndex, newIndex: newIndex };
+          this.emitChanges({ updated: updated });
         },
         onDragMove: function onDragMove(evt) {
           var onMove = this.move;
