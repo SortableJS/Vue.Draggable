@@ -67,7 +67,7 @@ Required: `false`<br>
 Default: `null`
 
 Array to be synchronized with drag-and-drop. Typically same array as referenced by inner element v-for directive.<br>
-Note that this prop is not required and that draggable component can be used without a list prop.
+When using children elements not linked to a "v-for" directive, use null.
 
 #### options
 Type: `Object`<br>
