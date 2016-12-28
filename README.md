@@ -158,7 +158,7 @@ https://jsfiddle.net/dede89/m2v0orcn/
 
 ## For Vue.js 1.0
 
-[See here](documentation/Vue.dragable.for.ReadMe.md)
+[See here](documentation/Vue.draggable.for.ReadME.md)
 
 ## Installation
 - Available through:
