@@ -6,6 +6,7 @@
 [![Npm download](https://img.shields.io/npm/dt/vuedraggable.svg?maxAge=2592000)](https://www.npmjs.com/package/vuedraggable)
 [![Npm version](https://img.shields.io/npm/v/vuedraggable.svg?maxAge=2592000)](https://www.npmjs.com/package/vuedraggable)
 [![Package Quality](http://npm.packagequality.com/shield/vuedragablefor.svg)](http://packagequality.com/#?package=vuedraggable)
+[![vue2](https://img.shields.io/badge/vue-2.x-brightgreen.svg)](https://vuejs.org/)
 [![MIT License](https://img.shields.io/github/license/David-Desmaisons/Vue.Draggable.svg)](https://github.com/David-Desmaisons/Vue.Draggable/blob/master/LICENSE)
 
 
