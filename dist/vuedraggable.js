@@ -1,7 +1,5 @@
 'use strict';
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
 (function () {
   "use strict";
 
@@ -162,7 +160,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           var _this4 = this;
 
           this.$nextTick(function () {
-            _this4.$emit('changes', evt);
+            _this4.$emit('change', evt);
           });
         },
         spliceList: function spliceList() {
@@ -227,8 +225,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
           var oldIndex = this.context.index;
           var newIndex = this.visibleIndexes[evt.newIndex];
           this.updatePosition(oldIndex, newIndex);
-          var updated = { element: this.context.element, oldIndex: oldIndex, newIndex: newIndex };
-          this.emitChanges({ updated: updated });
+          var moved = { element: this.context.element, oldIndex: oldIndex, newIndex: newIndex };
+          this.emitChanges({ moved: moved });
         },
         onDragMove: function onDragMove(evt) {
           var onMove = this.move;
@@ -249,7 +247,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     return draggableComponent;
   }
 
-  if ((typeof exports === 'undefined' ? 'undefined' : _typeof(exports)) == "object") {
+  if (typeof exports == "object") {
     var Sortable = require("sortablejs");
     module.exports = buildDraggable(Sortable);
   } else if (typeof define == "function" && define.amd) {
