@@ -31,7 +31,7 @@ Based on and offering all features of [Sortable.js](https://github.com/RubaXa/So
 
 Use draggable component:
 
-Tipical use:
+Typical use:
 ``` html
 <draggable  :list="list" :options="{group:'people'}" @start="dragging=true" @end="dragging=false">
    <div v-for="element in list">{{element.name}}</div>
