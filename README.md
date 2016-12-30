@@ -1,39 +1,44 @@
 <p align="center"><img width="100"src="https://raw.githubusercontent.com/SortableJS/Vue.Draggable/master/logo.png"></p>
 <h1 align="center">Vue.Draggable</h1>
 
-[![GitHub open issues](https://img.shields.io/github/issues/David-Desmaisons/Vue.Draggable.svg?maxAge=2592000)]()
-[![GitHub closed issues](https://img.shields.io/github/issues-closed/David-Desmaisons/Vue.Draggable.svg?maxAge=2592000)]()
+[![GitHub open issues](https://img.shields.io/github/issues/SortableJS/Vue.Draggable.svg?maxAge=2592000)](https://github.com/SortableJS/Vue.Draggable/issues?q=is%3Aopen+is%3Aissue)
+[![GitHub closed issues](https://img.shields.io/github/issues-closed/SortableJS/Vue.Draggable.svg?maxAge=2592000)](https://github.com/SortableJS/Vue.Draggable/issues?q=is%3Aissue+is%3Aclosed)
 [![Npm download](https://img.shields.io/npm/dt/vuedraggable.svg?maxAge=2592000)](https://www.npmjs.com/package/vuedraggable)
 [![Npm version](https://img.shields.io/npm/v/vuedraggable.svg?maxAge=2592000)](https://www.npmjs.com/package/vuedraggable)
 [![Package Quality](http://npm.packagequality.com/shield/vuedragablefor.svg)](http://packagequality.com/#?package=vuedraggable)
 [![vue2](https://img.shields.io/badge/vue-2.x-brightgreen.svg)](https://vuejs.org/)
-[![MIT License](https://img.shields.io/github/license/David-Desmaisons/Vue.Draggable.svg)](https://github.com/David-Desmaisons/Vue.Draggable/blob/master/LICENSE)
+[![MIT License](https://img.shields.io/github/license/SortableJS/Vue.Draggable.svg)](https://github.com/SortableJS/Vue.Draggable/blob/master/LICENSE)
 
 
 Vue component (Vue.js 2.0) or directive (Vue.js 1.0) allowing drag-and-drop and synchronization with view model array.
 
 Based on and offering all features of [Sortable.js](https://github.com/RubaXa/Sortable)
 
-##Demo
+## Demo
 
-![demo gif](https://raw.githubusercontent.com/David-Desmaisons/Vue.Dragable.For/master/example.gif)
+![demo gif](https://raw.githubusercontent.com/SortableJS/Vue.Draggable/master/example.gif)
 
 
-##Features
+## Features
 
-* Full support of [Sortable.js](https://github.com/RubaXa/Sortable) features
-* Keeps in sync view model and view
-* No jquery dependency
-* Plays nicely with Vue.js 2.0 transition-group
-* cancelation support
+* Full support of [Sortable.js](https://github.com/RubaXa/Sortable) features:
+    * Supports touch devices 
+    * Supports drag handles and selectable text
+    * Smart auto-scrolling
+    * Support drag and drop between different lists
+    * No jQuery dependency
+* Keeps in sync HTML and view model list
+* Compatible with Vue.js 2.0 transition-group
+* Cancelation support
+* Events reporting any changes when full control is needed 
 
-##For Vue.js 2.0
+## For Vue.js 2.0
 
 Use draggable component:
 
 Typical use:
 ``` html
-<draggable  :list="list" :options="{group:'people'}" @start="dragging=true" @end="dragging=false">
+<draggable :list="list" :options="{group:'people'}" @start="drag=true" @end="drag=false">
    <div v-for="element in list">{{element.name}}</div>
 </draggable>
 ```
@@ -115,8 +120,6 @@ evt object has same property as [Sortable onMove event](https://github.com/RubaX
 	- `element`: target element view model element
 	- `list`: target list
 	- `component`: target VueComponent
-	
-Ex:
 
 HTML:
 ```HTML
@@ -132,19 +135,36 @@ See complete example: [Cancel.html](https://github.com/SortableJS/Vue.Draggable/
 
 
 ### Events
-`start`, `add`, `remove`, `update`, `end`, `choose`, `sort`, `filter`, `clone`<br>
-events are called when respectivelly onStart, onAdd, onRemove, onUpdate, onEnd, onChoose, onSort, onClone are fired by Sortabe.js with the same argument.<br>
-[See here for reference](https://github.com/RubaXa/Sortable#event-object-demo)
 
-The OnMove callback is mapped with the [move prop](https://github.com/SortableJS/Vue.Draggable/blob/master/README.md#move)
+* Support for Sortable events:
 
-Ex:
+  `start`, `add`, `remove`, `update`, `end`, `choose`, `sort`, `filter`, `clone`<br>
+  events are called when respectivelly onStart, onAdd, onRemove, onUpdate, onEnd, onChoose, onSort, onClone are fired by Sortabe.js with the same argument.<br>
+  [See here for reference](https://github.com/RubaXa/Sortable#event-object-demo)
+
+  Note that SortableJS OnMove callback is mapped with the [move prop](https://github.com/SortableJS/Vue.Draggable/blob/master/README.md#move)
+
 HTML:
 ```HTML
 	<draggable :list="list" @end="onEnd"> 
 ```
 
-###Fiddle
+* change event
+
+  `change` event is trigerred when list prop is not null and the corresponding array is altered due to drag-and-drop operation.<br>
+  This event is called with one argument containing one of the following properties:
+  - `added`:  contains information of an element added to the array
+    - `newIndex`: the index of the added element
+    - `element`: the added element
+  - `removed`:  contains information of an element removed from to the array
+    - `oldIndex`: the index of the element before remove
+    - `element`: the removed element
+  - `moved`:  contains information of an element moved within the array
+    - `newIndex`: the current index of the moved element
+    - `oldIndex`: the old index of the moved element
+    - `element`: the moved element
+
+### Fiddle
 Simple:
 https://jsfiddle.net/dede89/sqssmhtz/
 
