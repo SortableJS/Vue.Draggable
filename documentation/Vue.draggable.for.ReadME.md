@@ -57,5 +57,4 @@ Version 1.0.9 is Vue.js 1.0 compatible <br>
 
 - #### For `<script>` Include
 
-  Just include `vuedraggable.min.js` or 'vue.dragable.for' after Vue.<br>
-  lodash(version >=3) is needed only for Vuejs. 1.0 version of the library.
+  Include 'vue.dragable.for' after Vue and lodash(version >=3).<br>
