@@ -210,4 +210,4 @@ https://jsfiddle.net/dede89/m2v0orcn/
 
 - #### For `<script>` Include
 
-  Just include `vuedraggable.min.js` or 'vue.dragable.for' after Vue.<br>
+  Just include `vuedraggable.min.js` after Vue.<br>
