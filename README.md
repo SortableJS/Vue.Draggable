@@ -164,17 +164,23 @@ HTML:
     - `oldIndex`: the old index of the moved element
     - `element`: the moved element
 
+### Gotchas
+  - Drag operation with empty list:
+
+    To be abble to drag items on an empty draggable component, set a min-height>0 on the `draggable` component or the `transition-group` if any.  
+
 ### Fiddle
-Simple:
+
+- Simple:
 https://jsfiddle.net/dede89/sqssmhtz/
 
-Two Lists:
+- Two Lists:
 https://jsfiddle.net/dede89/32ao2rpm/
 
-Example with list clone:
+- Example with list clone:
 https://jsfiddle.net/dede89/t3m5krea/
 
-Example with transition-group:
+- Example with transition-group:
 https://jsfiddle.net/dede89/m2v0orcn/
 
 ## For Vue.js 1.0
