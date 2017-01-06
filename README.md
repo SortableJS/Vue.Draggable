@@ -86,7 +86,7 @@ Note that all the method starting by "on" will be ignored as draggable component
 Type: `String`<br>
 Default: `'div'`
 
-HTML root element that draggable component create as outer element for the included slot.
+HTML node type of the element that draggable component create as outer element for the included slot.
 
 #### clone
 Type: `Function`<br>
