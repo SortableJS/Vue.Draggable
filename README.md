@@ -216,4 +216,4 @@ https://jsfiddle.net/dede89/m2v0orcn/
 
 - #### For `<script>` Include
 
-  Just include `vuedraggable.min.js` after Vue.<br>
+  Just include `Sortable.min.js` and `vuedraggable.min.js` after Vue.<br>
