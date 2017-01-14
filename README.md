@@ -110,8 +110,7 @@ function onMoveCallback(evt, originalEvent){
     // return false; — for cancel
 }
 ```
-evt object has same property as [Sortable onMove event](https://github.com/RubaXa/Sortable#move-event-object), plus two addicional properties:
-`move event` object addicional properties:
+evt object has same property as [Sortable onMove event](https://github.com/RubaXa/Sortable#move-event-object), plus two additional properties:
  - `draggedContext`:  context linked to dragged element
  	- `index`: dragged element index
 	- `element`: dragged element underlying view model element
