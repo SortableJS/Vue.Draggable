@@ -35,9 +35,9 @@
       }
     }
 
-    const eventsListened = ['Start', 'Add', 'Remove', 'Update', 'End'];
-    const eventsToEmit = ['Choose', 'Sort', 'Filter', 'Clone'];
-    const readonlyProperties = ['Move', ...eventsListened, ...eventsToEmit].map(evt => 'on'+evt);
+    const eventsListened = ['Start', 'Add', 'Remove', 'Update', 'End']
+    const eventsToEmit = ['Choose', 'Sort', 'Filter', 'Clone']
+    const readonlyProperties = ['Move', ...eventsListened, ...eventsToEmit].map(evt => 'on'+evt)
   
     const props = {
       options: Object,
@@ -172,7 +172,7 @@
           return context
         },
 
-        onDragStart (evt) {      
+        onDragStart (evt) {
           this.context = this.getUnderlyingVm(evt.item)
           evt.item._underlying_vm_ = this.clone(this.context.element)
         },
@@ -216,6 +216,16 @@
           this.emitChanges({moved})
         },
 
+        computeFutureIndex (relatedContext, evt) {
+          if (!relatedContext.element){
+            return 0
+          }
+          const relatedElement = evt.related;
+          const currentIndex = [...evt.to.children].indexOf(relatedElement)
+          const incialIndex = relatedContext.index
+          return (currentIndex !== incialIndex) ? incialIndex+1 : incialIndex
+        },
+
         onDragMove (evt) {
           const onMove = this.move
           if (!onMove || !this.list) {
@@ -224,6 +234,8 @@
 
           const relatedContext = this.getRelatedContextFromMoveEvent(evt)
           const draggedContext = this.context
+          const futureIndex = this.computeFutureIndex(relatedContext, evt)
+          Object.assign(draggedContext, { futureIndex })
           Object.assign(evt, {relatedContext, draggedContext})
           return onMove(evt)
         },

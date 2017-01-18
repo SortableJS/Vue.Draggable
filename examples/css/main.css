@@ -12,8 +12,12 @@
 	background-color: blue;
 }
 
-.target {
-  background-color: yellow;
+.target.ok {
+  background-color: blue;
+}
+
+.target.ko {
+  background-color: red;
 }
 
 .status {

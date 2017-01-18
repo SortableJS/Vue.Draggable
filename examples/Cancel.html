@@ -16,7 +16,7 @@
 
         <div class="status">
             <p v-if="canDrag!=null"  :class="canDrag? 'ok' : 'ko'">
-                can Drag: {{canDrag}}
+                can Drag: {{canDrag}} future index {{futureIndex}}
             </p>
             <p v-else>
                 No drag operation
@@ -26,9 +26,9 @@
 
         <div class="drag">
             <h2>List 1 draggable</h2>
-            <draggable element="ul" class="dragArea" :list="list" :options="{group:'people'}" :move="checkMove" @end="endDrag">           
-                <li v-for="(element, index) in list" :class="{'target': element===targetElement}">
-                    {{element.name}}
+            <draggable element="ul" class="dragArea" :list="list" :options="{group:'people'}" :move="checkMove" @end="endDrag" @start="startDrag">           
+                <li v-for="(element, index) in list" :class="{'target': element===targetElement, 'ok':canDrag  , 'ko':!canDrag}">
+                    {{element.name}} {{index}}
                 </li>
              </draggable>
 

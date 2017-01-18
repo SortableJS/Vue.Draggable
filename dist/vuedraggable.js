@@ -228,6 +228,15 @@
           var moved = { element: this.context.element, oldIndex: oldIndex, newIndex: newIndex };
           this.emitChanges({ moved: moved });
         },
+        computeFutureIndex: function computeFutureIndex(relatedContext, evt) {
+          if (!relatedContext.element) {
+            return 0;
+          }
+          var relatedElement = evt.related;
+          var currentIndex = [].concat(_toConsumableArray(evt.to.children)).indexOf(relatedElement);
+          var incialIndex = relatedContext.index;
+          return currentIndex !== incialIndex ? incialIndex + 1 : incialIndex;
+        },
         onDragMove: function onDragMove(evt) {
           var onMove = this.move;
           if (!onMove || !this.list) {
@@ -236,6 +245,8 @@
 
           var relatedContext = this.getRelatedContextFromMoveEvent(evt);
           var draggedContext = this.context;
+          var futureIndex = this.computeFutureIndex(relatedContext, evt);
+          Object.assign(draggedContext, { futureIndex: futureIndex });
           Object.assign(evt, { relatedContext: relatedContext, draggedContext: draggedContext });
           return onMove(evt);
         },
@@ -247,7 +258,7 @@
     return draggableComponent;
   }
 
-  if (typeof exports == "object") {
+   if (typeof exports == "object") {
     var Sortable = require("sortablejs");
     module.exports = buildDraggable(Sortable);
   } else if (typeof define == "function" && define.amd) {
