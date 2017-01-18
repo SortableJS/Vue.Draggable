@@ -86,7 +86,7 @@ Note that all the method starting by "on" will be ignored as draggable component
 Type: `String`<br>
 Default: `'div'`
 
-HTML root element that draggable component create as outer element for the included slot.
+HTML node type of the element that draggable component create as outer element for the included slot.
 
 #### clone
 Type: `Function`<br>
@@ -110,8 +110,7 @@ function onMoveCallback(evt, originalEvent){
     // return false; — for cancel
 }
 ```
-evt object has same property as [Sortable onMove event](https://github.com/RubaXa/Sortable#move-event-object), plus two addicional properties:
-`move event` object addicional properties:
+evt object has same property as [Sortable onMove event](https://github.com/RubaXa/Sortable#move-event-object), plus two additional properties:
  - `draggedContext`:  context linked to dragged element
  	- `index`: dragged element index
 	- `element`: dragged element underlying view model element
@@ -216,4 +215,4 @@ https://jsfiddle.net/dede89/m2v0orcn/
 
 - #### For `<script>` Include
 
-  Just include `vuedraggable.min.js` after Vue.<br>
+  Just include `Sortable.min.js` and `vuedraggable.min.js` after Vue.<br>
