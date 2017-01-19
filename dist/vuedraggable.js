@@ -1,5 +1,9 @@
 'use strict';
 
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
 (function () {
   "use strict";
 
@@ -188,6 +192,11 @@
 
           return context;
         },
+        getVmIndex: function getVmIndex(domIndex) {
+          var indexes = this.visibleIndexes;
+          var numberIndexes = indexes.length;
+          return domIndex > numberIndexes - 1 ? numberIndexes : indexes[domIndex];
+        },
         onDragStart: function onDragStart(evt) {
           this.context = this.getUnderlyingVm(evt.item);
           evt.item._underlying_vm_ = this.clone(this.context.element);
@@ -198,10 +207,7 @@
             return;
           }
           removeNode(evt.item);
-          var indexes = this.visibleIndexes;
-          var domNewIndex = evt.newIndex;
-          var numberIndexes = indexes.length;
-          var newIndex = domNewIndex > numberIndexes - 1 ? numberIndexes : indexes[domNewIndex];
+          var newIndex = this.getVmIndex(evt.newIndex);
           this.spliceList(newIndex, 0, element);
           this.computeIndexes();
           var added = { element: element, newIndex: newIndex };
@@ -223,7 +229,7 @@
           removeNode(evt.item);
           insertNodeAt(evt.from, evt.item, evt.oldIndex);
           var oldIndex = this.context.index;
-          var newIndex = this.visibleIndexes[evt.newIndex];
+          var newIndex = this.getVmIndex(evt.newIndex);
           this.updatePosition(oldIndex, newIndex);
           var moved = { element: this.context.element, oldIndex: oldIndex, newIndex: newIndex };
           this.emitChanges({ moved: moved });
@@ -233,9 +239,11 @@
             return 0;
           }
           var relatedElement = evt.related;
-          var currentIndex = [].concat(_toConsumableArray(evt.to.children)).indexOf(relatedElement);
+          var currentDOMIndex = [].concat(_toConsumableArray(evt.to.children)).indexOf(relatedElement);
+          var currentIndex = relatedContext.component.getVmIndex(currentDOMIndex);
           var incialIndex = relatedContext.index;
-          return currentIndex !== incialIndex ? incialIndex + 1 : incialIndex;
+          console.log(currentIndex, incialIndex);
+          return Math.max(currentIndex, incialIndex);
         },
         onDragMove: function onDragMove(evt) {
           var onMove = this.move;
@@ -258,7 +266,7 @@
     return draggableComponent;
   }
 
-   if (typeof exports == "object") {
+  if ((typeof exports === 'undefined' ? 'undefined' : _typeof(exports)) == "object") {
     var Sortable = require("sortablejs");
     module.exports = buildDraggable(Sortable);
   } else if (typeof define == "function" && define.amd) {

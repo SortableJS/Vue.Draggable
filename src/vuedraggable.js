@@ -172,6 +172,12 @@
           return context
         },
 
+        getVmIndex (domIndex) {
+          const indexes = this.visibleIndexes
+          const numberIndexes = indexes.length
+          return (domIndex > numberIndexes - 1) ? numberIndexes : indexes[domIndex]
+        },
+
         onDragStart (evt) {
           this.context = this.getUnderlyingVm(evt.item)
           evt.item._underlying_vm_ = this.clone(this.context.element)
@@ -183,10 +189,7 @@
             return
           }
           removeNode(evt.item)
-          const indexes = this.visibleIndexes
-          const domNewIndex = evt.newIndex
-          const numberIndexes = indexes.length
-          const newIndex = (domNewIndex > numberIndexes - 1) ? numberIndexes : indexes[domNewIndex]
+          const newIndex = this.getVmIndex(evt.newIndex)
           this.spliceList(newIndex, 0, element)
           this.computeIndexes()
           const added = {element, newIndex}
@@ -210,7 +213,7 @@
           removeNode(evt.item)
           insertNodeAt(evt.from, evt.item, evt.oldIndex)
           const oldIndex = this.context.index
-          const newIndex = this.visibleIndexes[evt.newIndex]
+          const newIndex = this.getVmIndex(evt.newIndex)
           this.updatePosition(oldIndex, newIndex)
           const moved = {element: this.context.element, oldIndex, newIndex}
           this.emitChanges({moved})
@@ -221,7 +224,8 @@
             return 0
           }
           const relatedElement = evt.related;
-          const currentIndex = [...evt.to.children].indexOf(relatedElement)
+          const currentDOMIndex = [...evt.to.children].indexOf(relatedElement)
+          const currentIndex = relatedContext.component.getVmIndex(currentDOMIndex)
           const incialIndex = relatedContext.index
           return (currentIndex !== incialIndex) ? incialIndex+1 : incialIndex
         },
