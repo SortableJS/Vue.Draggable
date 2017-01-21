@@ -79,7 +79,7 @@ When using children elements not linked to a "v-for" directive, use null.
 Type: `Object`<br>
 Required: `false`
 
-Option used to inicialize the sortable object see: [sortable option documentation](https://github.com/RubaXa/Sortable#options)<br>
+Option used to initialize the sortable object see: [sortable option documentation](https://github.com/RubaXa/Sortable#options)<br>
 Note that all the method starting by "on" will be ignored as draggable component expose the same API via events.
 
 #### element
