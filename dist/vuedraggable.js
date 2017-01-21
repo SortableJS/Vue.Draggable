@@ -1,7 +1,5 @@
 'use strict';
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
 (function () {
@@ -52,6 +50,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     var readonlyProperties = ['Move'].concat(eventsListened, eventsToEmit).map(function (evt) {
       return 'on' + evt;
     });
+    var draggingElement = null;
 
     var props = {
       options: Object,
@@ -200,6 +199,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
         onDragStart: function onDragStart(evt) {
           this.context = this.getUnderlyingVm(evt.item);
           evt.item._underlying_vm_ = this.clone(this.context.element);
+          draggingElement = evt.item;
         },
         onDragAdd: function onDragAdd(evt) {
           var element = evt.item._underlying_vm_;
@@ -238,12 +238,11 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
           if (!relatedContext.element) {
             return 0;
           }
-          var relatedElement = evt.related;
-          var currentDOMIndex = [].concat(_toConsumableArray(evt.to.children)).indexOf(relatedElement);
+          var domChildren = [].concat(_toConsumableArray(evt.to.children));
+          var currentDOMIndex = domChildren.indexOf(evt.related);
           var currentIndex = relatedContext.component.getVmIndex(currentDOMIndex);
-          var incialIndex = relatedContext.index;
-          console.log(currentIndex, incialIndex);
-          return Math.max(currentIndex, incialIndex);
+          var draggedInList = domChildren.indexOf(draggingElement) != -1;
+          return draggedInList ? currentIndex : currentIndex + 1;
         },
         onDragMove: function onDragMove(evt) {
           var onMove = this.move;
@@ -260,6 +259,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
         },
         onDragEnd: function onDragEnd(evt) {
           this.computeIndexes();
+          draggingElement = null;
         }
       }
     };

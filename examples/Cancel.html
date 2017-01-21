@@ -33,7 +33,7 @@
              </draggable>
 
            <h2>List 2 draggable</h2>
-            <draggable class="dragArea" :list="list2" :options="{group:'people'}">
+            <draggable class="dragArea" :list="list2" :options="{group:'people'}" :move="checkMove">
                 <transition-group tag="div" class="dragArea" name="list-complete">
                     <div v-for="(element, index) in list2" :class="{'target': element===targetElement, 'ok':canDrag  , 'ko':!canDrag}" :key="element.name" >
                         {{element.name}}

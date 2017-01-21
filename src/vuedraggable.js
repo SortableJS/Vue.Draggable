@@ -38,6 +38,7 @@
     const eventsListened = ['Start', 'Add', 'Remove', 'Update', 'End']
     const eventsToEmit = ['Choose', 'Sort', 'Filter', 'Clone']
     const readonlyProperties = ['Move', ...eventsListened, ...eventsToEmit].map(evt => 'on'+evt)
+    var draggingElement = null
   
     const props = {
       options: Object,
@@ -181,6 +182,7 @@
         onDragStart (evt) {
           this.context = this.getUnderlyingVm(evt.item)
           evt.item._underlying_vm_ = this.clone(this.context.element)
+          draggingElement = evt.item
         },
 
         onDragAdd (evt) {
@@ -223,11 +225,11 @@
           if (!relatedContext.element){
             return 0
           }
-          const relatedElement = evt.related;
-          const currentDOMIndex = [...evt.to.children].indexOf(relatedElement)
+          const domChildren = [...evt.to.children]
+          const currentDOMIndex = domChildren.indexOf(evt.related)
           const currentIndex = relatedContext.component.getVmIndex(currentDOMIndex)
-          const incialIndex = relatedContext.index
-          return (currentIndex !== incialIndex) ? incialIndex+1 : incialIndex
+          const draggedInList = domChildren.indexOf(draggingElement) != -1
+          return draggedInList? currentIndex : currentIndex+1
         },
 
         onDragMove (evt) {
@@ -246,6 +248,7 @@
 
         onDragEnd (evt) {
           this.computeIndexes()
+          draggingElement = null
         }
       }
     }    
