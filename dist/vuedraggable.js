@@ -1,5 +1,7 @@
 'use strict';
 
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
 (function () {
@@ -104,7 +106,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
           optionsAdded['on' + elt] = emit.bind(_this2, elt);
         });
 
-        var options = Object.assign({}, this.options, optionsAdded, { onMove: function onMove(evt) {
+        var options = _extends({}, this.options, optionsAdded, { onMove: function onMove(evt) {
             return _this2.onDragMove(evt);
           } });
         this._sortable = new Sortable(this.rootContainer, options);
@@ -175,8 +177,8 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
           this.list.splice(newIndex, 0, this.list.splice(oldIndex, 1)[0]);
         },
         getRelatedContextFromMoveEvent: function getRelatedContextFromMoveEvent(_ref2) {
-          var to = _ref2.to;
-          var related = _ref2.related;
+          var to = _ref2.to,
+              related = _ref2.related;
 
           var component = this.getUnderlyingPotencialDraggableComponent(to);
           if (!component) {
@@ -186,7 +188,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
           var context = { list: list, component: component };
           if (to !== related && list && component.getUnderlyingVm) {
             var destination = component.getUnderlyingVm(related);
-            return Object.assign(destination, context);
+            return _extends(destination, context);
           }
 
           return context;
@@ -253,8 +255,8 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
           var relatedContext = this.getRelatedContextFromMoveEvent(evt);
           var draggedContext = this.context;
           var futureIndex = this.computeFutureIndex(relatedContext, evt);
-          Object.assign(draggedContext, { futureIndex: futureIndex });
-          Object.assign(evt, { relatedContext: relatedContext, draggedContext: draggedContext });
+          _extends(draggedContext, { futureIndex: futureIndex });
+          _extends(evt, { relatedContext: relatedContext, draggedContext: draggedContext });
           return onMove(evt);
         },
         onDragEnd: function onDragEnd(evt) {
