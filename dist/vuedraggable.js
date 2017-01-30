@@ -270,7 +270,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     var Sortable = require("sortablejs");
     module.exports = buildDraggable(Sortable);
   } else if (typeof define == "function" && define.amd) {
-    define(['Sortable'], function (Sortable) {
+    define(['sortablejs'], function (Sortable) {
       return buildDraggable(Sortable);
     });
   } else if (window && window.Vue && window.Sortable) {
