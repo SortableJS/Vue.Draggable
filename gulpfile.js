@@ -10,7 +10,8 @@ const babel = require('gulp-babel');
 gulp.task('scripts', function () {
     return gulp.src('src/**/*.js')
         .pipe(babel({
-            presets: ['es2015']
+            presets: ['es2015'],
+            plugins: ["transform-object-assign"]
         }))
         .pipe($.jshint())
         .pipe($.jshint.reporter(require('jshint-stylish')))
@@ -25,7 +26,8 @@ gulp.task('buildjs', ['scripts'], function () {
 
     return gulp.src('src/**/*.js')
         .pipe(babel({
-            presets: ['es2015']
+            presets: ['es2015'],
+            plugins: ["transform-object-assign"]
         }))    
         .pipe(gulp.dest('dist'))
         .pipe($.size());
@@ -36,7 +38,8 @@ gulp.task('js', ['buildjs'], function () {
 
     return gulp.src('src/**/*.js')
         .pipe(babel({
-            presets: ['es2015']
+            presets: ['es2015'],
+            plugins: ["transform-object-assign"]
         }))    
         .pipe($.uglify())
         .pipe(rename({
@@ -91,7 +94,8 @@ gulp.task('main-bower-files', function() {
 gulp.task('copy-js', function() {
     return gulp.src('src/**/*.js')        
         .pipe(babel({
-            presets: ['es2015']
+            presets: ['es2015'],
+            plugins: ["transform-object-assign"]
         }))   
         .pipe(gulp.dest('./examples/src'));
 });
