@@ -3,8 +3,8 @@
 
 [![GitHub open issues](https://img.shields.io/github/issues/SortableJS/Vue.Draggable.svg?maxAge=2592000)](https://github.com/SortableJS/Vue.Draggable/issues?q=is%3Aopen+is%3Aissue)
 [![GitHub closed issues](https://img.shields.io/github/issues-closed/SortableJS/Vue.Draggable.svg?maxAge=2592000)](https://github.com/SortableJS/Vue.Draggable/issues?q=is%3Aissue+is%3Aclosed)
-[![Npm download](https://img.shields.io/npm/dt/vuedraggable.svg?maxAge=2592000)](https://www.npmjs.com/package/vuedraggable)
-[![Npm version](https://img.shields.io/npm/v/vuedraggable.svg?maxAge=2592000)](https://www.npmjs.com/package/vuedraggable)
+[![npm download](https://img.shields.io/npm/dt/vuedraggable.svg?maxAge=2592000)](https://www.npmjs.com/package/vuedraggable)
+[![npm version](https://img.shields.io/npm/v/vuedraggable.svg?maxAge=2592000)](https://www.npmjs.com/package/vuedraggable)
 [![Package Quality](http://npm.packagequality.com/shield/vuedragablefor.svg)](http://packagequality.com/#?package=vuedraggable)
 [![vue2](https://img.shields.io/badge/vue-2.x-brightgreen.svg)](https://vuejs.org/)
 [![MIT License](https://img.shields.io/github/license/SortableJS/Vue.Draggable.svg)](https://github.com/SortableJS/Vue.Draggable/blob/master/LICENSE)
@@ -22,15 +22,15 @@ Based on and offering all features of [Sortable.js](https://github.com/RubaXa/So
 ## Features
 
 * Full support of [Sortable.js](https://github.com/RubaXa/Sortable) features:
-    * Supports touch devices 
+    * Supports touch devices
     * Supports drag handles and selectable text
     * Smart auto-scrolling
     * Support drag and drop between different lists
     * No jQuery dependency
 * Keeps in sync HTML and view model list
 * Compatible with Vue.js 2.0 transition-group
-* Cancelation support
-* Events reporting any changes when full control is needed 
+* Cancellation support
+* Events reporting any changes when full control is needed
 
 ## For Vue.js 2.0
 
@@ -45,12 +45,12 @@ Typical use:
 
 With `transition-group`:
 ``` html
-<draggable :list="list"> 
-	<transition-group>
-		<div v-for="element in list" :key="element.id">
-			{{element.name}}
-		</div>
-	</transition-group>
+<draggable :list="list">
+    <transition-group>
+        <div v-for="element in list" :key="element.id">
+            {{element.name}}
+        </div>
+    </transition-group>
 </draggable>
 ```
 .vue file:
@@ -61,8 +61,8 @@ With `transition-group`:
         components: {
             draggable,
         },
-	...
-``` 
+  ...
+```
 
 Draggable component should directly wrap the draggable elements, or a `transition-component` containing the draggable elements.
 
@@ -94,7 +94,7 @@ Required: `false`<br>
 Default: `(original) => { return original;}`<br>
 
 Function called on the source component to clone element when clone option is true. The unique argument is the viewModel element to be cloned and the returned value should be its cloned version.<br>
-By default vue.draggable reuse the viewmodel element, so you have to use this hook if you want to clone or deep clone it.
+By default vue.draggable reuses the viewModel element, so you have to use this hook if you want to clone or deep clone it.
 
 #### move
 Type: `Function`<br>
@@ -112,23 +112,23 @@ function onMoveCallback(evt, originalEvent){
 ```
 evt object has same property as [Sortable onMove event](https://github.com/RubaXa/Sortable#move-event-object), and 3 additional properties:
  - `draggedContext`:  context linked to dragged element
- 	- `index`: dragged element index
-	- `element`: dragged element underlying view model element
- 	- `futureIndex`:  potencial index of the dragged element if the drop operation is accepted
+   - `index`: dragged element index
+   - `element`: dragged element underlying view model element
+   - `futureIndex`:  potential index of the dragged element if the drop operation is accepted
  - `relatedContext`: context linked to current drag operation
- 	- `index`: target element index
-	- `element`: target element view model element
-	- `list`: target list
-	- `component`: target VueComponent
+   - `index`: target element index
+   - `element`: target element view model element
+   - `list`: target list
+   - `component`: target VueComponent
 
 HTML:
 ```HTML
-	<draggable :list="list" :move="checkMove"> 
+<draggable :list="list" :move="checkMove">
 ```
 javascript:
 ```javascript
 checkMove: function(evt){
-	return (evt.draggedContext.element.name!=='apple');
+    return (evt.draggedContext.element.name!=='apple');
 }
 ```
 See complete example: [Cancel.html](https://github.com/SortableJS/Vue.Draggable/blob/master/examples/Cancel.html), [cancel.js](https://github.com/SortableJS/Vue.Draggable/blob/master/examples/script/cancel.js)
@@ -139,19 +139,19 @@ See complete example: [Cancel.html](https://github.com/SortableJS/Vue.Draggable/
 * Support for Sortable events:
 
   `start`, `add`, `remove`, `update`, `end`, `choose`, `sort`, `filter`, `clone`<br>
-  events are called when respectivelly onStart, onAdd, onRemove, onUpdate, onEnd, onChoose, onSort, onClone are fired by Sortabe.js with the same argument.<br>
+  Events are called whenever onStart, onAdd, onRemove, onUpdate, onEnd, onChoose, onSort, onClone are fired by Sortable.js with the same argument.<br>
   [See here for reference](https://github.com/RubaXa/Sortable#event-object-demo)
 
   Note that SortableJS OnMove callback is mapped with the [move prop](https://github.com/SortableJS/Vue.Draggable/blob/master/README.md#move)
 
 HTML:
 ```HTML
-	<draggable :list="list" @end="onEnd"> 
+<draggable :list="list" @end="onEnd">
 ```
 
 * change event
 
-  `change` event is trigerred when list prop is not null and the corresponding array is altered due to drag-and-drop operation.<br>
+  `change` event is triggered when list prop is not null and the corresponding array is altered due to drag-and-drop operation.<br>
   This event is called with one argument containing one of the following properties:
   - `added`:  contains information of an element added to the array
     - `newIndex`: the index of the added element
@@ -167,7 +167,7 @@ HTML:
 ### Gotchas
   - Drag operation with empty list:
 
-    To be abble to drag items on an empty draggable component, set a min-height>0 on the `draggable` component or the `transition-group` if any.  
+    To be able to drag items on an empty draggable component, set a min-height>0 on the `draggable` component or the `transition-group` if any.
 
 ### Fiddle
 
@@ -209,7 +209,7 @@ https://jsfiddle.net/dede89/m2v0orcn/
             ...
         }
         ...
-  
+
   //For Vue.js 2.0
   var draggable = require('vuedraggable')
   ```
