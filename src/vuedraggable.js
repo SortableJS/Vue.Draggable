@@ -102,6 +102,10 @@
       computed : {
         rootContainer () {
           return this.transitionMode? this.$el.children[0] : this.$el;
+        },
+
+        isCloning () {
+          return (this.options!==null) && (this.options.group !== null) && (this.options.group.pull === 'clone')
         }
       },
 
@@ -200,8 +204,7 @@
 
         onDragRemove (evt) {
           insertNodeAt(this.rootContainer, evt.item, evt.oldIndex)
-          const isCloning = !!evt.clone
-          if (isCloning) {
+          if (this.isCloning) {
             removeNode(evt.clone)
             return
           }
