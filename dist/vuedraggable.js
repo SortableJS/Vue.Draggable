@@ -122,7 +122,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
           return this.transitionMode ? this.$el.children[0] : this.$el;
         },
         isCloning: function isCloning() {
-          return this.options !== null && this.options.group !== null && this.options.group.pull === 'clone';
+          return !!this.options && this.options.group !== null && this.options.group.pull === 'clone';
         }
       },
 
