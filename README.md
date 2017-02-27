@@ -183,6 +183,10 @@ https://jsfiddle.net/dede89/t3m5krea/
 - Example with transition-group:
 https://jsfiddle.net/dede89/m2v0orcn/
 
+### Full demo example
+
+[draggable-example](https://github.com/David-Desmaisons/draggable-example)
+
 ## For Vue.js 1.0
 
 [See here](documentation/Vue.draggable.for.ReadME.md)
