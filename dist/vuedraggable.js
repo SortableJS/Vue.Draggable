@@ -40,7 +40,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       var _this = this;
 
       return function (evtData) {
-        if (_this.list !== null) {
+        if (_this.realList !== null) {
           _this['onDrag' + evtName](evtData);
         }
         emit.call(_this, evtName, evtData);
@@ -57,6 +57,11 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     var props = {
       options: Object,
       list: {
+        type: Array,
+        required: false,
+        default: null
+      },
+      value: {
         type: Array,
         required: false,
         default: null
@@ -123,6 +128,9 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
         },
         isCloning: function isCloning() {
           return !!this.options && this.options.group !== null && this.options.group.pull === 'clone';
+        },
+        realList: function realList() {
+          return !!this.list ? this.list : this.value;
         }
       },
 
@@ -134,7 +142,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
             }
           }
         },
-        list: function list() {
+        realList: function realList() {
           this.computeIndexes();
         }
       },
@@ -153,7 +161,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
         },
         getUnderlyingVm: function getUnderlyingVm(htmlElt) {
           var index = computeVmIndex(this.getChildrenNodes(), htmlElt);
-          var element = this.list[index];
+          var element = this.realList[index];
           return { index: index, element: element };
         },
         getUnderlyingPotencialDraggableComponent: function getUnderlyingPotencialDraggableComponent(_ref) {
@@ -171,23 +179,38 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
             _this4.$emit('change', evt);
           });
         },
+        alterList: function alterList(onList) {
+          if (!!this.list) {
+            onList(this.list);
+          } else {
+            var newList = [].concat(_toConsumableArray(this.value));
+            onList(newList);
+            this.$emit('input', newList);
+          }
+        },
         spliceList: function spliceList() {
-          var _list;
+          var _arguments = arguments;
 
-          (_list = this.list).splice.apply(_list, arguments);
+          var spliceList = function spliceList(list) {
+            return list.splice.apply(list, _arguments);
+          };
+          this.alterList(spliceList);
         },
         updatePosition: function updatePosition(oldIndex, newIndex) {
-          this.list.splice(newIndex, 0, this.list.splice(oldIndex, 1)[0]);
+          var updatePosition = function updatePosition(list) {
+            return list.splice(newIndex, 0, list.splice(oldIndex, 1)[0]);
+          };
+          this.alterList(updatePosition);
         },
         getRelatedContextFromMoveEvent: function getRelatedContextFromMoveEvent(_ref2) {
-          var to = _ref2.to,
-              related = _ref2.related;
+          var to = _ref2.to;
+          var related = _ref2.related;
 
           var component = this.getUnderlyingPotencialDraggableComponent(to);
           if (!component) {
             return { component: component };
           }
-          var list = component.list;
+          var list = component.realList;
           var context = { list: list, component: component };
           if (to !== related && list && component.getUnderlyingVm) {
             var destination = component.getUnderlyingVm(related);
@@ -250,7 +273,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
         },
         onDragMove: function onDragMove(evt) {
           var onMove = this.move;
-          if (!onMove || !this.list) {
+          if (!onMove || !this.realList) {
             return true;
           }
 

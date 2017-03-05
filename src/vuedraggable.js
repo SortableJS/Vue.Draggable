@@ -28,7 +28,7 @@
 
     function delegateAndEmit (evtName) {
       return (evtData) => {
-        if (this.list!==null) {
+        if (this.realList!==null) {
           this['onDrag' + evtName](evtData)
         }
         emit.call(this, evtName, evtData)
@@ -43,6 +43,11 @@
     const props = {
       options: Object,
       list: { 
+        type: Array,
+        required: false,
+        default: null
+      },
+      value: { 
         type: Array,
         required: false,
         default: null
@@ -106,6 +111,10 @@
 
         isCloning () {
           return (!!this.options) && (this.options.group !== null) && (this.options.group.pull === 'clone')
+        },
+
+        realList () {
+          return (!!this.list) ? this.list : this.value;
         }
       },
 
@@ -118,7 +127,7 @@
           }         
         },
 
-        list(){
+        realList() {
           this.computeIndexes()
         }
       },
@@ -137,7 +146,7 @@
 
         getUnderlyingVm (htmlElt) {
           const index = computeVmIndex(this.getChildrenNodes(), htmlElt)
-          const element = this.list[index]
+          const element = this.realList[index]
           return {index, element}
         },
 
@@ -154,12 +163,25 @@
           });       
         },
 
+        alterList (onList) {
+           if (!!this.list) {
+            onList(this.list)
+          }
+          else {
+            const newList = [...this.value]
+            onList(newList)
+            this.$emit('input', newList)
+          }  
+        },
+
         spliceList () {
-          this.list.splice(...arguments)
+          const spliceList = list => list.splice(...arguments)
+          this.alterList(spliceList)
         },
 
         updatePosition (oldIndex, newIndex) {
-          this.list.splice(newIndex, 0, this.list.splice(oldIndex, 1)[0])
+          const updatePosition = list => list.splice(newIndex, 0, list.splice(oldIndex, 1)[0])
+          this.alterList(updatePosition)
         },
 
         getRelatedContextFromMoveEvent({to, related}) {
@@ -167,7 +189,7 @@
           if (!component) {
             return {component}
           }
-          const list = component.list
+          const list = component.realList
           const context = {list, component}
           if (to !== related && list && component.getUnderlyingVm) {
             const destination = component.getUnderlyingVm(related)
@@ -237,7 +259,7 @@
 
         onDragMove (evt) {
           const onMove = this.move
-          if (!onMove || !this.list) {
+          if (!onMove || !this.realList) {
             return true
           }
 
