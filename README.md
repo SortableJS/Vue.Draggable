@@ -95,7 +95,8 @@ Required: `false`<br>
 Default: `null`
 
 Input array to draggable component. Typically same array as referenced by inner element v-for directive.<br>
-Should not used directly but used only though the `v-model` directive:
+This is the preferred way to use Vue.draggable as it is compatible with Vuex.<br>
+It should not be used directly but only though the `v-model` directive:
 ```html
 <draggable v-model="myArray">
 ```
@@ -107,7 +108,7 @@ Default: `null`
 
 Altenative to the `value` prop, list is an array to be synchronized with drag-and-drop.<br>
 The main diference is that `list` prop is updated by draggable component using splice method, whereas `value` is immutable.<br>
-Using `v-model` and `value` is the compatible with Vuex and thus is the preferred way of using draggable.
+**Do not use in conjunction with value prop.**
 
 #### options
 Type: `Object`<br>
