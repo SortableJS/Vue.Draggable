@@ -36,21 +36,10 @@ Based on and offering all features of [Sortable.js](https://github.com/RubaXa/So
 
 Use draggable component:
 
-Typical use:
+### Typical use:
 ``` html
-<draggable :list="list" :options="{group:'people'}" @start="drag=true" @end="drag=false">
-   <div v-for="element in list">{{element.name}}</div>
-</draggable>
-```
-
-With `transition-group`:
-``` html
-<draggable :list="list">
-    <transition-group>
-        <div v-for="element in list" :key="element.id">
-            {{element.name}}
-        </div>
-    </transition-group>
+<draggable v-model="myArray" :options="{group:'people'}" @start="drag=true" @end="drag=false">
+   <div v-for="element in myArray">{{element.name}}</div>
 </draggable>
 ```
 .vue file:
@@ -64,16 +53,61 @@ With `transition-group`:
   ...
 ```
 
+### With `transition-group`:
+``` html
+<draggable v-model="myArray">
+    <transition-group>
+        <div v-for="element in myArray" :key="element.id">
+            {{element.name}}
+        </div>
+    </transition-group>
+</draggable>
+```
+
+
 Draggable component should directly wrap the draggable elements, or a `transition-component` containing the draggable elements.
 
+
+### With Vuex:
+
+```html
+<draggable v-model='myList'>
+``` 
+
+```javascript
+computed: {
+    myList: {
+        get() {
+            return this.$store.state.myList
+        },
+        set(value) {
+            this.$store.commit('updateList', value)
+        }
+    }
+}
+```
+
+
 ### Props
+#### value
+Type: `Array`<br>
+Required: `false`<br>
+Default: `null`
+
+Input array to draggable component. Typically same array as referenced by inner element v-for directive.<br>
+Should not used directly but used only though the `v-model` directive:
+```html
+<draggable v-model="myArray">
+```
+
 #### list
 Type: `Array`<br>
 Required: `false`<br>
 Default: `null`
 
-Array to be synchronized with drag-and-drop. Typically same array as referenced by inner element v-for directive.<br>
-When using children elements not linked to a "v-for" directive, use null.
+Altenative to the `value` prop, list is an array to be synchronized with drag-and-drop.<br>
+The main diference is that `list` prop is updated by draggable component using splice method, whereas `value` is immutable.<br>
+Using `v-model` and `value` is the compatible with Vuex and thus is the preferred way of using draggable.
 
 #### options
 Type: `Object`<br>
