@@ -110,7 +110,7 @@
         },
 
         isCloning () {
-          return (!!this.options) && (this.options.group !== null) && (this.options.group !== undefined) && (this.options.group.pull === 'clone')
+          return (!!this.options) && (!!this.options.group !== null) && (this.options.group.pull === 'clone')
         },
 
         realList () {
