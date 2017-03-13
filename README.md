@@ -218,6 +218,9 @@ https://jsfiddle.net/dede89/t3m5krea/
 - Example with transition-group:
 https://jsfiddle.net/dede89/m2v0orcn/
 
+- Example with table:
+https://jsfiddle.net/dede89/L54yu3L9/
+
 ### Full demo example
 
 [draggable-example](https://github.com/David-Desmaisons/draggable-example)
