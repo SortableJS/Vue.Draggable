@@ -128,7 +128,7 @@ Type: `Function`<br>
 Required: `false`<br>
 Default: `(original) => { return original;}`<br>
 
-Function called on the source component to clone element when clone option is true. The unique argument is the viewModel element to be cloned and the returned value should be its cloned version.<br>
+Function called on the source component to clone element when clone option is true. The unique argument is the viewModel element to be cloned and the returned value is its cloned version.<br>
 By default vue.draggable reuses the viewModel element, so you have to use this hook if you want to clone or deep clone it.
 
 #### move
