@@ -15,7 +15,9 @@
     }
 
     function computeVmIndex (vnodes, element) {
-      return vnodes.map(elt => elt.elm).indexOf(element)
+      return vnodes.filter((elt) => {
+        return !elt.isComment && elt.elm.nodeName !== '#text';
+      }).map(elt => elt.elm).indexOf(element)
     }
 
     function computeIndexes (slots, children) {
