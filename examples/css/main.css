@@ -38,7 +38,20 @@
   border: solid 1px;
   transition: all 1s;
   height: 60px;
+  overflow: hidden;
 }
+
+.item {
+  padding: 4px;
+  margin-top: 4px;
+  border: solid 1px;
+  height: 60px;
+}
+
+/*.list-complete-item.no {
+  transition: none !important;
+}*/
+
 
 .list-complete-enter, .list-complete-leave-active {
   opacity: 0;
@@ -46,4 +59,9 @@
   margin-top: 0px;
   padding: 0px;
   border: solid 0px;
+}
+
+.machine-contents {
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
