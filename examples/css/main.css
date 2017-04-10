@@ -48,11 +48,6 @@
   height: 60px;
 }
 
-/*.list-complete-item.no {
-  transition: none !important;
-}*/
-
-
 .list-complete-enter, .list-complete-leave-active {
   opacity: 0;
   height: 0px;
@@ -64,4 +59,21 @@
 .machine-contents {
   margin-top: 10px;
   margin-bottom: 10px;
+  margin-left: 5%;
+  margin-right: 5%;
+  /*width: 45%;*/
 }
+
+#areas {
+  display: flex;
+}
+
+#columns {
+  flex: 1;
+}
+
+#columns>.list {
+  width: 40%;
+  float: left;
+}
+
