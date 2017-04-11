@@ -1,5 +1,7 @@
 'use strict';
 
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
@@ -33,17 +35,21 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     }
 
     function emit(evtName, evtData) {
-      this.$emit(evtName.toLowerCase(), evtData);
+      var _this = this;
+
+      this.$nextTick(function () {
+        return _this.$emit(evtName.toLowerCase(), evtData);
+      });
     }
 
     function delegateAndEmit(evtName) {
-      var _this = this;
+      var _this2 = this;
 
       return function (evtData) {
-        if (_this.realList !== null) {
-          _this['onDrag' + evtName](evtData);
+        if (_this2.realList !== null) {
+          _this2['onDrag' + evtName](evtData);
         }
-        emit.call(_this, evtName, evtData);
+        emit.call(_this2, evtName, evtData);
       };
     }
 
@@ -100,19 +106,19 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
         return h(this.element, null, this.$slots.default);
       },
       mounted: function mounted() {
-        var _this2 = this;
+        var _this3 = this;
 
         var optionsAdded = {};
         eventsListened.forEach(function (elt) {
-          optionsAdded['on' + elt] = delegateAndEmit.call(_this2, elt);
+          optionsAdded['on' + elt] = delegateAndEmit.call(_this3, elt);
         });
 
         eventsToEmit.forEach(function (elt) {
-          optionsAdded['on' + elt] = emit.bind(_this2, elt);
+          optionsAdded['on' + elt] = emit.bind(_this3, elt);
         });
 
         var options = _extends({}, this.options, optionsAdded, { onMove: function onMove(evt) {
-            return _this2.onDragMove(evt);
+            return _this3.onDragMove(evt);
           } });
         this._sortable = new Sortable(this.rootContainer, options);
         this.computeIndexes();
@@ -127,7 +133,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
           return this.transitionMode ? this.$el.children[0] : this.$el;
         },
         isCloning: function isCloning() {
-          return !!this.options && !!this.options.group && this.options.group.pull === 'clone';
+          return !!this.options && !!this.options.group !== null && this.options.group.pull === 'clone';
         },
         realList: function realList() {
           return !!this.list ? this.list : this.value;
@@ -153,10 +159,10 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
           return this.transitionMode ? rawNodes[0].child.$slots.default : rawNodes;
         },
         computeIndexes: function computeIndexes() {
-          var _this3 = this;
+          var _this4 = this;
 
           this.$nextTick(function () {
-            _this3.visibleIndexes = _computeIndexes(_this3.getChildrenNodes(), _this3.rootContainer.children);
+            _this4.visibleIndexes = _computeIndexes(_this4.getChildrenNodes(), _this4.rootContainer.children);
           });
         },
         getUnderlyingVm: function getUnderlyingVm(htmlElt) {
@@ -173,10 +179,10 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
           return __vue__.$parent;
         },
         emitChanges: function emitChanges(evt) {
-          var _this4 = this;
+          var _this5 = this;
 
           this.$nextTick(function () {
-            _this4.$emit('change', evt);
+            _this5.$emit('change', evt);
           });
         },
         alterList: function alterList(onList) {
@@ -203,8 +209,8 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
           this.alterList(updatePosition);
         },
         getRelatedContextFromMoveEvent: function getRelatedContextFromMoveEvent(_ref2) {
-          var to = _ref2.to;
-          var related = _ref2.related;
+          var to = _ref2.to,
+              related = _ref2.related;
 
           var component = this.getUnderlyingPotencialDraggableComponent(to);
           if (!component) {
@@ -293,7 +299,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     return draggableComponent;
   }
 
-  if (typeof exports == "object") {
+  if ((typeof exports === 'undefined' ? 'undefined' : _typeof(exports)) == "object") {
     var Sortable = require("sortablejs");
     module.exports = buildDraggable(Sortable);
   } else if (typeof define == "function" && define.amd) {
