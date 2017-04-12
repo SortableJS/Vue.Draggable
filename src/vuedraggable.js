@@ -19,7 +19,12 @@
     }
 
     function computeIndexes(slots, children) {
-      return (!slots) ? [] : Array.prototype.map.call(children, elt => computeVmIndex(slots, elt))
+      if (!slots) {
+        return []
+      }
+
+      const elmFromNodes = slots.map(elt => elt.elm);
+      return [...children].map(elt => elmFromNodes.indexOf(elt))
     }
 
     function emit(evtName, evtData) {
@@ -71,7 +76,8 @@
 
       data() {
         return {
-          transitionMode: false
+          transitionMode: false,
+          componentMode: false
         }
       },
 
@@ -86,6 +92,10 @@
       },
 
       mounted() {
+        this.componentMode = this.element.toLowerCase() !== this.$el.nodeName.toLowerCase()
+        if (this.componentMode && this.transitionMode) {
+          throw new Error(`Transition-group inside component is not suppported. Please alter element value or remove transition-group. Current element value: ${this.element}`);
+        }
         var optionsAdded = {};
         eventsListened.forEach(elt => {
           optionsAdded['on' + elt] = delegateAndEmit.call(this, elt)
@@ -134,6 +144,9 @@
 
       methods: {
         getChildrenNodes() {
+          if (this.componentMode) {
+            return this.$children[0].$slots.default
+          }
           const rawNodes = this.$slots.default
           return this.transitionMode ? rawNodes[0].child.$slots.default : rawNodes
         },

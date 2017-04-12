@@ -1,0 +1,55 @@
+<!doctype html>
+<html class="no-js" lang="">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Basic example</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="material/vue-material.css">
+    <link rel="stylesheet" href="css/component.css">
+</head>
+
+<body>
+
+    <div id="main">
+        <div id="app">
+            <md-toolbar>
+                <h1 class="md-title">My Title</h1>
+            </md-toolbar>
+
+            <md-layout :md-gutter="16">
+                <md-layout>
+                    <draggable v-model="listA" element="md-list" :options="sortOptions">
+                        <md-list-item v-for="(element, index) in listA" :key="index">
+                            <span>{{ element.name }}</span>
+
+                            <md-divider v-if="index !== listA.length - 1"></md-divider>
+                        </md-list-item>
+                    </draggable>
+                </md-layout>
+
+                <md-layout>
+                    <draggable v-model="listB" element="md-list" :options="sortOptions">
+                        <md-list-item v-for="(element, index) in listB" :key="index">
+                            <span>{{ element.name }}</span>
+
+                            <md-divider v-if="index !== listB.length - 1"></md-divider>
+                        </md-list-item>
+                    </draggable>
+                </md-layout>
+            </md-layout>
+        </div>
+
+    </div>
+
+    <script type="text/javascript" src="libs\vue\dist\vue.js"></script>
+    <script type="text/javascript" src="libs\Sortable\Sortable.js"></script>
+    <script type="text/javascript" src="src\vuedraggable.js"></script>
+    <script type="text/javascript" src="material\vue-material.js"></script>
+    <script type="text/javascript" src="script\component.js"></script>
+</body>
+
+</html>

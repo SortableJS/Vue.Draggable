@@ -29,8 +29,15 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     }
 
     function _computeIndexes(slots, children) {
-      return !slots ? [] : Array.prototype.map.call(children, function (elt) {
-        return computeVmIndex(slots, elt);
+      if (!slots) {
+        return [];
+      }
+
+      var elmFromNodes = slots.map(function (elt) {
+        return elt.elm;
+      });
+      return [].concat(_toConsumableArray(children)).map(function (elt) {
+        return elmFromNodes.indexOf(elt);
       });
     }
 
@@ -93,7 +100,8 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
       data: function data() {
         return {
-          transitionMode: false
+          transitionMode: false,
+          componentMode: false
         };
       },
       render: function render(h) {
@@ -108,6 +116,10 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       mounted: function mounted() {
         var _this3 = this;
 
+        this.componentMode = this.element.toLowerCase() !== this.$el.nodeName.toLowerCase();
+        if (this.componentMode && this.transitionMode) {
+          throw new Error('Transition-group inside component is not suppported. Please alter element value or remove transition-group. Current element value: ' + this.element);
+        }
         var optionsAdded = {};
         eventsListened.forEach(function (elt) {
           optionsAdded['on' + elt] = delegateAndEmit.call(_this3, elt);
@@ -133,7 +145,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
           return this.transitionMode ? this.$el.children[0] : this.$el;
         },
         isCloning: function isCloning() {
-          return !!this.options && !!this.options.group !== null && this.options.group.pull === 'clone';
+          return !!this.options && !!this.options.group && this.options.group.pull === 'clone';
         },
         realList: function realList() {
           return !!this.list ? this.list : this.value;
@@ -155,6 +167,9 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
       methods: {
         getChildrenNodes: function getChildrenNodes() {
+          if (this.componentMode) {
+            return this.$children[0].$slots.default;
+          }
           var rawNodes = this.$slots.default;
           return this.transitionMode ? rawNodes[0].child.$slots.default : rawNodes;
         },
