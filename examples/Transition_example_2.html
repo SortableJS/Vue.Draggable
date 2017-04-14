@@ -15,7 +15,7 @@
 
   <div id="main">
     <div class="container-fluid machine-contents">
-      <draggable :list="jobs" :options="{animation:150}" :no-default-animation-on-drag="true" @start="drag=true" @end="drag=false">
+      <draggable :list="jobs" :options="{animation:150}" :no-transition-on-drag="true" @start="drag=true" @end="drag=false">
         <transition-group :name="!drag? 'list-complete' : null" :class="{'no' : drag}" :css="true">
           <div v-for="(job, index) in jobs" :key="job.jobNumber" :class="drag? 'item' : 'list-complete-item'">
             <div>

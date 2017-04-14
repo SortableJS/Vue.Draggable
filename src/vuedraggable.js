@@ -57,6 +57,10 @@
         required: false,
         default: null
       },
+      noTransitionOnDrag: {
+        type: Boolean,
+        default: false
+      },
       clone: {
         type: Function,
         default: (original) => { return original; }
@@ -218,6 +222,21 @@
           return (domIndex > numberIndexes - 1) ? numberIndexes : indexes[domIndex]
         },
 
+        getComponent() {
+          return this.$slots.default[0].componentInstance
+        },
+
+        resetTransitionData(index) {
+          if (!this.noTransitionOnDrag || !this.transitionMode) {
+            return
+          }
+          var nodes = this.getChildrenNodes()
+          nodes[index].data = null
+          const transitionContainer = this.getComponent()
+          transitionContainer.children = []
+          transitionContainer.kept = undefined
+        },
+
         onDragStart(evt) {
           this.context = this.getUnderlyingVm(evt.item)
           evt.item._underlying_vm_ = this.clone(this.context.element)
@@ -246,6 +265,7 @@
           const oldIndex = this.context.index
           this.spliceList(oldIndex, 1)
           const removed = { element: this.context.element, oldIndex }
+          this.resetTransitionData(oldIndex)
           this.emitChanges({ removed })
         },
 

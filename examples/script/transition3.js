@@ -31,7 +31,10 @@ var vm = new Vue({
       arr.splice(index, 1);
     },
     add: function () {
-      this.jobs.push({jobNumber: "14037-"+ count++})
+      this.jobs.push({jobNumber: "14022-"+ count++})
+    },
+    add2: function () {
+      this.jobs2.push({jobNumber: "14046-"+ count++})
     }
   }
 })

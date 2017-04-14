@@ -17,7 +17,7 @@
     <div id="areas">
       <div id="columns">
         <div class="container-fluid machine-contents list">
-          <draggable :list="jobs" :options="{group:'a', animation:150}" :no-default-animation-on-drag="true" @start="drag=true" @end="drag=false">
+          <draggable :list="jobs" :options="{group:'a', animation:150}" :no-transition-on-drag="true" @start="drag=true" @end="drag=false">
             <transition-group :name="!drag? 'list-complete' : null" :class="{'no' : drag}" :css="true">
               <div v-for="(job, index) in jobs" :key="job.jobNumber" :class="drag? 'item' : 'list-complete-item'">
                 <div>
@@ -33,7 +33,7 @@
         </div>
 
         <div class="container-fluid machine-contents list">
-          <draggable :list="jobs2" :options="{group:'a', animation:150}" :no-default-animation-on-drag="true" @start="drag=true" @end="drag=false">
+          <draggable v-model="jobs2" :options="{group:'a', animation:150}" :no-transition-on-drag="true" @start="drag=true" @end="drag=false">
             <transition-group :name="!drag? 'list-complete' : null" :class="{'no' : drag}" :css="true">
               <div v-for="(job, index) in jobs2" :key="job.jobNumber" :class="drag? 'item' : 'list-complete-item'">
                 <div>
@@ -50,7 +50,8 @@
 
       </div>
     </div>
-    <button v-on:click="add">Add</button>
+    <button v-on:click="add">Add list 1</button>
+    <button v-on:click="add2">Add list 2</button>
   </div>
   <script type="text/javascript" src="libs\vue\dist\vue.js"></script>
   <script type="text/javascript" src="libs\Sortable\Sortable.js"></script>
