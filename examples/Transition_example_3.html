@@ -18,8 +18,8 @@
       <div id="columns">
         <div class="container-fluid machine-contents list">
           <draggable :list="jobs" :options="{group:'a', animation:150}" :no-transition-on-drag="true" @start="drag=true" @end="drag=false">
-            <transition-group :name="!drag? 'list-complete' : null" :class="{'no' : drag}" :css="true">
-              <div v-for="(job, index) in jobs" :key="job.jobNumber" :class="drag? 'item' : 'list-complete-item'">
+            <transition-group :name="!drag? 'list-complete' : null" :css="true">
+              <div v-for="(job, index) in jobs" :key="job.jobNumber" class="list-complete-item">
                 <div>
                   {{ job.jobNumber }}
                 </div>
@@ -34,8 +34,8 @@
 
         <div class="container-fluid machine-contents list">
           <draggable v-model="jobs2" :options="{group:'a', animation:150}" :no-transition-on-drag="true" @start="drag=true" @end="drag=false">
-            <transition-group :name="!drag? 'list-complete' : null" :class="{'no' : drag}" :css="true">
-              <div v-for="(job, index) in jobs2" :key="job.jobNumber" :class="drag? 'item' : 'list-complete-item'">
+            <transition-group :name="!drag? 'list-complete' : null" :css="true">
+              <div v-for="(job, index) in jobs2" :key="job.jobNumber" class="list-complete-item">
                 <div>
                   {{ job.jobNumber }}
                 </div>

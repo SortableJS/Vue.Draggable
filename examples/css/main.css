@@ -36,24 +36,26 @@
   padding: 4px;
   margin-top: 4px;
   border: solid 1px;
-  transition: all 1s;
   height: 60px;
+}
+
+.list-complete-enter-active {
   overflow: hidden;
+  transition: all 1s;
 }
 
-.item {
-  padding: 4px;
-  margin-top: 4px;
-  border: solid 1px;
-  height: 60px;
-}
-
-.list-complete-enter, .list-complete-leave-active {
-  opacity: 0;
-  height: 0px;
+.list-complete-leave-active {
   margin-top: 0px;
+  overflow: hidden;
+  transition: all 1s;
+}
+
+.list-complete-enter, .list-complete-leave-to {
+  height: 0px;
+  opacity: 0;
   padding: 0px;
-  border: solid 0px;
+  margin-top: 0px;
+  overflow: hidden;
 }
 
 .machine-contents {
