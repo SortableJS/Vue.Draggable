@@ -202,7 +202,7 @@ HTML:
 ### Gotchas
   - Drag operation with empty list:
 
-    To be able to drag items on an empty draggable component, set a min-height>0 on the `draggable` component or the `transition-group` if any.
+    To be able to drag items on an empty draggable component, set a min-height more than 0 on the `draggable` component or the `transition-group` if any and ensure the transition group has display: block; otherwise height won't work.
 
 ### Fiddle
 
