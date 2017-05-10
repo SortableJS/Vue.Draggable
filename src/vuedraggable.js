@@ -133,12 +133,15 @@
       },
 
       watch: {
-        options(newOptionValue) {
-          for (var property in newOptionValue) {
-            if (readonlyProperties.indexOf(property) == -1) {
-              this._sortable.option(property, newOptionValue[property]);
+        options:{
+          handler(newOptionValue) {
+            for (var property in newOptionValue) {
+              if (readonlyProperties.indexOf(property) == -1) {
+                this._sortable.option(property, newOptionValue[property]);
+              }
             }
-          }
+          },
+          deep: true
         },
 
         realList() {

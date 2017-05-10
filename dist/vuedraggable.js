@@ -155,13 +155,18 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       },
 
       watch: {
-        options: function options(newOptionValue) {
-          for (var property in newOptionValue) {
-            if (readonlyProperties.indexOf(property) == -1) {
-              this._sortable.option(property, newOptionValue[property]);
+        options: {
+          handler: function handler(newOptionValue) {
+            for (var property in newOptionValue) {
+              if (readonlyProperties.indexOf(property) == -1) {
+                this._sortable.option(property, newOptionValue[property]);
+              }
             }
-          }
+          },
+
+          deep: true
         },
+
         realList: function realList() {
           this.computeIndexes();
         }
@@ -257,7 +262,6 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
           var nodes = this.getChildrenNodes();
           nodes[index].data = null;
           var transitionContainer = this.getComponent();
-          var oldChildren = transitionContainer.children;
           transitionContainer.children = [];
           transitionContainer.kept = undefined;
         },
