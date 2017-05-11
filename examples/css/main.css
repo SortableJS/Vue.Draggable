@@ -79,3 +79,9 @@
   float: left;
 }
 
+.item {
+  padding: 5px;
+  background: #CCCCCC;
+  border: 1px solid black;
+}
+

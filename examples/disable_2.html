@@ -1,0 +1,36 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>Example ul element</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="stylesheet" href="css/main.css">
+    </head>
+    <body>
+
+    <div>
+        <div id="main">
+            <input id="disabled" type="checkbox" v-model="options.disabled">
+            <label for="disabled">options.disabled = {{ options.disabled }}</label>
+            <div class="items">
+                <draggable v-model="items" :options="options">
+                <div class="item" v-for="item of items">
+                    {{item}}
+                </div>
+                </draggable>
+            </div>
+        </div>
+
+        <a href="index.html">See basic example</a>
+        <a href="Two_Lists_Clone.html">See clone element example</a>
+        <a href="Two_Lists_Clone_If.html">See clone v-if element example</a>
+    </div>
+        <script type="text/javascript" src="libs\vue\dist\vue.js"></script>
+        <script type="text/javascript" src="libs\Sortable\Sortable.js"></script>
+        <script type="text/javascript" src="src\vuedraggable.js"></script>
+        <script type="text/javascript" src="script\disable_2.js"></script>
+    </body>
+</html>
