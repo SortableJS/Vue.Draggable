@@ -9,7 +9,10 @@
   "keywords": [
     "vue",
     "vuejs",
-    "drag and drop",
+    "drag",
+    "and",
+    "drop",
+    "list",
     "Sortable.js",
     "web-components"
   ],
@@ -51,7 +54,10 @@
   "scripts": {
     "test": "gulp test"
   },
-  "author": "David Desmaisons",
+  "author": {
+    "name": "David Desmaisons",
+    "email": "desmaisons_david@hotmail.com"
+  },
   "bugs": {
     "url": "https://github.com/David-Desmaisons/Vue.Draggable/issues"
   },
