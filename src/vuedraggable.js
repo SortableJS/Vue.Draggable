@@ -46,6 +46,10 @@
     var draggingElement = null
 
     const props = {
+      isEnabled: {
+        type: Boolean,
+        default: true
+      },
       options: Object,
       list: {
         type: Array,
@@ -96,6 +100,7 @@
       },
 
       mounted() {
+        if (!this.isEnabled) return;
         this.componentMode = this.element.toLowerCase() !== this.$el.nodeName.toLowerCase()
         if (this.componentMode && this.transitionMode) {
           throw new Error(`Transition-group inside component is not suppported. Please alter element value or remove transition-group. Current element value: ${this.element}`);
