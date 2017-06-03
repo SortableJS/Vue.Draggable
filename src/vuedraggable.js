@@ -98,7 +98,7 @@
       mounted() {
         this.componentMode = this.element.toLowerCase() !== this.$el.nodeName.toLowerCase()
         if (this.componentMode && this.transitionMode) {
-          throw new Error(`Transition-group inside component is not suppported. Please alter element value or remove transition-group. Current element value: ${this.element}`);
+          throw new Error(`Transition-group inside component is not supported. Please alter element value or remove transition-group. Current element value: ${this.element}`);
         }
         var optionsAdded = {};
         eventsListened.forEach(elt => {
@@ -286,11 +286,12 @@
           if (!relatedContext.element) {
             return 0
           }
-          const domChildren = [...evt.to.children]
+          const domChildren = [...evt.to.children].filter(el => el.style['display']!=='none')
           const currentDOMIndex = domChildren.indexOf(evt.related)
           const currentIndex = relatedContext.component.getVmIndex(currentDOMIndex)
           const draggedInList = domChildren.indexOf(draggingElement) != -1
-          return draggedInList ? currentIndex : currentIndex + 1
+          console.log(draggedInList, evt.willInsertAfter, currentDOMIndex, currentIndex)
+          return (draggedInList || !evt.willInsertAfter) ? currentIndex : currentIndex + 1          
         },
 
         onDragMove(evt) {
