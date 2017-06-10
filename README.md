@@ -258,4 +258,15 @@ https://jsfiddle.net/dede89/L54yu3L9/
 
 - #### For `<script>` Include
 
-  Just include `Sortable.min.js` and `vuedraggable.min.js` after Vue.<br>
+```HTML
+
+<!-- CDNJS :: Vue (https://cdnjs.com/) -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/vue/2.3.4/vue.min.js"></script>
+
+<!-- CDNJS :: Sortable (https://cdnjs.com/) -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/Sortable/1.6.0/Sortable.min.js"></script>
+
+<!-- CDNJS :: Vue.Draggable (https://cdnjs.com/) -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/Vue.Draggable/2.12.0/vuedraggable.min.js"></script>
+
+```
