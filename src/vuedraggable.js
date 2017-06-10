@@ -109,7 +109,8 @@
           optionsAdded['on' + elt] = emit.bind(this, elt)
         });
 
-        const options = Object.assign({}, this.options, optionsAdded, { onMove: evt => { return this.onDragMove(evt); } })
+        const options = Object.assign({}, this.options, optionsAdded, { onMove: (evt, originalEvent) => { return this.onDragMove(evt, originalEvent); } })
+        !('draggable' in options) && (options.draggable =  '>*');
         this._sortable = new Sortable(this.rootContainer, options)
         this.computeIndexes()
       },
@@ -290,11 +291,10 @@
           const currentDOMIndex = domChildren.indexOf(evt.related)
           const currentIndex = relatedContext.component.getVmIndex(currentDOMIndex)
           const draggedInList = domChildren.indexOf(draggingElement) != -1
-          console.log(draggedInList, evt.willInsertAfter, currentDOMIndex, currentIndex)
-          return (draggedInList || !evt.willInsertAfter) ? currentIndex : currentIndex + 1          
+          return (draggedInList || !evt.willInsertAfter) ? currentIndex : currentIndex + 1
         },
 
-        onDragMove(evt) {
+        onDragMove(evt, originalEvent) {
           const onMove = this.move
           if (!onMove || !this.realList) {
             return true
@@ -305,7 +305,7 @@
           const futureIndex = this.computeFutureIndex(relatedContext, evt)
           Object.assign(draggedContext, { futureIndex })
           Object.assign(evt, { relatedContext, draggedContext })
-          return onMove(evt)
+          return onMove(evt, originalEvent)
         },
 
         onDragEnd(evt) {

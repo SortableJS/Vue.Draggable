@@ -1,7 +1,4 @@
 'use strict';
-
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
@@ -133,9 +130,10 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
           optionsAdded['on' + elt] = emit.bind(_this3, elt);
         });
 
-        var options = _extends({}, this.options, optionsAdded, { onMove: function onMove(evt) {
-            return _this3.onDragMove(evt);
+        var options = _extends({}, this.options, optionsAdded, { onMove: function onMove(evt, originalEvent) {
+            return _this3.onDragMove(evt, originalEvent);
           } });
+        !('draggable' in options) && (options.draggable = '>*');
         this._sortable = new Sortable(this.rootContainer, options);
         this.computeIndexes();
       },
@@ -315,11 +313,9 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
           var currentDOMIndex = domChildren.indexOf(evt.related);
           var currentIndex = relatedContext.component.getVmIndex(currentDOMIndex);
           var draggedInList = domChildren.indexOf(draggingElement) != -1;
-          console.log(draggedInList, evt.willInsertAfter, currentDOMIndex, currentIndex);
-          // return (draggedInList || !evt.willInsertAfter) ? currentIndex : currentIndex + 1          
-          return evt.willInsertAfter ? currentIndex + 1 : currentIndex;
+          return draggedInList || !evt.willInsertAfter ? currentIndex : currentIndex + 1;
         },
-        onDragMove: function onDragMove(evt) {
+        onDragMove: function onDragMove(evt, originalEvent) {
           var onMove = this.move;
           if (!onMove || !this.realList) {
             return true;
@@ -330,7 +326,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
           var futureIndex = this.computeFutureIndex(relatedContext, evt);
           _extends(draggedContext, { futureIndex: futureIndex });
           _extends(evt, { relatedContext: relatedContext, draggedContext: draggedContext });
-          return onMove(evt);
+          return onMove(evt, originalEvent);
         },
         onDragEnd: function onDragEnd(evt) {
           this.computeIndexes();
@@ -341,7 +337,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     return draggableComponent;
   }
 
-  if ((typeof exports === 'undefined' ? 'undefined' : _typeof(exports)) == "object") {
+  if (typeof exports == "object") {
     var Sortable = require("sortablejs");
     module.exports = buildDraggable(Sortable);
   } else if (typeof define == "function" && define.amd) {
