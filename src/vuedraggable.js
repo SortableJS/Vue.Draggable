@@ -76,7 +76,7 @@
     }
 
     const draggableComponent = {
-      name: 'vuedraggable',
+      name: 'draggable',
 
       props,
 
