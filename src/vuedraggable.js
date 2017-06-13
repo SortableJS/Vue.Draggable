@@ -76,6 +76,8 @@
     }
 
     const draggableComponent = {
+      name: 'draggable',
+
       props,
 
       data() {
