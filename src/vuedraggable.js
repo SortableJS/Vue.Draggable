@@ -1,6 +1,12 @@
 (function () {
   "use strict";
 
+  if (!Array.from) {
+    Array.from = function (object) {
+        return [].slice.call(object);
+    }
+  }
+
   function buildDraggable(Sortable) {
     function removeNode(node) {
       node.parentElement.removeChild(node)

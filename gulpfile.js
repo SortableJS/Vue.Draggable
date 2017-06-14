@@ -100,6 +100,11 @@ gulp.task('copy-js', function() {
         .pipe(gulp.dest('./examples/src'));
 });
 
+gulp.task('copy-dist-js', function() {
+    return gulp.src('dist/*.js')        
+        .pipe(gulp.dest('./examples/dist'));
+});
+
 var jip = require('jasmine-istanbul-phantom');
 var changedSpec = null
 
@@ -124,6 +129,7 @@ gulp.task('watch', ['connect', 'serve'], function () {
         'examples/*.html',
         'src/**/*.js',
         'examples/**/*.js',
+        'dist/*.js',
     ]).on('change', server.changed);
 
 
@@ -136,6 +142,10 @@ gulp.task('watch', ['connect', 'serve'], function () {
     gulp.watch('src/**/*.js').on('change', function() {
         gulp.start('copy-js');
         gulp.start('test');
+    });
+
+    gulp.watch('dist/*.js').on('change', function() {
+        gulp.start('copy-dist-js');
     });
 
     gulp.watch('test/spec/*.js').on('change', function(event){
