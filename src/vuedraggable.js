@@ -24,13 +24,14 @@
       return vnodes.map(elt => elt.elm).indexOf(element)
     }
 
-    function computeIndexes(slots, children) {
+    function computeIndexes(slots, children, isTransition) {
       if (!slots) {
         return []
       }
 
       const elmFromNodes = slots.map(elt => elt.elm);
-      return [...children].map(elt => elmFromNodes.indexOf(elt))
+      const rawIndexes =  [...children].map(elt => elmFromNodes.indexOf(elt))
+      return isTransition?  rawIndexes.filter(ind => ind!==-1) : rawIndexes
     }
 
     function emit(evtName, evtData) {
@@ -169,7 +170,7 @@
 
         computeIndexes() {
           this.$nextTick(() => {
-            this.visibleIndexes = computeIndexes(this.getChildrenNodes(), this.rootContainer.children)
+            this.visibleIndexes = computeIndexes(this.getChildrenNodes(), this.rootContainer.children, this.transitionMode)
           })
         },
 
