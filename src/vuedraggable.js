@@ -174,7 +174,12 @@
         },
 
         getUnderlyingVm(htmlElt) {
-          const index = computeVmIndex(this.getChildrenNodes(), htmlElt)
+          const index = computeVmIndex(this.getChildrenNodes() || [], htmlElt)
+          if (index === -1) {
+            //Edge case during move callback: related element might be
+            //an element different from collection
+            return null
+          }
           const element = this.realList[index]
           return { index, element }
         },
@@ -222,7 +227,9 @@
           const context = { list, component }
           if (to !== related && list && component.getUnderlyingVm) {
             const destination = component.getUnderlyingVm(related)
-            return Object.assign(destination, context)
+            if (destination) {
+              return Object.assign(destination, context)
+            }
           }
 
           return context
