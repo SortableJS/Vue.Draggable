@@ -13,11 +13,8 @@
     }
 
     function insertNodeAt(fatherNode, node, position) {
-      if (position < fatherNode.children.length) {
-        fatherNode.insertBefore(node, fatherNode.children[position])
-      } else {
-        fatherNode.appendChild(node)
-      }
+      const refNode = (position ===0) ? fatherNode.children[0] : fatherNode.children[position-1].nextSibling
+      fatherNode.insertBefore(node, refNode)
     }
 
     function computeVmIndex(vnodes, element) {
@@ -95,13 +92,19 @@
       },
 
       render(h) {
-        if (this.$slots.default && this.$slots.default.length === 1) {
-          const child = this.$slots.default[0]
+        const slots = this.$slots.default
+        if (slots && slots.length === 1) {
+          const child = slots[0]
           if (child.componentOptions && child.componentOptions.tag === "transition-group") {
             this.transitionMode = true
           }
         }
-        return h(this.element, null, this.$slots.default);
+        let children = [...slots]
+        const {footer} = this.$slots
+        if (footer){
+          children = [...slots, ...footer]
+        }
+        return h(this.element, null, children);
       },
 
       mounted() {

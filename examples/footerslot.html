@@ -1,0 +1,46 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>Basic example</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="stylesheet" href="css/main.css">
+    </head>
+    <body>
+     
+     <div id="main">
+        <h1>Vue Draggable</h1>
+
+        <div :class="dragging? 'list-dragging' : 'drag'">
+            <h2>Draggable</h2>
+            <draggable  :list="list" @start="dragging=true" @end="dragging=false" :options="{draggable:'.itemd'}">
+                <div v-for="element in list" class="itemd" :key="element.id">{{element.name}}</div>
+                <button slot="footer" @click="add">Add People</button>
+             </draggable>
+         </div>
+
+         <div class="normal">
+            <h2>Normal v-for</h2>
+            <div >
+                <div v-for="element in list">{{element.name}}</div>
+             </div>
+         </div>
+
+        <button @click="replace">Replace</button>
+        <br>
+
+        <a href="Two_Lists.html">See 2 lists example</a>
+        <a href="Two_Lists_Clone.html">See clone element example</a>
+        <a href="Two_Lists_Clone_If.html">See clone v-if element example</a>
+
+    </div>
+
+        <script type="text/javascript" src="libs\vue\dist\vue.js"></script>
+        <script type="text/javascript" src="libs\Sortable\Sortable.js"></script>
+        <script type="text/javascript" src="src\vuedraggable.js"></script>
+        <script type="text/javascript" src="script\main.js"></script>
+    </body>
+</html>
