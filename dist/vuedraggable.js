@@ -18,11 +18,8 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     }
 
     function insertNodeAt(fatherNode, node, position) {
-      if (position < fatherNode.children.length) {
-        fatherNode.insertBefore(node, fatherNode.children[position]);
-      } else {
-        fatherNode.appendChild(node);
-      }
+      var refNode = position === 0 ? fatherNode.children[0] : fatherNode.children[position - 1].nextSibling;
+      fatherNode.insertBefore(node, refNode);
     }
 
     function computeVmIndex(vnodes, element) {
@@ -31,7 +28,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       }).indexOf(element);
     }
 
-    function _computeIndexes(slots, children) {
+    function _computeIndexes(slots, children, isTransition) {
       if (!slots) {
         return [];
       }
@@ -39,9 +36,12 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       var elmFromNodes = slots.map(function (elt) {
         return elt.elm;
       });
-      return [].concat(_toConsumableArray(children)).map(function (elt) {
+      var rawIndexes = [].concat(_toConsumableArray(children)).map(function (elt) {
         return elmFromNodes.indexOf(elt);
       });
+      return isTransition ? rawIndexes.filter(function (ind) {
+        return ind !== -1;
+      }) : rawIndexes;
     }
 
     function emit(evtName, evtData) {
@@ -114,13 +114,20 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
         };
       },
       render: function render(h) {
-        if (this.$slots.default && this.$slots.default.length === 1) {
-          var child = this.$slots.default[0];
+        var slots = this.$slots.default;
+        if (slots && slots.length === 1) {
+          var child = slots[0];
           if (child.componentOptions && child.componentOptions.tag === "transition-group") {
             this.transitionMode = true;
           }
         }
-        return h(this.element, null, this.$slots.default);
+        var children = [].concat(_toConsumableArray(slots));
+        var footer = this.$slots.footer;
+
+        if (footer) {
+          children = [].concat(_toConsumableArray(slots), _toConsumableArray(footer));
+        }
+        return h(this.element, null, children);
       },
       mounted: function mounted() {
         var _this3 = this;
@@ -192,11 +199,16 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
           var _this4 = this;
 
           this.$nextTick(function () {
-            _this4.visibleIndexes = _computeIndexes(_this4.getChildrenNodes(), _this4.rootContainer.children);
+            _this4.visibleIndexes = _computeIndexes(_this4.getChildrenNodes(), _this4.rootContainer.children, _this4.transitionMode);
           });
         },
         getUnderlyingVm: function getUnderlyingVm(htmlElt) {
-          var index = computeVmIndex(this.getChildrenNodes(), htmlElt);
+          var index = computeVmIndex(this.getChildrenNodes() || [], htmlElt);
+          if (index === -1) {
+            //Edge case during move callback: related element might be
+            //an element different from collection
+            return null;
+          }
           var element = this.realList[index];
           return { index: index, element: element };
         },
@@ -250,7 +262,9 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
           var context = { list: list, component: component };
           if (to !== related && list && component.getUnderlyingVm) {
             var destination = component.getUnderlyingVm(related);
-            return _extends(destination, context);
+            if (destination) {
+              return _extends(destination, context);
+            }
           }
 
           return context;
