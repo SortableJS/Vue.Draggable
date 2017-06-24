@@ -64,8 +64,18 @@ Use draggable component:
 </draggable>
 ```
 
-
 Draggable component should directly wrap the draggable elements, or a `transition-component` containing the draggable elements.
+
+
+### With footer slot:
+``` html
+<draggable v-model="myArray" :options="{draggable:'.item'}">
+    <div v-for="element in myArray" :key="element.id" class="item">
+        {{element.name}}
+    </div>
+    <button slot="footer" @click="addPeople">Add</button>
+</draggable>
+```
 
 
 ### With Vuex:
@@ -198,6 +208,20 @@ HTML:
     - `newIndex`: the current index of the moved element
     - `oldIndex`: the old index of the moved element
     - `element`: the moved element
+
+### Slots
+Use the `footer` slot to add none-draggable element inside the vuedraggable component.
+Important: it should be used in conjunction with draggable option to tag draggable element.
+Ex:
+
+``` html
+<draggable v-model="myArray" :options="{draggable:'.item'}">
+    <div v-for="element in myArray" :key="element.id" class="item">
+        {{element.name}}
+    </div>
+    <button slot="footer" @click="addPeople">Add</button>
+</draggable>
+```
 
 ### Gotchas
   - Drag operation with empty list:
