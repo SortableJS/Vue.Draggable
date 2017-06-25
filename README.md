@@ -212,6 +212,7 @@ HTML:
 ### Slots
 Use the `footer` slot to add none-draggable element inside the vuedraggable component.
 Important: it should be used in conjunction with draggable option to tag draggable element.
+Note that footer slot will always be added after the default slot.
 Ex:
 
 ``` html

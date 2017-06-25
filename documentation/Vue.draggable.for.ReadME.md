@@ -1,4 +1,4 @@
-##For Vue.js 1.0
+## For Vue.js 1.0
 
 Use it exactly as v-for directive, passing optional parameters using 'options' parameter.
 Options parameter can be json string or a full javascript object.
@@ -9,7 +9,7 @@ Options parameter can be json string or a full javascript object.
   </div>
    ```
    
-###Limitation
+### Limitation
 
 * This directive works only when applied to arrays and not to objects.
 * `onStart`, `onUpdate`, `onAdd`, `onRemove` Sortable.js options hooks are used by v-dragable-for to update VM. As such these four options are not usable with v-dragable-for. If you need to listen to re-order events, you can watch the underlying view model collection. For example:
@@ -19,7 +19,7 @@ Options parameter can be json string or a full javascript object.
                 console.log('Collection updated!');
             },
 ```
-###fiddle
+### fiddle
 Simple:
 https://jsfiddle.net/dede89/j62g58z7/
 
