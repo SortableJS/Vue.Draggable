@@ -121,11 +121,11 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
             this.transitionMode = true;
           }
         }
-        var children = [].concat(_toConsumableArray(slots));
+        var children = slots;
         var footer = this.$slots.footer;
 
         if (footer) {
-          children = [].concat(_toConsumableArray(slots), _toConsumableArray(footer));
+          children = slots ? [].concat(_toConsumableArray(slots), _toConsumableArray(footer)) : [].concat(_toConsumableArray(footer));
         }
         return h(this.element, null, children);
       },

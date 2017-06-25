@@ -99,10 +99,10 @@
             this.transitionMode = true
           }
         }
-        let children = [...slots]
+        let children = slots
         const {footer} = this.$slots
-        if (footer){
-          children = [...slots, ...footer]
+        if (footer) {
+          children = slots? [...slots, ...footer] : [...footer]
         }
         return h(this.element, null, children);
       },
