@@ -1,0 +1,52 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>Example two lists</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="stylesheet" href="css/main.css">
+    </head>
+    <body>
+     
+     <div id="main">
+        <h1>Vue Dragable</h1>
+
+        <div class="drag">
+            <h2>List 1 draggable</h2>
+            <draggable class="dragArea" v-model="list1" :options="{group:'people'}" @change="log">
+                <div v-for="(element, index) in list1"  >
+                    {{element.name}} {{index}}
+                </div>
+             </draggable>
+
+            <h2>List 2 draggable</h2>
+            <draggable class="dragArea" v-model="list2" :options="{group:'people'}" @change="log">
+                <div v-for="(element, index) in list2" :key="index">{{element.name}}</div>
+            </draggable>
+         </div>
+
+        <div class="normal">
+            <h2>List 1 v-for</h2>
+            <div>
+                <div v-for="element in list1" >{{element.name}}</div>
+             </div>
+
+            <h2>List 2 v-for</h2>
+            <div>
+                <div v-for="element in list2" >{{element.name}}</div>
+            </div>
+        </div>
+
+        <a href="index.html">See basic example</a>
+        <a href="Two_Lists_Clone.html">See clone element example</a>
+        <a href="Two_Lists_Clone_If.html">See clone v-if element example</a>
+    </div>
+        <script type="text/javascript" src="libs\vue\dist\vue.js"></script>
+        <script type="text/javascript" src="libs\Sortable\Sortable.js"></script>
+        <script type="text/javascript" src="src\vuedraggable.js"></script>
+        <script type="text/javascript" src="script\complex2.js"></script>
+    </body>
+</html>
