@@ -249,6 +249,10 @@
           return this.$slots.default[0].componentInstance
         },
 
+        getSortable() {
+          return this._sortable
+        },
+
         resetTransitionData(index) {
           if (!this.noTransitionOnDrag || !this.transitionMode) {
             return
