@@ -267,9 +267,15 @@
         },
 
         onDragAdd(evt) {
-          const element = evt.item._underlying_vm_
-          if (element === undefined) {
-            return
+          const original = evt.item._underlying_vm_;
+          if (original === undefined) {
+            return;
+          }
+          var element = {}
+          for (var key in original) {
+            if(original.hasOwnProperty(key)) {
+              element[key] = original[key]
+            }
           }
           removeNode(evt.item)
           const newIndex = this.getVmIndex(evt.newIndex)
