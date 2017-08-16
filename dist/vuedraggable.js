@@ -371,11 +371,11 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     Vue.component('draggable', draggable);
   } else {
     if(typeof window.Vue == "undefined") {
-      console.error('Vue.js not found!');
+      throw 'Vue.js not found!';
     }
     
     if(typeof window.Sortable == "undefined") {
-      console.error('Sortable.js not found!');
+      throw 'Sortable.js not found!';
     }
   }
 })();
