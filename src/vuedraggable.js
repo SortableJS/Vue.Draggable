@@ -21,13 +21,32 @@
       return vnodes.map(elt => elt.elm).indexOf(element)
     }
 
-    function computeIndexes(slots, children, isTransition) {
+    function matchNode(/**HTMLElement*/el, /**String*/selector) {
+      if (selector === '>*') {
+        return true;
+      }
+      if (el) {
+        selector = selector.split('.');
+
+        var tag = selector.shift().toUpperCase(),
+          re = new RegExp('\\s(' + selector.join('|') + ')(?=\\s)', 'g');
+
+        return (
+          (tag === '' || el.nodeName.toUpperCase() == tag) &&
+          (!selector.length || ((' ' + el.className + ' ').match(re) || []).length == selector.length)
+        );
+      }
+
+      return false;
+    }
+
+    function computeIndexes(slots, children, selector, isTransition) {
       if (!slots) {
         return []
       }
 
       const elmFromNodes = slots.map(elt => elt.elm);
-      const rawIndexes =  [...children].map(elt => elmFromNodes.indexOf(elt))
+      const rawIndexes = [...children].filter(elt => matchNode(elt, selector)).map(elt => elmFromNodes.indexOf(elt))
       return isTransition?  rawIndexes.filter(ind => ind!==-1) : rawIndexes
     }
 
@@ -173,7 +192,7 @@
 
         computeIndexes() {
           this.$nextTick(() => {
-            this.visibleIndexes = computeIndexes(this.getChildrenNodes(), this.rootContainer.children, this.transitionMode)
+            this.visibleIndexes = computeIndexes(this.getChildrenNodes(), this.rootContainer.children, this.options.draggable, this.transitionMode)
           })
         },
 
