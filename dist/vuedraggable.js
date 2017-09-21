@@ -123,9 +123,13 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
         }
         var children = slots;
         var footer = this.$slots.footer;
+        var header = this.$slots.header;
 
         if (footer) {
           children = slots ? [].concat(_toConsumableArray(slots), _toConsumableArray(footer)) : [].concat(_toConsumableArray(footer));
+        }
+        if (header) {
+          children = children ? [].concat(_toConsumableArray(header), _toConsumableArray(slots)) : [].concat(_toConsumableArray(header));
         }
         return h(this.element, null, children);
       },
