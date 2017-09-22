@@ -100,9 +100,12 @@
           }
         }
         let children = slots
-        const {footer} = this.$slots
+        const {footer, header} = this.$slots
         if (footer) {
           children = slots? [...slots, ...footer] : [...footer]
+        }
+        if (header) {
+          children = children? [...header, ...children] : [...header]
         }
         return h(this.element, null, children);
       },
