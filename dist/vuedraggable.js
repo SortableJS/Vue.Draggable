@@ -129,7 +129,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
           children = slots ? [].concat(_toConsumableArray(slots), _toConsumableArray(footer)) : [].concat(_toConsumableArray(footer));
         }
         if (header) {
-          children = children ? [].concat(_toConsumableArray(children), _toConsumableArray(header)) : [].concat(_toConsumableArray(header));
+          children = children ? [].concat(_toConsumableArray(header), _toConsumableArray(children)) : [].concat(_toConsumableArray(header));
         }
         return h(this.element, null, children);
       },
