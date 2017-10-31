@@ -1,41 +1,41 @@
 (function () {
-  "use strict";
+  'use strict'
 
   if (!Array.from) {
     Array.from = function (object) {
-        return [].slice.call(object);
+      return [].slice.call(object)
     }
   }
 
-  function buildDraggable(Sortable) {
-    function removeNode(node) {
+  function buildDraggable (Sortable) {
+    function removeNode (node) {
       node.parentElement.removeChild(node)
     }
 
-    function insertNodeAt(fatherNode, node, position) {
-      const refNode = (position ===0) ? fatherNode.children[0] : fatherNode.children[position-1].nextSibling
+    function insertNodeAt (fatherNode, node, position) {
+      const refNode = (position === 0) ? fatherNode.children[0] : fatherNode.children[position - 1].nextSibling
       fatherNode.insertBefore(node, refNode)
     }
 
-    function computeVmIndex(vnodes, element) {
+    function computeVmIndex (vnodes, element) {
       return vnodes.map(elt => elt.elm).indexOf(element)
     }
 
-    function computeIndexes(slots, children, isTransition) {
+    function computeIndexes (slots, children, isTransition) {
       if (!slots) {
         return []
       }
 
-      const elmFromNodes = slots.map(elt => elt.elm);
-      const rawIndexes =  [...children].map(elt => elmFromNodes.indexOf(elt))
-      return isTransition?  rawIndexes.filter(ind => ind!==-1) : rawIndexes
+      const elmFromNodes = slots.map(elt => elt.elm)
+      const rawIndexes = [...children].map(elt => elmFromNodes.indexOf(elt))
+      return isTransition ? rawIndexes.filter(ind => ind !== -1) : rawIndexes
     }
 
-    function emit(evtName, evtData) {
+    function emit (evtName, evtData) {
       this.$nextTick(() => this.$emit(evtName.toLowerCase(), evtData))
     }
 
-    function delegateAndEmit(evtName) {
+    function delegateAndEmit (evtName) {
       return (evtData) => {
         if (this.realList !== null) {
           this['onDrag' + evtName](evtData)
@@ -67,7 +67,7 @@
       },
       clone: {
         type: Function,
-        default: (original) => { return original; }
+        default: (original) => { return original }
       },
       element: {
         type: String,
@@ -84,86 +84,95 @@
 
       props,
 
-      data() {
+      data () {
         return {
           transitionMode: false,
-          componentMode: false
+          componentMode: false,
+          handleClass: null,
         }
       },
 
-      render(h) {
+      render (h) {
         const slots = this.$slots.default
         if (slots && slots.length === 1) {
           const child = slots[0]
-          if (child.componentOptions && child.componentOptions.tag === "transition-group") {
+          if (child.componentOptions && child.componentOptions.tag === 'transition-group') {
             this.transitionMode = true
           }
         }
         let children = slots
         const {footer} = this.$slots
         if (footer) {
-          children = slots? [...slots, ...footer] : [...footer]
+          children = slots ? [...slots, ...footer] : [...footer]
         }
-        return h(this.element, null, children);
+        return h(this.element, null, children)
       },
 
-      mounted() {
+      mounted () {
         this.componentMode = this.element.toLowerCase() !== this.$el.nodeName.toLowerCase()
         if (this.componentMode && this.transitionMode) {
-          throw new Error(`Transition-group inside component is not supported. Please alter element value or remove transition-group. Current element value: ${this.element}`);
+          throw new Error(`Transition-group inside component is not supported. Please alter element value or remove transition-group. Current element value: ${this.element}`)
         }
-        var optionsAdded = {};
+        var optionsAdded = {}
         eventsListened.forEach(elt => {
           optionsAdded['on' + elt] = delegateAndEmit.call(this, elt)
-        });
+        })
 
         eventsToEmit.forEach(elt => {
           optionsAdded['on' + elt] = emit.bind(this, elt)
-        });
+        })
 
-        const options = Object.assign({}, this.options, optionsAdded, { onMove: (evt, originalEvent) => { return this.onDragMove(evt, originalEvent); } })
-        !('draggable' in options) && (options.draggable =  '>*');
+        const options = Object.assign({}, this.allOptions, optionsAdded, {onMove: (evt, originalEvent) => { return this.onDragMove(evt, originalEvent) }})
+        !('draggable' in options) && (options.draggable = '>*')
         this._sortable = new Sortable(this.rootContainer, options)
         this.computeIndexes()
       },
 
-      beforeDestroy() {
+      beforeDestroy () {
         this._sortable.destroy()
       },
 
       computed: {
-        rootContainer() {
-          return this.transitionMode ? this.$el.children[0] : this.$el;
+        rootContainer () {
+          return this.transitionMode ? this.$el.children[0] : this.$el
         },
 
-        isCloning() {
-          return (!!this.options) && (!!this.options.group) && (this.options.group.pull === 'clone')
+        isCloning () {
+          return (!!this.allOptions) && (!!this.allOptions.group) && (this.allOptions.group.pull === 'clone')
         },
 
-        realList() {
-          return (!!this.list) ? this.list : this.value;
-        }
+        realList () {
+          return (!!this.list) ? this.list : this.value
+        },
+
+        allOptions () {
+          const options = Object.assign({}, this.options || {})
+          if (this.handleClass && !options.handle) {
+            options.handle = '.'+this.handleClass
+          }
+          return options
+        },
       },
 
       watch: {
-        options:{
-          handler(newOptionValue) {
+        allOptions: {
+          handler (newOptionValue) {
             for (var property in newOptionValue) {
               if (readonlyProperties.indexOf(property) == -1) {
-                this._sortable.option(property, newOptionValue[property]);
+                this._sortable.option(property, newOptionValue[property])
               }
             }
           },
           deep: true
         },
 
-        realList() {
+        realList () {
           this.computeIndexes()
         }
       },
 
       methods: {
-        getChildrenNodes() {
+        getChildrenNodes () {
           if (this.componentMode) {
             return this.$children[0].$slots.default
           }
@@ -171,13 +180,13 @@
           return this.transitionMode ? rawNodes[0].child.$slots.default : rawNodes
         },
 
-        computeIndexes() {
+        computeIndexes () {
           this.$nextTick(() => {
             this.visibleIndexes = computeIndexes(this.getChildrenNodes(), this.rootContainer.children, this.transitionMode)
           })
         },
 
-        getUnderlyingVm(htmlElt) {
+        getUnderlyingVm (htmlElt) {
           const index = computeVmIndex(this.getChildrenNodes() || [], htmlElt)
           if (index === -1) {
             //Edge case during move callback: related element might be
@@ -185,23 +194,23 @@
             return null
           }
           const element = this.realList[index]
-          return { index, element }
+          return {index, element}
         },
 
-        getUnderlyingPotencialDraggableComponent({ __vue__ }) {
-          if (!__vue__ || !__vue__.$options || __vue__.$options._componentTag !== "transition-group") {
+        getUnderlyingPotencialDraggableComponent ({__vue__}) {
+          if (!__vue__ || !__vue__.$options || __vue__.$options._componentTag !== 'transition-group') {
             return __vue__
           }
           return __vue__.$parent
         },
 
-        emitChanges(evt) {
+        emitChanges (evt) {
           this.$nextTick(() => {
             this.$emit('change', evt)
-          });
+          })
         },
 
-        alterList(onList) {
+        alterList (onList) {
           if (!!this.list) {
             onList(this.list)
           }
@@ -212,23 +221,23 @@
           }
         },
 
-        spliceList() {
+        spliceList () {
           const spliceList = list => list.splice(...arguments)
           this.alterList(spliceList)
         },
 
-        updatePosition(oldIndex, newIndex) {
+        updatePosition (oldIndex, newIndex) {
           const updatePosition = list => list.splice(newIndex, 0, list.splice(oldIndex, 1)[0])
           this.alterList(updatePosition)
         },
 
-        getRelatedContextFromMoveEvent({ to, related }) {
+        getRelatedContextFromMoveEvent ({to, related}) {
           const component = this.getUnderlyingPotencialDraggableComponent(to)
           if (!component) {
-            return { component }
+            return {component}
           }
           const list = component.realList
-          const context = { list, component }
+          const context = {list, component}
           if (to !== related && list && component.getUnderlyingVm) {
             const destination = component.getUnderlyingVm(related)
             if (destination) {
@@ -239,17 +248,17 @@
           return context
         },
 
-        getVmIndex(domIndex) {
+        getVmIndex (domIndex) {
           const indexes = this.visibleIndexes
           const numberIndexes = indexes.length
           return (domIndex > numberIndexes - 1) ? numberIndexes : indexes[domIndex]
         },
 
-        getComponent() {
+        getComponent () {
           return this.$slots.default[0].componentInstance
         },
 
-        resetTransitionData(index) {
+        resetTransitionData (index) {
           if (!this.noTransitionOnDrag || !this.transitionMode) {
             return
           }
@@ -260,13 +269,13 @@
           transitionContainer.kept = undefined
         },
 
-        onDragStart(evt) {
+        onDragStart (evt) {
           this.context = this.getUnderlyingVm(evt.item)
           evt.item._underlying_vm_ = this.clone(this.context.element)
           draggingElement = evt.item
         },
 
-        onDragAdd(evt) {
+        onDragAdd (evt) {
           const element = evt.item._underlying_vm_
           if (element === undefined) {
             return
@@ -275,11 +284,11 @@
           const newIndex = this.getVmIndex(evt.newIndex)
           this.spliceList(newIndex, 0, element)
           this.computeIndexes()
-          const added = { element, newIndex }
-          this.emitChanges({ added })
+          const added = {element, newIndex}
+          this.emitChanges({added})
         },
 
-        onDragRemove(evt) {
+        onDragRemove (evt) {
           insertNodeAt(this.rootContainer, evt.item, evt.oldIndex)
           if (this.isCloning) {
             removeNode(evt.clone)
@@ -287,33 +296,33 @@
           }
           const oldIndex = this.context.index
           this.spliceList(oldIndex, 1)
-          const removed = { element: this.context.element, oldIndex }
+          const removed = {element: this.context.element, oldIndex}
           this.resetTransitionData(oldIndex)
-          this.emitChanges({ removed })
+          this.emitChanges({removed})
         },
 
-        onDragUpdate(evt) {
+        onDragUpdate (evt) {
           removeNode(evt.item)
           insertNodeAt(evt.from, evt.item, evt.oldIndex)
           const oldIndex = this.context.index
           const newIndex = this.getVmIndex(evt.newIndex)
           this.updatePosition(oldIndex, newIndex)
-          const moved = { element: this.context.element, oldIndex, newIndex }
-          this.emitChanges({ moved })
+          const moved = {element: this.context.element, oldIndex, newIndex}
+          this.emitChanges({moved})
         },
 
-        computeFutureIndex(relatedContext, evt) {
+        computeFutureIndex (relatedContext, evt) {
           if (!relatedContext.element) {
             return 0
           }
-          const domChildren = [...evt.to.children].filter(el => el.style['display']!=='none')
+          const domChildren = [...evt.to.children].filter(el => el.style['display'] !== 'none')
           const currentDOMIndex = domChildren.indexOf(evt.related)
           const currentIndex = relatedContext.component.getVmIndex(currentDOMIndex)
           const draggedInList = domChildren.indexOf(draggingElement) != -1
           return (draggedInList || !evt.willInsertAfter) ? currentIndex : currentIndex + 1
         },
 
-        onDragMove(evt, originalEvent) {
+        onDragMove (evt, originalEvent) {
           const onMove = this.move
           if (!onMove || !this.realList) {
             return true
@@ -322,27 +331,76 @@
           const relatedContext = this.getRelatedContextFromMoveEvent(evt)
           const draggedContext = this.context
           const futureIndex = this.computeFutureIndex(relatedContext, evt)
-          Object.assign(draggedContext, { futureIndex })
-          Object.assign(evt, { relatedContext, draggedContext })
+          Object.assign(draggedContext, {futureIndex})
+          Object.assign(evt, {relatedContext, draggedContext})
           return onMove(evt, originalEvent)
         },
 
-        onDragEnd(evt) {
+        onDragEnd (evt) {
           this.computeIndexes()
           draggingElement = null
         }
       }
     }
+    draggableComponent.draggableHandle = buildDraggableHandle(Sortable)
     return draggableComponent
   }
 
-  if (typeof exports == "object") {
-    var Sortable = require("sortablejs")
+  function buildDraggableHandle () {
+    let nextHandleClassId = 0
+
+    function findParentDraggable (handle) {
+      for (let parent = handle.$parent; parent; parent = parent.$parent) {
+        if (parent.$options.name === 'draggable') {
+          return parent
+        }
+      }
+      return null
+    }
+
+    return {
+      name: 'draggable-handle',
+      props: {
+        tag: {
+          type: String,
+          'default': 'span',
+        },
+      },
+
+      render (h) {
+        return h(this.tag, {
+          class: this.handleClass,
+        }, this.$slots.default)
+      },
+
+      computed: {
+        draggable () {
+          return findParentDraggable(this)
+        },
+
+        handleClass () {
+          if (!this.draggable) {
+            return null
+          }
+
+          if (!this.draggable.handleClass) {
+            this.draggable.handleClass = 'v-draggable-handle-' + (nextHandleClassId++)
+          }
+
+          return this.draggable.handleClass
+        },
+      },
+    }
+  }
+
+  if (typeof exports == 'object') {
+    var Sortable = require('sortablejs')
     module.exports = buildDraggable(Sortable)
-  } else if (typeof define == "function" && define.amd) {
-    define(['sortablejs'], function (Sortable) { return buildDraggable(Sortable); });
+  } else if (typeof define == 'function' && define.amd) {
+    define(['sortablejs'], function (Sortable) { return buildDraggable(Sortable) })
   } else if (window && (window.Vue) && (window.Sortable)) {
     var draggable = buildDraggable(window.Sortable)
     Vue.component('draggable', draggable)
+    Vue.component('draggable-handle', draggable.draggableHandle)
   }
-})();
+})()
