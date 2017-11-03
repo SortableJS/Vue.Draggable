@@ -82,7 +82,7 @@ Draggable component should directly wrap the draggable elements, or a `transitio
 
 ```html
 <draggable v-model='myList'>
-``` 
+```
 
 ```javascript
 computed: {
@@ -106,7 +106,7 @@ Default: `null`
 
 Input array to draggable component. Typically same array as referenced by inner element v-for directive.<br>
 This is the preferred way to use Vue.draggable as it is compatible with Vuex.<br>
-It should not be used directly but only though the `v-model` directive:
+It should not be used directly but only though the `v-model` prop:
 ```html
 <draggable v-model="myArray">
 ```
@@ -136,7 +136,7 @@ HTML node type of the element that draggable component create as outer element f
 #### clone
 Type: `Function`<br>
 Required: `false`<br>
-Default: `(original) => { return original;}`<br>
+Default: `original => original;`<br>
 
 Function called on the source component to clone element when clone option is true. The unique argument is the viewModel element to be cloned and the returned value is its cloned version.<br>
 By default vue.draggable reuses the viewModel element, so you have to use this hook if you want to clone or deep clone it.
@@ -152,7 +152,8 @@ Returning false will cancel the drag operation.
 ```javascript
 function onMoveCallback(evt, originalEvent){
    ...
-    // return false; — for cancel
+   // cancel operation
+   return false;
 }
 ```
 evt object has same property as [Sortable onMove event](https://github.com/RubaXa/Sortable#move-event-object), and 3 additional properties:
@@ -182,7 +183,6 @@ See complete example: [Cancel.html](https://github.com/SortableJS/Vue.Draggable/
 ### Events
 
 * Support for Sortable events:
-
   `start`, `add`, `remove`, `update`, `end`, `choose`, `sort`, `filter`, `clone`<br>
   Events are called whenever onStart, onAdd, onRemove, onUpdate, onEnd, onChoose, onSort, onClone are fired by Sortable.js with the same argument.<br>
   [See here for reference](https://github.com/RubaXa/Sortable#event-object-demo)
@@ -227,7 +227,7 @@ Ex:
 ### Gotchas
   - Drag operation with empty list:
 
-    To be able to drag items on an empty draggable component, set a min-height greater than 0 on the `draggable` component or the `transition-group` if any and ensure the transition group has display: block; otherwise height won't work.
+    To be able to drag items on an empty draggable component, set a `min-height` greater than 0 on the `draggable` component or the `transition-group` if any and ensure the transition group has `display: block;` otherwise height won't work.
 
 ### Fiddle
 
@@ -260,14 +260,14 @@ https://jsfiddle.net/dede89/L54yu3L9/
  npm install vuedraggable
 ```
 ``` js
- Bower install vue.draggable
+ bower install vue.draggable
 ```
 
 - #### For Modules
 
   ``` js
   // ES6
-  //For Vue.js 2.0
+  // For Vue.js 2.0
   import draggable from 'vuedraggable'
   ...
   export default {
