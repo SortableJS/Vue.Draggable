@@ -342,7 +342,7 @@
   } else if (typeof define == "function" && define.amd) {
     define(['sortablejs'], function (Sortable) { return buildDraggable(Sortable); });
   } else if (window && (window.Vue) && (window.Sortable)) {
-    var draggable = buildDraggable(window.Sortable)
-    Vue.component('draggable', draggable)
+    window.vuedraggable = buildDraggable(window.Sortable)
+    Vue.component('draggable', window.vuedraggable)
   }
 })();
