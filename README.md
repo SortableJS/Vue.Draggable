@@ -18,6 +18,47 @@ Based on and offering all features of [Sortable.js](https://github.com/RubaXa/So
 
 ![demo gif](https://raw.githubusercontent.com/SortableJS/Vue.Draggable/master/example.gif)
 
+## Installation
+- Available through:
+``` js
+ npm install vuedraggable
+```
+``` js
+ Bower install vue.draggable
+```
+
+- #### For Modules
+
+  ``` js
+  // ES6
+  //For Vue.js 2.0
+  import draggable from 'vuedraggable'
+  ...
+  export default {
+        components: {
+            draggable,
+            ...
+        }
+        ...
+
+  //For Vue.js 2.0
+  var draggable = require('vuedraggable')
+  ```
+
+- #### For `<script>` Include
+
+```HTML
+
+<!-- CDNJS :: Vue (https://cdnjs.com/) -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/vue/2.5.2/vue.min.js"></script>
+
+<!-- CDNJS :: Sortable (https://cdnjs.com/) -->
+<script src="//cdn.jsdelivr.net/npm/sortablejs@1.7.0/Sortable.min.js></script>
+
+<!-- CDNJS :: Vue.Draggable (https://cdnjs.com/) -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/Vue.Draggable/2.15.0/vuedraggable.min.js"></script>
+
+```
 
 ## Features
 
@@ -254,44 +295,3 @@ https://jsfiddle.net/dede89/L54yu3L9/
 
 [See here](documentation/Vue.draggable.for.ReadME.md)
 
-## Installation
-- Available through:
-``` js
- npm install vuedraggable
-```
-``` js
- Bower install vue.draggable
-```
-
-- #### For Modules
-
-  ``` js
-  // ES6
-  //For Vue.js 2.0
-  import draggable from 'vuedraggable'
-  ...
-  export default {
-        components: {
-            draggable,
-            ...
-        }
-        ...
-
-  //For Vue.js 2.0
-  var draggable = require('vuedraggable')
-  ```
-
-- #### For `<script>` Include
-
-```HTML
-
-<!-- CDNJS :: Vue (https://cdnjs.com/) -->
-<script src="//cdnjs.cloudflare.com/ajax/libs/vue/2.5.2/vue.min.js"></script>
-
-<!-- CDNJS :: Sortable (https://cdnjs.com/) -->
-<script src="//cdn.jsdelivr.net/npm/sortablejs@1.7.0/Sortable.min.js></script>
-
-<!-- CDNJS :: Vue.Draggable (https://cdnjs.com/) -->
-<script src="//cdnjs.cloudflare.com/ajax/libs/Vue.Draggable/2.15.0/vuedraggable.min.js"></script>
-
-```
