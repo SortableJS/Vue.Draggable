@@ -85,3 +85,8 @@
   border: 1px solid black;
 }
 
+.drag-handler {
+  cursor: move;
+  font-weight: bold;
+}
+
