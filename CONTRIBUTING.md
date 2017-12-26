@@ -1,6 +1,6 @@
 ## How to contribute to vue.draggable
 
-### **Did you find a bug?**
+#### **Did you find a bug?**
 
 * **Ensure the bug was not already reported** by searching on GitHub under [Issues](https://github.com/SortableJS/Vue.Draggable/issues).
 
@@ -16,13 +16,13 @@
 
 * DO NOT OPEN ISSUE. Ask a question on [stackoverflow](https://stackoverflow.com) instead to get answer from the vue fantastic community.
 
-### **Did you write a correction that fixes a bug?**
+#### **Did you write a correction that fixes a bug?**
 
 * Open a new GitHub pull request with the code.
 
 * Ensure the PR description clearly describes the problem and solution. Include the relevant issue number if applicable.
 
-### **Do you intend to add a new feature or change an existing one?**
+#### **Do you intend to add a new feature or change an existing one?**
 
 * Open an issue proposing the enhancement explaining the rational and the added value.
 
