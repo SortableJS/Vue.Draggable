@@ -1,4 +1,4 @@
-## How to contribute to vue.draggable
+## How to contribute
 
 #### **Did you find a bug?**
 
