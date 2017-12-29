@@ -3,7 +3,7 @@
 
   if (!Array.from) {
     Array.from = function (object) {
-        return [].slice.call(object);
+      return [].slice.call(object);
     }
   }
 
@@ -13,7 +13,7 @@
     }
 
     function insertNodeAt(fatherNode, node, position) {
-      const refNode = (position ===0) ? fatherNode.children[0] : fatherNode.children[position-1].nextSibling
+      const refNode = (position === 0) ? fatherNode.children[0] : fatherNode.children[position - 1].nextSibling
       fatherNode.insertBefore(node, refNode)
     }
 
@@ -27,8 +27,8 @@
       }
 
       const elmFromNodes = slots.map(elt => elt.elm);
-      const rawIndexes =  [...children].map(elt => elmFromNodes.indexOf(elt))
-      return isTransition?  rawIndexes.filter(ind => ind!==-1) : rawIndexes
+      const rawIndexes = [...children].map(elt => elmFromNodes.indexOf(elt))
+      return isTransition ? rawIndexes.filter(ind => ind !== -1) : rawIndexes
     }
 
     function emit(evtName, evtData) {
@@ -87,7 +87,8 @@
       data() {
         return {
           transitionMode: false,
-          componentMode: false
+          noneFunctionalComponentMode: false,
+          init: false
         }
       },
 
@@ -100,16 +101,16 @@
           }
         }
         let children = slots
-        const {footer} = this.$slots
+        const { footer } = this.$slots
         if (footer) {
-          children = slots? [...slots, ...footer] : [...footer]
+          children = slots ? [...slots, ...footer] : [...footer]
         }
         return h(this.element, null, children);
       },
 
       mounted() {
-        this.componentMode = this.element.toLowerCase() !== this.$el.nodeName.toLowerCase()
-        if (this.componentMode && this.transitionMode) {
+        this.noneFunctionalComponentMode = this.element.toLowerCase() !== this.$el.nodeName.toLowerCase()
+        if (this.noneFunctionalComponentMode && this.transitionMode) {
           throw new Error(`Transition-group inside component is not supported. Please alter element value or remove transition-group. Current element value: ${this.element}`);
         }
         var optionsAdded = {};
@@ -122,7 +123,7 @@
         });
 
         const options = Object.assign({}, this.options, optionsAdded, { onMove: (evt, originalEvent) => { return this.onDragMove(evt, originalEvent); } })
-        !('draggable' in options) && (options.draggable =  '>*');
+        !('draggable' in options) && (options.draggable = '>*');
         this._sortable = new Sortable(this.rootContainer, options)
         this.computeIndexes()
       },
@@ -146,7 +147,7 @@
       },
 
       watch: {
-        options:{
+        options: {
           handler(newOptionValue) {
             for (var property in newOptionValue) {
               if (readonlyProperties.indexOf(property) == -1) {
@@ -164,7 +165,12 @@
 
       methods: {
         getChildrenNodes() {
-          if (this.componentMode) {
+          if (!this.init) {
+            this.noneFunctionalComponentMode = this.noneFunctionalComponentMode && this.$children.length == 1
+            this.init = true;
+          }
+
+          if (this.noneFunctionalComponentMode) {
             return this.$children[0].$slots.default
           }
           const rawNodes = this.$slots.default
@@ -306,7 +312,7 @@
           if (!relatedContext.element) {
             return 0
           }
-          const domChildren = [...evt.to.children].filter(el => el.style['display']!=='none')
+          const domChildren = [...evt.to.children].filter(el => el.style['display'] !== 'none')
           const currentDOMIndex = domChildren.indexOf(evt.related)
           const currentIndex = relatedContext.component.getVmIndex(currentDOMIndex)
           const draggedInList = domChildren.indexOf(draggingElement) != -1
