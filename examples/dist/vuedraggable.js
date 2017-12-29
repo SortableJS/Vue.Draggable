@@ -110,7 +110,8 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       data: function data() {
         return {
           transitionMode: false,
-          componentMode: false
+          noneFunctionalComponentMode: false,
+          init: false
         };
       },
       render: function render(h) {
@@ -132,8 +133,8 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       mounted: function mounted() {
         var _this3 = this;
 
-        this.componentMode = this.element.toLowerCase() !== this.$el.nodeName.toLowerCase();
-        if (this.componentMode && this.transitionMode) {
+        this.noneFunctionalComponentMode = this.element.toLowerCase() !== this.$el.nodeName.toLowerCase();
+        if (this.noneFunctionalComponentMode && this.transitionMode) {
           throw new Error('Transition-group inside component is not supported. Please alter element value or remove transition-group. Current element value: ' + this.element);
         }
         var optionsAdded = {};
@@ -189,7 +190,12 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
       methods: {
         getChildrenNodes: function getChildrenNodes() {
-          if (this.componentMode) {
+          if (!this.init) {
+            this.noneFunctionalComponentMode = this.noneFunctionalComponentMode && this.$children.length == 1;
+            this.init = true;
+          }
+
+          if (this.noneFunctionalComponentMode) {
             return this.$children[0].$slots.default;
           }
           var rawNodes = this.$slots.default;
@@ -359,7 +365,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     return draggableComponent;
   }
 
-  if (typeof exports == "object") {
+ if (typeof exports == "object") {
     var Sortable = require("sortablejs");
     module.exports = buildDraggable(Sortable);
   } else if (typeof define == "function" && define.amd) {
@@ -369,5 +375,13 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
   } else if (window && window.Vue && window.Sortable) {
     var draggable = buildDraggable(window.Sortable);
     Vue.component('draggable', draggable);
+  } else {
+    if(typeof window.Vue == "undefined") {
+      throw 'Vue.js not found!';
+    }
+    
+    if(typeof window.Sortable == "undefined") {
+      throw 'Sortable.js not found!';
+    }  
   }
 })();

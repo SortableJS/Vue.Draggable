@@ -1,4 +1,7 @@
 'use strict';
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
@@ -99,6 +102,11 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       move: {
         type: Function,
         default: null
+      },
+      componentProps: {
+        type: Object,
+        required: false,
+        default: null
       }
     };
 
@@ -128,7 +136,8 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
         if (footer) {
           children = slots ? [].concat(_toConsumableArray(slots), _toConsumableArray(footer)) : [].concat(_toConsumableArray(footer));
         }
-        return h(this.element, null, children);
+        var attributes = this.componentProps ? { attrs: this.componentProps } : null;
+        return h(this.element, attributes, children);
       },
       mounted: function mounted() {
         var _this3 = this;
@@ -365,7 +374,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     return draggableComponent;
   }
 
- if (typeof exports == "object") {
+  if ((typeof exports === 'undefined' ? 'undefined' : _typeof(exports)) == "object") {
     var Sortable = require("sortablejs");
     module.exports = buildDraggable(Sortable);
   } else if (typeof define == "function" && define.amd) {
@@ -375,13 +384,5 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
   } else if (window && window.Vue && window.Sortable) {
     var draggable = buildDraggable(window.Sortable);
     Vue.component('draggable', draggable);
-  } else {
-    if(typeof window.Vue == "undefined") {
-      throw 'Vue.js not found!';
-    }
-    
-    if(typeof window.Sortable == "undefined") {
-      throw 'Sortable.js not found!';
-    }  
   }
 })();

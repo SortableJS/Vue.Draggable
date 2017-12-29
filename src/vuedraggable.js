@@ -105,7 +105,8 @@
         if (footer) {
           children = slots ? [...slots, ...footer] : [...footer]
         }
-        return h(this.element, null, children);
+        const attributes = this.$attrs ? {attrs: this.$attrs } : null;
+        return h(this.element, attributes, children);
       },
 
       mounted() {

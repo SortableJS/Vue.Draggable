@@ -19,8 +19,8 @@
                 <v-container>
                     Hello world
 
-                    <draggable element="v-layout" :list="listA" :options="sortOptions">
-                        <v-flex v-for="(element, index) in listA" :key="element.name">
+                    <draggable element="v-layout" :list="listA" :options="sortOptions" row wrap>
+                        <v-flex v-for="(element, index) in listA" :key="element.name" lg12>
                             <span>{{ element.name }}</span>
                         </v-flex>
                     </draggable>
