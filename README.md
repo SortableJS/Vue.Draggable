@@ -131,7 +131,9 @@ Note that all the method starting by "on" will be ignored as draggable component
 Type: `String`<br>
 Default: `'div'`
 
-HTML node type of the element that draggable component create as outer element for the included slot.
+HTML node type of the element that draggable component create as outer element for the included slot.<br>
+It is also possible to pass the name of vue component as element. In this case, draggable attribute will be passed to the create component.<br>
+See also [componentData](#componentData) if you need to set props or event to the created component.
 
 #### clone
 Type: `Function`<br>
@@ -178,6 +180,45 @@ checkMove: function(evt){
 ```
 See complete example: [Cancel.html](https://github.com/SortableJS/Vue.Draggable/blob/master/examples/Cancel.html), [cancel.js](https://github.com/SortableJS/Vue.Draggable/blob/master/examples/script/cancel.js)
 
+#### componentData
+Type: `Object`<br>
+Required: `false`<br>
+Default: `null`<br>
+
+This props is used to pass additional information to child component declared by [element props](#element).<br>
+Value:
+* `props`: props to be passed to the child component
+* `on`: events to be subscribe in the child component
+
+Example (using [element UI library](http://element.eleme.io/#/en-US)):
+```HTML
+<draggable element="el-collapse" :list="list" :component-data="getComponentData()">
+    <el-collapse-item v-for="e in list" :title="e.title" :name="e.name" :key="e.name">
+        <div>{{e.description}}</div>
+     </el-collapse-item>
+</draggable>
+```
+```javascript
+methods: {
+    handleChange() {
+      console.log('changed');
+    },
+    inputChanged(value) {
+      this.activeNames = value;
+    },
+    getComponentData() {
+      return {
+        on: {
+          change: this.handleChange,
+          input: this.inputChanged
+        },
+        props: {
+          value: this.activeNames
+        }
+      };
+    }
+  }
+```
 
 ### Events
 
