@@ -1,6 +1,3 @@
-Vue.config.devtools = true
-
-
 var App = new Vue({
   el: '#app',
   methods: {
@@ -24,20 +21,10 @@ var App = new Vue({
   },
   data() {
     return {
-      visible: false,
       activeNames: ['1'],
       sortOptions: {
         group: 'sample',
         animation: 150,
-      },
-      componentData: {
-        on: {
-          change: this.handleChange,
-          input: this.inputChanged
-        },
-        props: {
-          value: this.activeNames
-        }
       },
       list: [
         { title: "Consistency", name: '1', description: "Consistent with real life: in line with the process and logic of real life, and comply with languages and habits that the users are used to" },
