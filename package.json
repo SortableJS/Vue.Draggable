@@ -1,6 +1,6 @@
 {
   "name": "vuedraggable",
-  "version": "2.15.0",
+  "version": "2.16.0",
   "description": "draggable component for vue",
   "main": "dist/vuedraggable.js",
   "files": [

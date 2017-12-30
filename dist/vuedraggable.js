@@ -15,6 +15,15 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     };
   }
 
+  function buildAttribute(object, propName, value) {
+    if (value == undefined) {
+      return object;
+    }
+    object = object == null ? {} : object;
+    object[propName] = value;
+    return object;
+  }
+
   function buildDraggable(Sortable) {
     function removeNode(node) {
       node.parentElement.removeChild(node);
@@ -102,11 +111,6 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       move: {
         type: Function,
         default: null
-      },
-      componentProps: {
-        type: Object,
-        required: false,
-        default: null
       }
     };
 
@@ -136,7 +140,8 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
         if (footer) {
           children = slots ? [].concat(_toConsumableArray(slots), _toConsumableArray(footer)) : [].concat(_toConsumableArray(footer));
         }
-        var attributes = this.componentProps ? { attrs: this.componentProps } : null;
+        var attributes = null;
+        attributes = buildAttribute(attributes, 'attrs', this.$attrs);
         return h(this.element, attributes, children);
       },
       mounted: function mounted() {

@@ -7,6 +7,15 @@
     }
   }
 
+  function buildAttribute(object, propName, value) {
+    if (value == undefined) {
+      return object;
+    }
+    object = (object == null) ? {} : object;
+    object[propName] = value;
+    return object;
+  }
+
   function buildDraggable(Sortable) {
     function removeNode(node) {
       node.parentElement.removeChild(node)
@@ -105,7 +114,8 @@
         if (footer) {
           children = slots ? [...slots, ...footer] : [...footer]
         }
-        const attributes = this.$attrs ? {attrs: this.$attrs } : null;
+        var attributes = null;
+        attributes = buildAttribute(attributes, 'attrs', this.$attrs);
         return h(this.element, attributes, children);
       },
 
