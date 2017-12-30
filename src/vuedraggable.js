@@ -85,6 +85,11 @@
       move: {
         type: Function,
         default: null
+      },
+      componentData: {
+        type: Object,
+        required: false,
+        default: null
       }
     }
 
@@ -115,7 +120,13 @@
           children = slots ? [...slots, ...footer] : [...footer]
         }
         var attributes = null;
-        attributes = buildAttribute(attributes, 'attrs', this.$attrs);
+        const update = (name, value) => { attributes = buildAttribute(attributes, name, value); };
+        update('attrs', this.$attrs);
+        if (this.componentData) {
+          const { on, props } = this.componentData;
+          update('on', on);
+          update('props', props);
+        }
         return h(this.element, attributes, children);
       },
 

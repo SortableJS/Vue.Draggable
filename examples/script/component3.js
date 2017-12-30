@@ -6,6 +6,20 @@ var App = new Vue({
   methods: {
     handleChange() {
       console.log('times are changing');
+    },
+    inputChanged(value) {
+      this.activeNames = value;
+    },
+    getComponentData() {
+      return {
+        on: {
+          change: this.handleChange,
+          input: this.inputChanged
+        },
+        props: {
+          value: this.activeNames
+        }
+      };
     }
   },
   data() {
@@ -16,14 +30,12 @@ var App = new Vue({
         group: 'sample',
         animation: 150,
       },
-      componentData:{
-        on:{
+      componentData: {
+        on: {
           change: this.handleChange,
-          input(value){
-            this.activeNames = value;
-          }
+          input: this.inputChanged
         },
-        props:{
+        props: {
           value: this.activeNames
         }
       },

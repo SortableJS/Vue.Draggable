@@ -15,7 +15,7 @@
 <body>
 
     <div id="app">
-        <draggable element="el-collapse" :list="list" :options="sortOptions" :component-data="componentData">
+        <draggable element="el-collapse" :list="list" :options="sortOptions" :component-data="getComponentData()">
             <el-collapse-item v-for="(item) in list" :title="item.title" :name="item.name" :key="item.name">
                 <div>{{item.description}}</div>
             </el-collapse-item>
