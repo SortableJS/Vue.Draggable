@@ -334,6 +334,6 @@ https://jsfiddle.net/dede89/L54yu3L9/
 <script src="//cdn.jsdelivr.net/npm/sortablejs@1.7.0/Sortable.min.js"></script>
 
 <!-- CDNJS :: Vue.Draggable (https://cdnjs.com/) -->
-<script src="//cdnjs.cloudflare.com/ajax/libs/Vue.Draggable/2.15.0/vuedraggable.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/Vue.Draggable/2.16.0/vuedraggable.min.js"></script>
 
 ```
