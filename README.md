@@ -134,7 +134,7 @@ Default: `'div'`
 
 HTML node type of the element that draggable component create as outer element for the included slot.<br>
 It is also possible to pass the name of vue component as element. In this case, draggable attribute will be passed to the create component.<br>
-See also [componentData](#componentData) if you need to set props or event to the created component.
+See also [componentData](#componentdata) if you need to set props or event to the created component.
 
 #### clone
 Type: `Function`<br>
