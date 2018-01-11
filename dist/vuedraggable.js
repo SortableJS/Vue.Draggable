@@ -1,5 +1,4 @@
 'use strict';
-
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
@@ -11,15 +10,6 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     Array.from = function (object) {
       return [].slice.call(object);
     };
-  }
-
-  function buildAttribute(object, propName, value) {
-    if (value == undefined) {
-      return object;
-    }
-    object = object == null ? {} : object;
-    object[propName] = value;
-    return object;
   }
 
   function buildDraggable(Sortable) {
@@ -74,7 +64,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     }
 
     var eventsListened = ['Start', 'Add', 'Remove', 'Update', 'End'];
-    var eventsToEmit = ['Choose', 'Sort', 'Filter', 'Clone'];
+    var eventsToEmit = ['Choose', 'Sort', 'Filter', 'Clone', 'Copy'];
     var readonlyProperties = ['Move'].concat(eventsListened, eventsToEmit).map(function (evt) {
       return 'on' + evt;
     });
@@ -96,6 +86,12 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
         type: Boolean,
         default: false
       },
+      copy: {
+        type: Function,
+        default: function _default(original) {
+          return JSON.parse(JSON.stringify(original));
+        }
+      },
       clone: {
         type: Function,
         default: function _default(original) {
@@ -109,11 +105,6 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       move: {
         type: Function,
         default: null
-      },
-      componentData: {
-        type: Object,
-        required: false,
-        default: null
       }
     };
 
@@ -125,8 +116,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       data: function data() {
         return {
           transitionMode: false,
-          noneFunctionalComponentMode: false,
-          init: false
+          componentMode: false
         };
       },
       render: function render(h) {
@@ -143,26 +133,13 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
         if (footer) {
           children = slots ? [].concat(_toConsumableArray(slots), _toConsumableArray(footer)) : [].concat(_toConsumableArray(footer));
         }
-        var attributes = null;
-        var update = function update(name, value) {
-          attributes = buildAttribute(attributes, name, value);
-        };
-        update('attrs', this.$attrs);
-        if (this.componentData) {
-          var _componentData = this.componentData,
-              on = _componentData.on,
-              _props = _componentData.props;
-
-          update('on', on);
-          update('props', _props);
-        }
-        return h(this.element, attributes, children);
+        return h(this.element, null, children);
       },
       mounted: function mounted() {
         var _this3 = this;
 
-        this.noneFunctionalComponentMode = this.element.toLowerCase() !== this.$el.nodeName.toLowerCase();
-        if (this.noneFunctionalComponentMode && this.transitionMode) {
+        this.componentMode = this.element.toLowerCase() !== this.$el.nodeName.toLowerCase();
+        if (this.componentMode && this.transitionMode) {
           throw new Error('Transition-group inside component is not supported. Please alter element value or remove transition-group. Current element value: ' + this.element);
         }
         var optionsAdded = {};
@@ -193,6 +170,9 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
         isCloning: function isCloning() {
           return !!this.options && !!this.options.group && this.options.group.pull === 'clone';
         },
+        isCopying: function isCopying() {
+          return !!this.options && !!this.options.group && this.options.group.pull === 'copy';
+        },
         realList: function realList() {
           return !!this.list ? this.list : this.value;
         }
@@ -218,12 +198,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
       methods: {
         getChildrenNodes: function getChildrenNodes() {
-          if (!this.init) {
-            this.noneFunctionalComponentMode = this.noneFunctionalComponentMode && this.$children.length == 1;
-            this.init = true;
-          }
-
-          if (this.noneFunctionalComponentMode) {
+          if (this.componentMode) {
             return this.$children[0].$slots.default;
           }
           var rawNodes = this.$slots.default;
@@ -321,6 +296,8 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
           transitionContainer.children = [];
           transitionContainer.kept = undefined;
         },
+        
+        //Edited onDragStart so that materials and details could be copied over without referencing the original object
         onDragStart: function onDragStart(evt) {
           this.context = this.getUnderlyingVm(evt.item);
           evt.item._underlying_vm_ = this.clone(this.context.element);
