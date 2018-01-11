@@ -332,8 +332,6 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
           transitionContainer.children = [];
           transitionContainer.kept = undefined;
         },
-
-        //Edited onDragStart so that materials and details could be copied over without referencing the original object
         onDragStart: function onDragStart(evt) {
           this.context = this.getUnderlyingVm(evt.item);
           evt.item._underlying_vm_ = this.clone(this.context.element);
