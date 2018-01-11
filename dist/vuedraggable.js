@@ -1,4 +1,5 @@
 'use strict';
+
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
@@ -10,6 +11,15 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     Array.from = function (object) {
       return [].slice.call(object);
     };
+  }
+
+  function buildAttribute(object, propName, value) {
+    if (value == undefined) {
+      return object;
+    }
+    object = object == null ? {} : object;
+    object[propName] = value;
+    return object;
   }
 
   function buildDraggable(Sortable) {
@@ -105,6 +115,11 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       move: {
         type: Function,
         default: null
+      },
+      componentData: {
+        type: Object,
+        required: false,
+        default: null
       }
     };
 
@@ -115,8 +130,8 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
       data: function data() {
         return {
-          transitionMode: false,
-          componentMode: false
+          noneFunctionalComponentMode: false,
+          init: false
         };
       },
       render: function render(h) {
@@ -133,13 +148,26 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
         if (footer) {
           children = slots ? [].concat(_toConsumableArray(slots), _toConsumableArray(footer)) : [].concat(_toConsumableArray(footer));
         }
-        return h(this.element, null, children);
+        var attributes = null;
+        var update = function update(name, value) {
+          attributes = buildAttribute(attributes, name, value);
+        };
+        update('attrs', this.$attrs);
+        if (this.componentData) {
+          var _componentData = this.componentData,
+            on = _componentData.on,
+            _props = _componentData.props;
+
+          update('on', on);
+          update('props', _props);
+        }
+        return h(this.element, attributes, children);
       },
       mounted: function mounted() {
         var _this3 = this;
 
-        this.componentMode = this.element.toLowerCase() !== this.$el.nodeName.toLowerCase();
-        if (this.componentMode && this.transitionMode) {
+        this.noneFunctionalComponentMode = this.element.toLowerCase() !== this.$el.nodeName.toLowerCase();
+        if (this.noneFunctionalComponentMode && this.transitionMode) {
           throw new Error('Transition-group inside component is not supported. Please alter element value or remove transition-group. Current element value: ' + this.element);
         }
         var optionsAdded = {};
@@ -151,9 +179,11 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
           optionsAdded['on' + elt] = emit.bind(_this3, elt);
         });
 
-        var options = _extends({}, this.options, optionsAdded, { onMove: function onMove(evt, originalEvent) {
+        var options = _extends({}, this.options, optionsAdded, {
+          onMove: function onMove(evt, originalEvent) {
             return _this3.onDragMove(evt, originalEvent);
-          } });
+          }
+        });
         !('draggable' in options) && (options.draggable = '>*');
         this._sortable = new Sortable(this.rootContainer, options);
         this.computeIndexes();
@@ -198,7 +228,12 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
       methods: {
         getChildrenNodes: function getChildrenNodes() {
-          if (this.componentMode) {
+          if (!this.init) {
+            this.noneFunctionalComponentMode = this.noneFunctionalComponentMode && this.$children.length == 1;
+            this.init = true;
+          }
+
+          if (this.noneFunctionalComponentMode) {
             return this.$children[0].$slots.default;
           }
           var rawNodes = this.$slots.default;
@@ -261,7 +296,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
         },
         getRelatedContextFromMoveEvent: function getRelatedContextFromMoveEvent(_ref2) {
           var to = _ref2.to,
-              related = _ref2.related;
+            related = _ref2.related;
 
           var component = this.getUnderlyingPotencialDraggableComponent(to);
           if (!component) {
@@ -296,7 +331,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
           transitionContainer.children = [];
           transitionContainer.kept = undefined;
         },
-        
+
         //Edited onDragStart so that materials and details could be copied over without referencing the original object
         onDragStart: function onDragStart(evt) {
           this.context = this.getUnderlyingVm(evt.item);
