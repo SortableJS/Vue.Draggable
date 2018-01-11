@@ -130,6 +130,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
       data: function data() {
         return {
+          transitionMode: false,
           noneFunctionalComponentMode: false,
           init: false
         };
@@ -155,8 +156,8 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
         update('attrs', this.$attrs);
         if (this.componentData) {
           var _componentData = this.componentData,
-            on = _componentData.on,
-            _props = _componentData.props;
+          on = _componentData.on,
+          _props = _componentData.props;
 
           update('on', on);
           update('props', _props);
@@ -296,7 +297,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
         },
         getRelatedContextFromMoveEvent: function getRelatedContextFromMoveEvent(_ref2) {
           var to = _ref2.to,
-            related = _ref2.related;
+          related = _ref2.related;
 
           var component = this.getUnderlyingPotencialDraggableComponent(to);
           if (!component) {
