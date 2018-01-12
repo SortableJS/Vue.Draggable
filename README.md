@@ -117,7 +117,7 @@ Type: `Array`<br>
 Required: `false`<br>
 Default: `null`
 
-Altenative to the `value` prop, list is an array to be synchronized with drag-and-drop.<br>
+Alternative to the `value` prop, list is an array to be synchronized with drag-and-drop.<br>
 The main diference is that `list` prop is updated by draggable component using splice method, whereas `value` is immutable.<br>
 **Do not use in conjunction with value prop.**
 
