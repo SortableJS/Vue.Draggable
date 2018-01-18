@@ -74,7 +74,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     }
 
     var eventsListened = ['Start', 'Add', 'Remove', 'Update', 'End'];
-    var eventsToEmit = ['Choose', 'Sort', 'Filter', 'Clone'];
+    var eventsToEmit = ['Choose', 'Sort', 'Filter', 'Clone', 'Copy'];
     var readonlyProperties = ['Move'].concat(eventsListened, eventsToEmit).map(function (evt) {
       return 'on' + evt;
     });
@@ -95,6 +95,12 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       noTransitionOnDrag: {
         type: Boolean,
         default: false
+      },
+      copy: {
+        type: Function,
+        default: function _default(original) {
+          return JSON.parse(JSON.stringify(original));
+        }
       },
       clone: {
         type: Function,
@@ -150,8 +156,8 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
         update('attrs', this.$attrs);
         if (this.componentData) {
           var _componentData = this.componentData,
-              on = _componentData.on,
-              _props = _componentData.props;
+          on = _componentData.on,
+          _props = _componentData.props;
 
           update('on', on);
           update('props', _props);
@@ -174,9 +180,11 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
           optionsAdded['on' + elt] = emit.bind(_this3, elt);
         });
 
-        var options = _extends({}, this.options, optionsAdded, { onMove: function onMove(evt, originalEvent) {
+        var options = _extends({}, this.options, optionsAdded, {
+          onMove: function onMove(evt, originalEvent) {
             return _this3.onDragMove(evt, originalEvent);
-          } });
+          }
+        });
         !('draggable' in options) && (options.draggable = '>*');
         this._sortable = new Sortable(this.rootContainer, options);
         this.computeIndexes();
@@ -192,6 +200,9 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
         },
         isCloning: function isCloning() {
           return !!this.options && !!this.options.group && this.options.group.pull === 'clone';
+        },
+        isCopying: function isCopying() {
+          return !!this.options && !!this.options.group && this.options.group.pull === 'copy';
         },
         realList: function realList() {
           return !!this.list ? this.list : this.value;
@@ -286,7 +297,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
         },
         getRelatedContextFromMoveEvent: function getRelatedContextFromMoveEvent(_ref2) {
           var to = _ref2.to,
-              related = _ref2.related;
+          related = _ref2.related;
 
           var component = this.getUnderlyingPotencialDraggableComponent(to);
           if (!component) {

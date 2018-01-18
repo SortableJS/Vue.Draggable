@@ -54,7 +54,7 @@
     }
 
     const eventsListened = ['Start', 'Add', 'Remove', 'Update', 'End']
-    const eventsToEmit = ['Choose', 'Sort', 'Filter', 'Clone']
+    var eventsToEmit = ['Choose', 'Sort', 'Filter', 'Clone', 'Copy']
     const readonlyProperties = ['Move', ...eventsListened, ...eventsToEmit].map(evt => 'on' + evt)
     var draggingElement = null
 
@@ -73,6 +73,10 @@
       noTransitionOnDrag: {
         type: Boolean,
         default: false
+      },
+      copy: {
+        type: Function,
+        default: (original) => { return JSON.parse(JSON.stringify(original))}
       },
       clone: {
         type: Function,
@@ -161,6 +165,10 @@
 
         isCloning() {
           return (!!this.options) && (!!this.options.group) && (this.options.group.pull === 'clone')
+        },
+
+        isCopying: function isCopying() {
+          return !!this.options && !!this.options.group && this.options.group.pull === 'copy';
         },
 
         realList() {
@@ -288,10 +296,10 @@
           transitionContainer.kept = undefined
         },
 
-        onDragStart(evt) {
-          this.context = this.getUnderlyingVm(evt.item)
-          evt.item._underlying_vm_ = this.clone(this.context.element)
-          draggingElement = evt.item
+        onDragStart: function onDragStart(evt) {
+          this.context = this.getUnderlyingVm(evt.item);
+          evt.item._underlying_vm_ = this.clone(this.context.element);
+          draggingElement = evt.item;
         },
 
         onDragAdd(evt) {
