@@ -246,7 +246,8 @@
         },
 
         updatePosition(oldIndex, newIndex) {
-          const updatePosition = list => list.splice(newIndex, 0, list.splice(oldIndex, 1)[0])
+          const headerLength = this.$slots.header.length;
+          const updatePosition = list => list.splice(newIndex - headerLength, 0, list.splice(oldIndex - headerLength, 1)[0])
           this.alterList(updatePosition)
         },
 
