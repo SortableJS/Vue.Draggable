@@ -42,7 +42,7 @@ yarn add vuedraggable
 npm i -S vuedraggable
 ```
 
-*Beware it is vuedraggable and not vue-draggable which is another package*
+**Beware it is vuedraggable and not vue-draggable which is another package**
 
 ### with direct link 
 ```html
