@@ -32,7 +32,7 @@
           </draggable>
         </div>
 
-        <div class="container-fluid machine-contents list">
+        <div class="container-fluid machine-contents list" style="background:#ccc;">
           <draggable class="dragArea" v-model="jobs2" :options="{group:'a', animation:150}" :no-transition-on-drag="true" @start="drag=true" @end="drag=false">
             <transition-group :name="!drag? 'list-complete' : null" :css="true">
               <div v-for="(job, index) in jobs2" :key="job.jobNumber" class="list-complete-item">
@@ -50,8 +50,6 @@
 
       </div>
     </div>
-    <button v-on:click="add">Add list 1</button>
-    <button v-on:click="add2">Add list 2</button>
   </div>
   <script type="text/javascript" src="libs\vue\dist\vue.js"></script>
   <script type="text/javascript" src="libs\Sortable\Sortable.js"></script>

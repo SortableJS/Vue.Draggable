@@ -8,7 +8,7 @@
     min-height: 10px;	
 }
 .dragArea > span {
-    min-height: 10px;  
+    min-height: 100px;  
     display: block;
 }
 
