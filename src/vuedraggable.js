@@ -160,7 +160,14 @@
         },
 
         isCloning() {
-          return (!!this.options) && (!!this.options.group) && (this.options.group.pull === 'clone')
+          if ((!!this.options) && (!!this.options.group)) {
+            if (Object.prototype.toString.call(this.options.group.pull) === '[object Function]') {
+              return this.options.group.pull() === 'clone';
+            } else {
+              return this.options.group.pull === 'clone';
+            }
+          }
+          return false;
         },
 
         realList() {
