@@ -160,7 +160,8 @@
         },
 
         isCloning() {
-          return (!!this.options) && (!!this.options.group) && (this.options.group.pull === 'clone')
+          return (!!this.options && !!this.options.group && this.options.group.pull === 'clone')
+            || this._sortable.lastPullMode === 'clone';
         },
 
         realList() {
