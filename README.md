@@ -32,6 +32,30 @@ Based on and offering all features of [Sortable.js](https://github.com/RubaXa/So
 * Cancellation support
 * Events reporting any changes when full control is needed
 * Reuse existing UI library components (such as [vuetify](https://vuetifyjs.com), [element](http://element.eleme.io/), or [vue material](https://vuematerial.io) etc...) and make them draggable using `element` and `componentData` props
+## Installation
+
+### With npm or yarn 
+
+```bash
+yarn add vuedraggable
+
+npm i -S vuedraggable
+```
+
+**Beware it is vuedraggable and not vue-draggable which is another package**
+
+### with direct link 
+```html
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/vue/2.5.2/vue.min.js"></script>
+<!-- CDNJS :: Sortable (https://cdnjs.com/) -->
+<script src="//cdn.jsdelivr.net/npm/sortablejs@1.7.0/Sortable.min.js"></script>
+<!-- CDNJS :: Vue.Draggable (https://cdnjs.com/) -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/Vue.Draggable/2.15.0/vuedraggable.min.js"></script>
+
+```
+
+[cf example section](https://github.com/SortableJS/Vue.Draggable/tree/master/examples)
 
 ## For Vue.js 2.0
 
