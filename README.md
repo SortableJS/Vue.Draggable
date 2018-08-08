@@ -42,7 +42,7 @@ yarn add vuedraggable
 npm i -S vuedraggable
 ```
 
-**Beware it is vuedraggable and not vue-draggable which is another package**
+**Beware it is vuedraggable for Vue 2.0 and not vue-draggable which is for version 1.0**
 
 ### with direct link 
 ```html
@@ -321,45 +321,5 @@ https://jsfiddle.net/dede89/L54yu3L9/
 ## For Vue.js 1.0
 
 [See here](documentation/Vue.draggable.for.ReadME.md)
-
-## Installation
-- Available through:
-``` js
- npm install vuedraggable
-```
-``` js
- Bower install vue.draggable
-```
-
-- #### For Modules
-
-  ``` js
-  // ES6
-  //For Vue.js 2.0
-  import draggable from 'vuedraggable'
-  ...
-  export default {
-        components: {
-            draggable,
-            ...
-        }
-        ...
-
-  //For Vue.js 2.0
-  var draggable = require('vuedraggable')
-  ```
-
-- #### For `<script>` Include
-
-```HTML
-
-<!-- CDNJS :: Vue (https://cdnjs.com/) -->
-<script src="//cdnjs.cloudflare.com/ajax/libs/vue/2.5.2/vue.min.js"></script>
-
-<!-- CDNJS :: Sortable (https://cdnjs.com/) -->
-<script src="//cdn.jsdelivr.net/npm/sortablejs@1.7.0/Sortable.min.js"></script>
-
-<!-- CDNJS :: Vue.Draggable (https://cdnjs.com/) -->
-<script src="//cdnjs.cloudflare.com/ajax/libs/Vue.Draggable/2.16.0/vuedraggable.min.js"></script>
 
 ```
