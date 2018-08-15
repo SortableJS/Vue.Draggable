@@ -18,6 +18,9 @@ Based on and offering all features of [Sortable.js](https://github.com/RubaXa/So
 
 ![demo gif](https://raw.githubusercontent.com/SortableJS/Vue.Draggable/master/example.gif)
 
+## Live Demo
+
+https://david-desmaisons.github.io/draggable-example/
 
 ## Features
 
