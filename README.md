@@ -317,7 +317,11 @@ https://jsfiddle.net/dede89/m2v0orcn/
 - Example with table:
 https://jsfiddle.net/dede89/L54yu3L9/
 
-### Full demo example
+- Example with remove button
+ on list elements
+ https://jsfiddle.net/dede89/5Leuhh1n/
+ 
+ ### Full demo example
 
 [draggable-example](https://github.com/David-Desmaisons/draggable-example)
 
