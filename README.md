@@ -14,14 +14,36 @@ Vue component (Vue.js 2.0) or directive (Vue.js 1.0) allowing drag-and-drop and 
 
 Based on and offering all features of [Sortable.js](https://github.com/RubaXa/Sortable)
 
+- [Demo](#demo)
+- [Live Demo](#live-demo)
+- [Features](#features)
+- [Installation](#installation)
+   - [With npm or yarn](#installation-npm-or-yarn)
+   - [With direct link](#installation-direct-link)
+- [For Vue.js 2.0](#vue-2)
+   - [Typical use](#vue-2-typical-use)
+   - [With `transition-group`](#vue-2-transition-group)
+   - [With `footer-slot`](#vue-2-footer-slot)
+   - [With Vuex](#vue-2-with-vuex)
+   - [Props](#vue-2-props)
+   - [Events](#vue-2-events)
+   - [Slots](#vue-2-events)
+   - [Gotchas](#vue-2-gotchas)
+   - [Fiddle](#vue-2-fiddle)
+   - [Full demo example](#vue-2-full-demo)
+- [For Vue.js 1.0](#vue-1)
+   
+<a name="demo"></a>
 ## Demo
 
 ![demo gif](https://raw.githubusercontent.com/SortableJS/Vue.Draggable/master/example.gif)
 
+<a name="live-demo"></a>
 ## Live Demo
 
 https://david-desmaisons.github.io/draggable-example/
 
+<a name="features"></a>
 ## Features
 
 * Full support of [Sortable.js](https://github.com/RubaXa/Sortable) features:
@@ -35,8 +57,11 @@ https://david-desmaisons.github.io/draggable-example/
 * Cancellation support
 * Events reporting any changes when full control is needed
 * Reuse existing UI library components (such as [vuetify](https://vuetifyjs.com), [element](http://element.eleme.io/), or [vue material](https://vuematerial.io) etc...) and make them draggable using `element` and `componentData` props
+
+<a name="installation"></a>
 ## Installation
 
+<a name="installation-npm-or-yarn"></a>
 ### With npm or yarn 
 
 ```bash
@@ -47,6 +72,7 @@ npm i -S vuedraggable
 
 **Beware it is vuedraggable for Vue 2.0 and not vue-draggable which is for version 1.0**
 
+<a name="installation-direct-link"></a>
 ### with direct link 
 ```html
 
@@ -60,10 +86,12 @@ npm i -S vuedraggable
 
 [cf example section](https://github.com/SortableJS/Vue.Draggable/tree/master/examples)
 
+<a name="vue-2"></a>
 ## For Vue.js 2.0
 
 Use draggable component:
 
+<a name="vue-2-typical-use"></a>
 ### Typical use:
 ``` html
 <draggable v-model="myArray" :options="{group:'people'}" @start="drag=true" @end="drag=false">
@@ -81,6 +109,7 @@ Use draggable component:
   ...
 ```
 
+<a name="vue-2-transition-group"></a>
 ### With `transition-group`:
 ``` html
 <draggable v-model="myArray">
@@ -95,6 +124,7 @@ Use draggable component:
 Draggable component should directly wrap the draggable elements, or a `transition-component` containing the draggable elements.
 
 
+<a name="vue-2-footer-slot"></a>
 ### With footer slot:
 ``` html
 <draggable v-model="myArray" :options="{draggable:'.item'}">
@@ -106,6 +136,7 @@ Draggable component should directly wrap the draggable elements, or a `transitio
 ```
 
 
+<a name="vue-2-with-vuex"></a>
 ### With Vuex:
 
 ```html
@@ -126,6 +157,7 @@ computed: {
 ```
 
 
+<a name="vue-2-props"></a>
 ### Props
 #### value
 Type: `Array`<br>
@@ -250,6 +282,7 @@ methods: {
   }
 ```
 
+<a name="vue-2-events"></a>
 ### Events
 
 * Support for Sortable events:
@@ -280,6 +313,7 @@ HTML:
     - `oldIndex`: the old index of the moved element
     - `element`: the moved element
 
+<a name="vue-2-slots"></a>
 ### Slots
 Use the `footer` slot to add none-draggable element inside the vuedraggable component.
 Important: it should be used in conjunction with draggable option to tag draggable element.
@@ -295,11 +329,13 @@ Ex:
 </draggable>
 ```
 
+<a name="vue-2-gotchas"></a>
 ### Gotchas
   - Drag operation with empty list:
 
     To be able to drag items on an empty draggable component, set a min-height greater than 0 on the `draggable` component or the `transition-group` if any and ensure the transition group has display: block; otherwise height won't work.
 
+<a name="vue-2-fiddle"></a>
 ### Fiddle
 
 - Simple:
@@ -321,10 +357,12 @@ https://jsfiddle.net/dede89/L54yu3L9/
  on list elements
  https://jsfiddle.net/dede89/5Leuhh1n/
  
+<a name="vue-2-full-demo"></a>
  ### Full demo example
 
 [draggable-example](https://github.com/David-Desmaisons/draggable-example)
 
+<a name="vue-1"></a>
 ## For Vue.js 1.0
 
 [See here](documentation/Vue.draggable.for.ReadME.md)
