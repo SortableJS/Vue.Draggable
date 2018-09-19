@@ -5,7 +5,11 @@
     background-color: green;
 }
 .dragArea {
-     min-height: 10px;	
+    min-height: 10px;	
+}
+.dragArea > span {
+    min-height: 100px;  
+    display: block;
 }
 
 .list-dragging {
