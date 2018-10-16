@@ -318,8 +318,11 @@ https://jsfiddle.net/dede89/m2v0orcn/
 https://jsfiddle.net/dede89/L54yu3L9/
 
 - Example with remove button
- on list elements
- https://jsfiddle.net/dede89/5Leuhh1n/
+ on list elements:
+https://jsfiddle.net/dede89/5Leuhh1n/
+ 
+- Example with ghosting class:
+https://jsfiddle.net/jericopulvera/ze5qn7oa/4/
  
  ### Full demo example
 
