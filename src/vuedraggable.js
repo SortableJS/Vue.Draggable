@@ -115,9 +115,12 @@
           }
         }
         let children = slots
-        const { footer } = this.$slots
+        const { header, footer } = this.$slots
+        if (header) {
+          children = children ? [...header, ...children] : [...header];
+        }
         if (footer) {
-          children = slots ? [...slots, ...footer] : [...footer]
+          children = children ? [...children, ...footer] : [...footer]
         }
         var attributes = null;
         const update = (name, value) => { attributes = buildAttribute(attributes, name, value); };
