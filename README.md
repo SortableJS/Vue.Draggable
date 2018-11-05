@@ -249,6 +249,14 @@ methods: {
     }
   }
 ```
+#### Ignore
+Type: `Array<String>`<br>
+Required: `false`<br>
+Default: `[]`<br>
+
+Array of HTML query selectors for elements that should be completely ignored by the component.
+The elements encompassed by these selectors will not be draggable, nor will they be indexed by the component.
+The selectors in this option will automatically be added to the SortableJS `filter` option.
 
 ### Events
 
