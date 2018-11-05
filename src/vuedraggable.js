@@ -90,6 +90,11 @@
         type: Object,
         required: false,
         default: null
+      },
+      ignore: {
+        type: Array,
+        required: false,
+        default: null
       }
     }
 
@@ -143,8 +148,19 @@
         eventsToEmit.forEach(elt => {
           optionsAdded['on' + elt] = emit.bind(this, elt)
         });
-
-        const options = Object.assign({}, this.options, optionsAdded, { onMove: (evt, originalEvent) => { return this.onDragMove(evt, originalEvent); } })
+        
+        var _this = this;
+        const options = Object.assign({}, this.options, optionsAdded, {
+          onMove: (evt, originalEvent) => { return this.onDragMove(evt, originalEvent); },
+          filter: function(evt, target) {
+             if (typeof options.filter == 'function') {
+               return _this.isIgnoredElement(target) || options.filter(evt, target);
+             } else if (typeof options.filter == 'string') {
+               return target.matches(_this.ignore.join(',') + ',' + options.filter);
+             }
+             return _this.isIgnoredElement(target);
+           }
+        })
         !('draggable' in options) && (options.draggable = '>*');
         this._sortable = new Sortable(this.rootContainer, options)
         this.computeIndexes()
@@ -196,12 +212,12 @@
             return this.$children[0].$slots.default
           }
           const rawNodes = this.$slots.default
-          return this.transitionMode ? rawNodes[0].child.$slots.default : rawNodes
+          return this.transitionMode ? rawNodes[0].child.$slots.default : (rawNodes ? rawNodes.filter(node => !this.isIgnoredElement(node.elm)) : rawNodes);
         },
 
         computeIndexes() {
           this.$nextTick(() => {
-            this.visibleIndexes = computeIndexes(this.getChildrenNodes(), this.rootContainer.children, this.transitionMode)
+            this.visibleIndexes = computeIndexes(this.getChildrenNodes(), Array.from(this.rootContainer.children).filter(elem => !this.isIgnoredElement(elem)), this.transitionMode);
           })
         },
 
