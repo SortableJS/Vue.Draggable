@@ -258,6 +258,18 @@ Array of HTML query selectors for elements that should be completely ignored by 
 The elements encompassed by these selectors will not be draggable, nor will they be indexed by the component.
 The selectors in this option will automatically be added to the SortableJS `filter` option.
 
+Example:
+```HTML
+<draggable v-model="list" :ignore="['.text']">
+   <div class="draggable-item">Item 1</div>
+   <div class="draggable-item">Item 2</div>
+   <div class="draggable-item">Item 3</div>
+   <div class="text">I am ignored</div>
+   <div class="draggable-item">Item 4</div>
+   <div class="draggable-item">Item 5</div>
+</draggable>
+```
+
 ### Events
 
 * Support for Sortable events:
