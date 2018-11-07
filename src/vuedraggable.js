@@ -214,6 +214,10 @@
           const rawNodes = this.$slots.default
           return this.transitionMode ? rawNodes[0].child.$slots.default : (rawNodes ? rawNodes.filter(node => !this.isIgnoredElement(node.elm)) : rawNodes);
         },
+        
+        isIgnoredElement: function isIgnoredElement(elem) {
+          return !!(!elem.matches || this.ignore.filter(query => elem.matches(query)).length);
+        },
 
         computeIndexes() {
           this.$nextTick(() => {
