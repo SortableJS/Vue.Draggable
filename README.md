@@ -41,8 +41,8 @@ https://david-desmaisons.github.io/draggable-example/
  <a href="https://flatlogic.com/admin-dashboards">
  <img width="190" style="margin-top: 10px;" src="https://flatlogic.com/assets/logo-d9e7751df5fddd11c911945a75b56bf72bcfe809a7f6dca0e32d7b407eacedae.svg">
  </a>
- 
- Flatlogic creates Dashboards and Web Applications for businesses to manage, analyze and visualize their data.
+
+Admin Dashboard Templates made with Vue, React and Angular.
 
 ## Installation
 
