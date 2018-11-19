@@ -1,4 +1,4 @@
-<p align="center"><img width="100"src="https://raw.githubusercontent.com/SortableJS/Vue.Draggable/master/logo.png"></p>
+<p align="center"><img width="140"src="https://raw.githubusercontent.com/SortableJS/Vue.Draggable/master/logo.png"></p>
 <h1 align="center">Vue.Draggable</h1>
 
 [![GitHub open issues](https://img.shields.io/github/issues/SortableJS/Vue.Draggable.svg?maxAge=2592000)](https://github.com/SortableJS/Vue.Draggable/issues?q=is%3Aopen+is%3Aissue)
@@ -35,6 +35,15 @@ https://david-desmaisons.github.io/draggable-example/
 * Cancellation support
 * Events reporting any changes when full control is needed
 * Reuse existing UI library components (such as [vuetify](https://vuetifyjs.com), [element](http://element.eleme.io/), or [vue material](https://vuematerial.io) etc...) and make them draggable using `element` and `componentData` props
+
+## Backers
+
+ <a href="https://flatlogic.com/admin-dashboards">
+ <img width="190" style="margin-top: 10px;" src="https://flatlogic.com/assets/logo-d9e7751df5fddd11c911945a75b56bf72bcfe809a7f6dca0e32d7b407eacedae.svg">
+ </a>
+ 
+ Flatlogic creates Dashboards and Web Applications for businesses to manage, analyze and visualize their data.
+
 ## Installation
 
 ### With npm or yarn 
