@@ -151,7 +151,7 @@
       },
 
       beforeDestroy() {
-        this._sortable.destroy()
+        if(this._sortable !== undefined) this._sortable.destroy();
       },
 
       computed: {
