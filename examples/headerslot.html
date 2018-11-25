@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <title>Header and footer example</title>
+        <title>c</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -19,7 +19,6 @@
             <draggable  :list="list" @start="dragging=true" @end="dragging=false" :options="{draggable:'.itemd'}">
                 <div v-for="element in list" class="itemd" :key="element.id">{{element.name}}</div>
                 <button slot="header" @click="add">Add People (Header)</button>
-                <button slot="footer" @click="add">Add People (Footer)</button>
              </draggable>
          </div>
 
