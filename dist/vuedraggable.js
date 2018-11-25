@@ -189,7 +189,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
         this.computeIndexes();
       },
       beforeDestroy: function beforeDestroy() {
-        this._sortable.destroy();
+        if (this._sortable !== undefined) this._sortable.destroy();
       },
 
 
