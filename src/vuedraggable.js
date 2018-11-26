@@ -27,7 +27,7 @@
     }
 
     function computeVmIndex(vnodes, element) {
-      return vnodes.map(elt => elt.elm).indexOf(element)
+      return vnodes.map(elt => elt.elm).filter(elt => !(elt instanceof Comment)).indexOf(element)
     }
 
     function computeIndexes(slots, children, isTransition) {
