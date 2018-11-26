@@ -51,6 +51,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       var rawIndexes = [].concat(_toConsumableArray(children)).map(function (elt) {
         return elmFromNodes.indexOf(elt);
       });
+      console.log(JSON.stringify(rawIndexes));
       return isTransition ? rawIndexes.filter(function (ind) {
         return ind !== -1;
       }) : rawIndexes;
@@ -139,17 +140,20 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
             this.transitionMode = true;
           }
         }
+        var headerOffset = 0;
         var children = slots;
         var _$slots = this.$slots,
             header = _$slots.header,
             footer = _$slots.footer;
 
         if (header) {
+          headerOffset = header.length;
           children = children ? [].concat(_toConsumableArray(header), _toConsumableArray(children)) : [].concat(_toConsumableArray(header));
         }
         if (footer) {
           children = children ? [].concat(_toConsumableArray(children), _toConsumableArray(footer)) : [].concat(_toConsumableArray(footer));
         }
+        this.headerOffset = headerOffset;
         var attributes = null;
         var update = function update(name, value) {
           attributes = buildAttribute(attributes, name, value);
@@ -311,9 +315,10 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
           return context;
         },
         getVmIndex: function getVmIndex(domIndex) {
+          var correctedDomIndex = domIndex + this.headerOffset;
           var indexes = this.visibleIndexes;
           var numberIndexes = indexes.length;
-          return domIndex > numberIndexes - 1 ? numberIndexes : indexes[domIndex];
+          return correctedDomIndex > numberIndexes - 1 ? numberIndexes : indexes[correctedDomIndex];
         },
         getComponent: function getComponent() {
           return this.$slots.default[0].componentInstance;
@@ -358,10 +363,12 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
           this.emitChanges({ removed: removed });
         },
         onDragUpdate: function onDragUpdate(evt) {
+          console.log(evt.newIndex, evt.oldIndex, evt.item);
           removeNode(evt.item);
           insertNodeAt(evt.from, evt.item, evt.oldIndex);
           var oldIndex = this.context.index;
           var newIndex = this.getVmIndex(evt.newIndex);
+          console.log(newIndex);
           this.updatePosition(oldIndex, newIndex);
           var moved = { element: this.context.element, oldIndex: oldIndex, newIndex: newIndex };
           this.emitChanges({ moved: moved });

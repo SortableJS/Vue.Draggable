@@ -114,14 +114,17 @@
             this.transitionMode = true
           }
         }
+        let headerOffset = 0
         let children = slots
         const { header, footer } = this.$slots
         if (header) {
+          headerOffset = header.length
           children = children ? [...header, ...children] : [...header];
         }
         if (footer) {
           children = children ? [...children, ...footer] : [...footer]
         }
+        this.headerOffset = headerOffset;
         var attributes = null;
         const update = (name, value) => { attributes = buildAttribute(attributes, name, value); };
         update('attrs', this.$attrs);
@@ -271,9 +274,10 @@
         },
 
         getVmIndex(domIndex) {
+          const correctedDomIndex = domIndex + this.headerOffset
           const indexes = this.visibleIndexes
           const numberIndexes = indexes.length
-          return (domIndex > numberIndexes - 1) ? numberIndexes : indexes[domIndex]
+          return (correctedDomIndex > numberIndexes - 1) ? numberIndexes : indexes[correctedDomIndex]
         },
 
         getComponent() {
