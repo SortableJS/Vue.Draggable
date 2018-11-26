@@ -51,7 +51,6 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       var rawIndexes = [].concat(_toConsumableArray(children)).map(function (elt) {
         return elmFromNodes.indexOf(elt);
       });
-      console.log(JSON.stringify(rawIndexes));
       return isTransition ? rawIndexes.filter(function (ind) {
         return ind !== -1;
       }) : rawIndexes;
@@ -363,12 +362,10 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
           this.emitChanges({ removed: removed });
         },
         onDragUpdate: function onDragUpdate(evt) {
-          console.log(evt.newIndex, evt.oldIndex, evt.item);
           removeNode(evt.item);
           insertNodeAt(evt.from, evt.item, evt.oldIndex);
           var oldIndex = this.context.index;
           var newIndex = this.getVmIndex(evt.newIndex);
-          console.log(newIndex);
           this.updatePosition(oldIndex, newIndex);
           var moved = { element: this.context.element, oldIndex: oldIndex, newIndex: newIndex };
           this.emitChanges({ moved: moved });
