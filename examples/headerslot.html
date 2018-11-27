@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <title>Basic example</title>
+        <title>Header slot</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -16,8 +16,9 @@
 
         <div :class="dragging? 'list-dragging' : 'drag'">
             <h2>Draggable</h2>
-            <draggable  :list="list" @start="dragging=true" @end="dragging=false">
-                <div v-for="element in list">{{element.name}}</div>
+            <draggable  :list="list" @start="dragging=true" @end="dragging=false" :options="{draggable:'.itemd'}">
+                <div v-for="element in list" class="itemd" :key="element.id">{{element.name}}</div>
+                <button slot="header" @click="add">Add People (Header)</button>
              </draggable>
          </div>
 
@@ -28,16 +29,12 @@
              </div>
          </div>
 
-        <button @click="add">Add</button>
         <button @click="replace">Replace</button>
-
         <br>
 
         <a href="Two_Lists.html">See 2 lists example</a>
         <a href="Two_Lists_Clone.html">See clone element example</a>
         <a href="Two_Lists_Clone_If.html">See clone v-if element example</a>
-        <a href="footerslot.html">See footer slot example</a>
-        <a href="headerslot.html">See header slot example</a>
 
     </div>
 

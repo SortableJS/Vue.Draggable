@@ -113,7 +113,15 @@ Draggable component should directly wrap the draggable elements, or a `transitio
     <button slot="footer" @click="addPeople">Add</button>
 </draggable>
 ```
-
+### With header slot:
+``` html
+<draggable v-model="myArray" :options="{draggable:'.item'}">
+    <div v-for="element in myArray" :key="element.id" class="item">
+        {{element.name}}
+    </div>
+    <button slot="header" @click="addPeople">Add</button>
+</draggable>
+```
 
 ### With Vuex:
 
@@ -290,9 +298,26 @@ HTML:
     - `element`: the moved element
 
 ### Slots
+
+#### Header
+Use the `header` slot to add none-draggable element inside the vuedraggable component.
+Important: it should be used in conjunction with draggable option to tag draggable element.
+Note that header slot will always be added before the default slot regardless its position in the template.
+Ex:
+
+``` html
+<draggable v-model="myArray" :options="{draggable:'.item'}">
+    <div v-for="element in myArray" :key="element.id" class="item">
+        {{element.name}}
+    </div>
+    <button slot="header" @click="addPeople">Add</button>
+</draggable>
+```
+
+#### Footer
 Use the `footer` slot to add none-draggable element inside the vuedraggable component.
 Important: it should be used in conjunction with draggable option to tag draggable element.
-Note that footer slot will always be added after the default slot.
+Note that footer slot will always be added after the default slot regardless its position in the template.
 Ex:
 
 ``` html

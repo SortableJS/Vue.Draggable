@@ -114,11 +114,17 @@
             this.transitionMode = true
           }
         }
+        let headerOffset = 0
         let children = slots
-        const { footer } = this.$slots
-        if (footer) {
-          children = slots ? [...slots, ...footer] : [...footer]
+        const { header, footer } = this.$slots
+        if (header) {
+          headerOffset = header.length
+          children = children ? [...header, ...children] : [...header];
         }
+        if (footer) {
+          children = children ? [...children, ...footer] : [...footer]
+        }
+        this.headerOffset = headerOffset;
         var attributes = null;
         const update = (name, value) => { attributes = buildAttribute(attributes, name, value); };
         update('attrs', this.$attrs);
@@ -295,6 +301,7 @@
         },
 
         onDragAdd(evt) {
+          this.updateEvenemt(evt)
           const element = evt.item._underlying_vm_
           if (element === undefined) {
             return
@@ -308,6 +315,7 @@
         },
 
         onDragRemove(evt) {
+          this.updateEvenemt(evt)
           insertNodeAt(this.rootContainer, evt.item, evt.oldIndex)
           if (this.isCloning) {
             removeNode(evt.clone)
@@ -321,6 +329,7 @@
         },
 
         onDragUpdate(evt) {
+          this.updateEvenemt(evt)
           removeNode(evt.item)
           insertNodeAt(evt.from, evt.item, evt.oldIndex)
           const oldIndex = this.context.index
@@ -328,6 +337,15 @@
           this.updatePosition(oldIndex, newIndex)
           const moved = { element: this.context.element, oldIndex, newIndex }
           this.emitChanges({ moved })
+        },
+
+        updateEvenemt(evt){
+          this.updateProperty(evt, 'newIndex')
+          this.updateProperty(evt, 'oldIndex')
+        },
+
+        updateProperty(evt, propertyName){
+          evt.hasOwnProperty(propertyName) && (evt[propertyName] += this.headerOffset)
         },
 
         computeFutureIndex(relatedContext, evt) {
