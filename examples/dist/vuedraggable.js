@@ -1,4 +1,7 @@
 'use strict';
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
@@ -10,6 +13,15 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     Array.from = function (object) {
       return [].slice.call(object);
     };
+  }
+
+  function buildAttribute(object, propName, value) {
+    if (value == undefined) {
+      return object;
+    }
+    object = object == null ? {} : object;
+    object[propName] = value;
+    return object;
   }
 
   function buildDraggable(Sortable) {
@@ -99,6 +111,11 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       move: {
         type: Function,
         default: null
+      },
+      componentData: {
+        type: Object,
+        required: false,
+        default: null
       }
     };
 
@@ -122,13 +139,34 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
             this.transitionMode = true;
           }
         }
+        var headerOffset = 0;
         var children = slots;
-        var footer = this.$slots.footer;
+        var _$slots = this.$slots,
+            header = _$slots.header,
+            footer = _$slots.footer;
 
-        if (footer) {
-          children = slots ? [].concat(_toConsumableArray(slots), _toConsumableArray(footer)) : [].concat(_toConsumableArray(footer));
+        if (header) {
+          headerOffset = header.length;
+          children = children ? [].concat(_toConsumableArray(header), _toConsumableArray(children)) : [].concat(_toConsumableArray(header));
         }
-        return h(this.element, null, children);
+        if (footer) {
+          children = children ? [].concat(_toConsumableArray(children), _toConsumableArray(footer)) : [].concat(_toConsumableArray(footer));
+        }
+        this.headerOffset = headerOffset;
+        var attributes = null;
+        var update = function update(name, value) {
+          attributes = buildAttribute(attributes, name, value);
+        };
+        update('attrs', this.$attrs);
+        if (this.componentData) {
+          var _componentData = this.componentData,
+              on = _componentData.on,
+              _props = _componentData.props;
+
+          update('on', on);
+          update('props', _props);
+        }
+        return h(this.element, attributes, children);
       },
       mounted: function mounted() {
         var _this3 = this;
@@ -154,7 +192,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
         this.computeIndexes();
       },
       beforeDestroy: function beforeDestroy() {
-        this._sortable.destroy();
+        if (this._sortable !== undefined) this._sortable.destroy();
       },
 
 
@@ -276,9 +314,10 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
           return context;
         },
         getVmIndex: function getVmIndex(domIndex) {
+          var correctedDomIndex = domIndex + this.headerOffset;
           var indexes = this.visibleIndexes;
           var numberIndexes = indexes.length;
-          return domIndex > numberIndexes - 1 ? numberIndexes : indexes[domIndex];
+          return correctedDomIndex > numberIndexes - 1 ? numberIndexes : indexes[correctedDomIndex];
         },
         getComponent: function getComponent() {
           return this.$slots.default[0].componentInstance;
@@ -365,7 +404,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     return draggableComponent;
   }
 
- if (typeof exports == "object") {
+  if ((typeof exports === 'undefined' ? 'undefined' : _typeof(exports)) == "object") {
     var Sortable = require("sortablejs");
     module.exports = buildDraggable(Sortable);
   } else if (typeof define == "function" && define.amd) {
@@ -375,13 +414,5 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
   } else if (window && window.Vue && window.Sortable) {
     var draggable = buildDraggable(window.Sortable);
     Vue.component('draggable', draggable);
-  } else {
-    if(typeof window.Vue == "undefined") {
-      throw 'Vue.js not found!';
-    }
-    
-    if(typeof window.Sortable == "undefined") {
-      throw 'Sortable.js not found!';
-    }  
   }
 })();

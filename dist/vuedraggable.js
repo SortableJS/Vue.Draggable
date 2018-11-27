@@ -314,10 +314,9 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
           return context;
         },
         getVmIndex: function getVmIndex(domIndex) {
-          var correctedDomIndex = domIndex + this.headerOffset;
           var indexes = this.visibleIndexes;
           var numberIndexes = indexes.length;
-          return correctedDomIndex > numberIndexes - 1 ? numberIndexes : indexes[correctedDomIndex];
+          return domIndex > numberIndexes - 1 ? numberIndexes : indexes[domIndex];
         },
         getComponent: function getComponent() {
           return this.$slots.default[0].componentInstance;
@@ -362,13 +361,24 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
           this.emitChanges({ removed: removed });
         },
         onDragUpdate: function onDragUpdate(evt) {
+          console.log(evt.newIndex, evt.oldIndex);
+          this.updateEvenemt(evt);
+          console.log(evt.newIndex, evt.oldIndex);
           removeNode(evt.item);
           insertNodeAt(evt.from, evt.item, evt.oldIndex);
+          throw new Error();
           var oldIndex = this.context.index;
           var newIndex = this.getVmIndex(evt.newIndex);
           this.updatePosition(oldIndex, newIndex);
           var moved = { element: this.context.element, oldIndex: oldIndex, newIndex: newIndex };
           this.emitChanges({ moved: moved });
+        },
+        updateEvenemt: function updateEvenemt(evt) {
+          this.updateProperty(evt, 'newIndex');
+          this.updateProperty(evt, 'oldIndex');
+        },
+        updateProperty: function updateProperty(evt, propertyName) {
+          evt.hasOwnProperty(propertyName) && (evt[propertyName] += this.headerOffset);
         },
         computeFutureIndex: function computeFutureIndex(relatedContext, evt) {
           if (!relatedContext.element) {
