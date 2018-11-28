@@ -299,6 +299,8 @@ HTML:
 
 ### Slots
 
+Limitation: neither header or footer slot works in conjunction with transition-group.
+
 #### Header
 Use the `header` slot to add none-draggable element inside the vuedraggable component.
 Important: it should be used in conjunction with draggable option to tag draggable element.
