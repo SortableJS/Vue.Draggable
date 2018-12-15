@@ -110,7 +110,7 @@
         const slots = this.$slots.default
         if (slots && slots.length === 1) {
           const child = slots[0]
-          if (child.componentOptions && child.componentOptions.tag === "transition-group") {
+          if (child.componentOptions && ["transition-group", "TransitionGroup"].includes(child.componentOptions.tag)) {
             this.transitionMode = true
           }
         }
