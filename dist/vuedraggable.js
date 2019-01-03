@@ -26,7 +26,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
   function buildDraggable(Sortable) {
     function removeNode(node) {
-      node.parentElement.removeChild(node);
+      node.parentElement && node.parentElement.removeChild(node);
     }
 
     function insertNodeAt(fatherNode, node, position) {
@@ -135,7 +135,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
         var slots = this.$slots.default;
         if (slots && slots.length === 1) {
           var child = slots[0];
-          if (child.componentOptions && child.componentOptions.tag === "transition-group") {
+          if (child.componentOptions && ["transition-group", "TransitionGroup"].includes(child.componentOptions.tag)) {
             this.transitionMode = true;
           }
         }
@@ -200,9 +200,6 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
         rootContainer: function rootContainer() {
           return this.transitionMode ? this.$el.children[0] : this.$el;
         },
-        isCloning: function isCloning() {
-          return !!this.options && !!this.options.group && this.options.group.pull === 'clone';
-        },
         realList: function realList() {
           return !!this.list ? this.list : this.value;
         }
@@ -227,6 +224,16 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
       },
 
       methods: {
+        isCloning: function isCloning(evt) {
+          var value = !!this.options && !!this.options.group && this.options.group.pull;
+
+          if (typeof value === 'function') {
+            value = value(evt.to, evt.from, null, evt);
+          }
+
+          return value === 'clone';
+        },
+
         getChildrenNodes: function getChildrenNodes() {
           if (!this.init) {
             this.noneFunctionalComponentMode = this.noneFunctionalComponentMode && this.$children.length == 1;
@@ -352,7 +359,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
         onDragRemove: function onDragRemove(evt) {
           this.updateEvenemt(evt);
           insertNodeAt(this.rootContainer, evt.item, evt.oldIndex);
-          if (this.isCloning) {
+          if (this.isCloning(evt)) {
             removeNode(evt.clone);
             return;
           }

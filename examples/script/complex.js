@@ -23,6 +23,9 @@ var vm = new Vue({
 			},
 			log: function (evt){
 				console.log(evt)
+			},
+			cloneFunction: function(to, from, dragEl, evt) {
+				return 'clone'
 			}
 		}
 	});

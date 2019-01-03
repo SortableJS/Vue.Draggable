@@ -18,7 +18,7 @@
 
   function buildDraggable(Sortable) {
     function removeNode(node) {
-      node.parentElement.removeChild(node)
+      node.parentElement && node.parentElement.removeChild(node)
     }
 
     function insertNodeAt(fatherNode, node, position) {
@@ -165,10 +165,6 @@
           return this.transitionMode ? this.$el.children[0] : this.$el;
         },
 
-        isCloning() {
-          return (!!this.options) && (!!this.options.group) && (this.options.group.pull === 'clone')
-        },
-
         realList() {
           return (!!this.list) ? this.list : this.value;
         }
@@ -192,6 +188,16 @@
       },
 
       methods: {
+        isCloning: function isCloning(evt) {
+          var value = !!this.options && !!this.options.group && this.options.group.pull;
+
+          if (typeof value === 'function') {
+            value = value(evt.to, evt.from, null, evt);
+          }
+
+          return (value === 'clone');
+        },
+
         getChildrenNodes() {
           if (!this.init) {
             this.noneFunctionalComponentMode = this.noneFunctionalComponentMode && this.$children.length == 1
@@ -317,7 +323,7 @@
         onDragRemove(evt) {
           this.updateEvenemt(evt)
           insertNodeAt(this.rootContainer, evt.item, evt.oldIndex)
-          if (this.isCloning) {
+          if (this.isCloning(evt)) {
             removeNode(evt.clone)
             return
           }

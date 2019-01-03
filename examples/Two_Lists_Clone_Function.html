@@ -10,13 +10,13 @@
         <link rel="stylesheet" href="css/main.css">
     </head>
     <body>
-     
+
      <div id="main">
         <h1>Vue Dragable</h1>
 
         <div class="drag">
             <h2>List 1 v-dragable-for</h2>
-            <draggable id="list1" :list="list1" class="dragArea" :options="{group:{name:'people', pull:'clone', put:false }}" @change="log">
+            <draggable id="list1" :list="list1" class="dragArea" :options="{group:{name:'people', pull:cloneFunction }}" @change="log">
                 <div v-for="(element, index) in list1"  :key="index">
                     {{element.name}} {{index}}
                 </div>
@@ -43,10 +43,9 @@
         <a href="index.html">See basic example</a>
         <a href="Two_Lists.html">See 2 lists example</a>
         <a href="Two_Lists_Clone_If.html">See clone v-if element example</a>
-        <a href="Two_Lists_Clone_Function.html">See clone function element example</a>
 
-  
-    </div>     
+
+    </div>
     <script type="text/javascript" src="libs\vue\dist\vue.js"></script>
     <script type="text/javascript" src="libs\Sortable\Sortable.js"></script>
     <script type="text/javascript" src="src\vuedraggable.js"></script>
