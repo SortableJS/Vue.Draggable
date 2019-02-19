@@ -2,69 +2,92 @@
   "name": "vuedraggable",
   "version": "2.17.0",
   "description": "draggable component for vue",
-  "main": "dist/vuedraggable.js",
+  "main": "dist/vuedraggable.umd.js",
+  "private": false,
+  "scripts": {
+    "serve": "vue-cli-service serve ./example/main.js --open",
+    "build": "vue-cli-service build --name vuedraggable --entry ./src/index.js --target lib",
+    "lint": "vue-cli-service lint",
+    "prepublishOnly": "npm run lint && npm run build",
+    "test:unit": "vue-cli-service test:unit"
+  },
+  "dependencies": {
+    "bootstrap": "^4.3.1",
+    "sortablejs": "^1.8.3",
+    "vue": "^2.5.22"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "^3.4.0",
+    "@vue/cli-plugin-eslint": "^3.4.0",
+    "@vue/cli-plugin-unit-jest": "^3.4.0",
+    "@vue/cli-service": "^3.4.0",
+    "@vue/eslint-config-prettier": "^4.0.1",
+    "@vue/test-utils": "^1.0.0-beta.20",
+    "babel-core": "7.0.0-bridge.0",
+    "babel-eslint": "^10.0.1",
+    "babel-jest": "^23.6.0",
+    "component-fixture": "^0.4.1",
+    "eslint": "^5.8.0",
+    "eslint-plugin-vue": "^5.0.0",
+    "vue-cli-plugin-component": "^1.10.5",
+    "vue-template-compiler": "^2.5.21"
+  },
+  "eslintConfig": {
+    "root": true,
+    "env": {
+      "node": true
+    },
+    "extends": [
+      "plugin:vue/essential",
+      "@vue/prettier"
+    ],
+    "rules": {},
+    "parserOptions": {
+      "parser": "babel-eslint"
+    }
+  },
+  "postcss": {
+    "plugins": {
+      "autoprefixer": {}
+    }
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not ie <= 8"
+  ],
+  "jest": {
+    "moduleFileExtensions": [
+      "js",
+      "jsx",
+      "json",
+      "vue"
+    ],
+    "transform": {
+      "^.+\\.vue$": "vue-jest",
+      ".+\\.(css|styl|less|sass|scss|svg|png|jpg|ttf|woff|woff2)$": "jest-transform-stub",
+      "^.+\\.jsx?$": "babel-jest"
+    },
+    "moduleNameMapper": {
+      "^@/(.*)$": "<rootDir>/src/$1"
+    },
+    "snapshotSerializers": [
+      "jest-serializer-vue"
+    ],
+    "testMatch": [
+      "**/tests/unit/**/*.spec.(js|jsx|ts|tsx)|**/__tests__/*.(js|jsx|ts|tsx)"
+    ],
+    "testURL": "http://localhost/"
+  },
   "files": [
-    "dist/vuedraggable.js"
+    "dist/*.css",
+    "dist/*.map",
+    "dist/*.js",
+    "src/*"
   ],
   "keywords": [
     "vue",
-    "vuejs",
-    "drag",
-    "and",
-    "drop",
-    "list",
-    "Sortable.js",
-    "web-components"
+    "component"
   ],
-  "directories": {
-    "example": "examples",
-    "test": "test"
-  },
-  "dependencies": {
-    "sortablejs": "^1.7.0"
-  },
-  "devDependencies": {
-    "babel-plugin-transform-object-assign": "^6.22.0",
-    "babel-polyfill": "^6.20.0",
-    "babel-preset-es2015": "^6.16.0",
-    "bower": "^1.8.4",
-    "connect": "^3.6.6",
-    "connect-livereload": "^0.5.4",
-    "gulp": "^3.9.1",
-    "gulp-babel": "^6.1.3",
-    "gulp-clean": "^0.3.2",
-    "gulp-filter": "^4.0.0",
-    "gulp-flatten": "^0.3.0",
-    "gulp-jasmine": "^2.4.0",
-    "gulp-jshint": "^2.1.0",
-    "gulp-livereload": "^3.8.1",
-    "gulp-load-plugins": "^1.2.4",
-    "gulp-main-bower-files": "^1.6.3",
-    "gulp-rename": "^1.4.0",
-    "gulp-size": "^2.1.0",
-    "gulp-uglify": "^1.5.4",
-    "gulp-useref": "^3.1.6",
-    "jasmine-istanbul-phantom": "^1.1.1",
-    "jshint": "^2.9.6",
-    "jshint-stylish": "^2.2.0",
-    "opn": "^4.0.2",
-    "serve-index": "^1.8.0",
-    "serve-static": "^1.13.2"
-  },
-  "scripts": {
-    "test": "gulp test"
-  },
-  "author": {
-    "name": "David Desmaisons",
-    "email": "desmaisons_david@hotmail.com"
-  },
-  "bugs": {
-    "url": "https://github.com/David-Desmaisons/Vue.Draggable/issues"
-  },
-  "license": "MIT",
-  "homepage": "https://github.com/David-Desmaisons/Vue.Draggable#readme",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/David-Desmaisons/Vue.Draggable.git"
-  }
+  "module": "dist/vuedraggable.common.min.js"
 }
