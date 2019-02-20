@@ -32,6 +32,17 @@
           >Two Lists</a>
         </li>
 
+          <li class="nav-item">
+          <a
+            class="nav-link"
+            data-toggle="tab"
+            href="#clone"
+            role="tab"
+            aria-controls="profile"
+            aria-selected="false"
+          >Clone</a>
+        </li>
+
       </ul>
       <div
         class="tab-content"
@@ -58,6 +69,16 @@
 
         </div>
 
+        <div
+          class="tab-pane show"
+          id="clone"
+          role="tabpanel"
+          aria-labelledby="profile-tab"
+        >
+          <clone />
+
+        </div>
+
 
       </div>
     </div>
@@ -67,12 +88,14 @@
 <script>
 import simple from "./components/simple";
 import twoLists from "./components/two-lists";
+import clone from "./components/clone";
 
 export default {
   name: "app",
   components: {
     simple,
-    twoLists
+    twoLists,
+    clone
   }
 };
 </script>

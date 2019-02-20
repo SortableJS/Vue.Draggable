@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <div class="row justify-content-center jumbotron">
+  <div class="justify-content-center jumbotron">
+    <div class="row">
 
       <div class="col-2">
         <div
@@ -71,9 +71,6 @@ export default {
   computed: {
     draggingInfo() {
       return this.dragging ? "under drag" : "";
-    },
-    listString() {
-      return JSON.stringify(this.list, null, 2);
     }
   },
   methods: {

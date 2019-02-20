@@ -6,6 +6,7 @@
 </template>
 <script>
 const props = {
+  name: "raw-displayer",
   title: {
     required: true,
     type: String

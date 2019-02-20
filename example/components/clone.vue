@@ -1,4 +1,5 @@
 <template>
+
   <div class=" justify-content-center jumbotron">
 
     <div class="row">
@@ -7,7 +8,7 @@
         <draggable
           class="dragArea list-group"
           :list="list1"
-          :options="{group:'people'}"
+          :options="{group:{name:'people', pull:'clone', put:false }}"
           @change="log"
         >
           <div
@@ -53,14 +54,14 @@
     </div>
 
   </div>
-
 </template>
+
 <script>
 import draggable from "@/components/Vuedraggable";
 import rawDisplayer from "./raw-displayer.vue";
-
+let id = 1;
 export default {
-  name: "two-lists",
+  name: "clone",
   components: {
     draggable,
     rawDisplayer
@@ -81,26 +82,12 @@ export default {
     };
   },
   methods: {
-    add: function() {
-      this.list.push({ name: "Juan" });
-    },
-    replace: function() {
-      this.list = [{ name: "Edgard" }];
-    },
-    clone: function(el) {
-      return {
-        name: el.name + " cloned"
-      };
-    },
     log: function(evt) {
       console.log(evt);
     }
   }
 };
 </script>
-<style>
-.dragArea {
-  min-height: 10px;
-}
+<style scoped>
 </style>
 
