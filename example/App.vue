@@ -62,6 +62,18 @@
             >Header slot</a
           >
         </li>
+
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            data-toggle="tab"
+            href="#handler"
+            role="tab"
+            aria-controls="profile"
+            aria-selected="false"
+            >Handler</a
+          >
+        </li>
       </ul>
 
       <div class="tab-content" id="tab-content">
@@ -109,6 +121,15 @@
         >
           <headerslot />
         </div>
+
+        <div
+          class="tab-pane show"
+          id="handler"
+          role="tabpanel"
+          aria-labelledby="profile-tab"
+        >
+          <handler />
+        </div>
       </div>
     </div>
   </div>
@@ -120,6 +141,7 @@ import twoLists from "./components/two-lists";
 import clone from "./components/clone";
 import footerslot from "./components/footerslot";
 import headerslot from "./components/headerslot";
+import handler from "./components/handler";
 
 export default {
   name: "app",
@@ -128,7 +150,8 @@ export default {
     twoLists,
     clone,
     footerslot,
-    headerslot
+    headerslot,
+    handler
   }
 };
 </script>

@@ -40,7 +40,7 @@ import draggable from "@/vuedraggable";
 import rawDisplayer from "./raw-displayer.vue";
 let id = 1;
 export default {
-  name: "footer",
+  name: "footer-example",
   components: {
     draggable,
     rawDisplayer

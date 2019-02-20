@@ -29,6 +29,7 @@
     "component-fixture": "^0.4.1",
     "eslint": "^5.8.0",
     "eslint-plugin-vue": "^5.0.0",
+    "font-awesome": "^4.7.0",
     "jquery": "^3.3.1",
     "vue-cli-plugin-component": "^1.10.5",
     "vue-template-compiler": "^2.5.21"
