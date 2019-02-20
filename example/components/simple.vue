@@ -21,7 +21,7 @@
       </div>
 
       <div class="col-6">
-        <h2>Draggable {{draggingInfo}}</h2>
+        <h3>Draggable {{draggingInfo}}</h3>
 
         <draggable
           :list="list"

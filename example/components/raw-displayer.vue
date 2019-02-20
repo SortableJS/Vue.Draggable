@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h2>{{title}}</h2>
+    <h3>{{title}}</h3>
     <pre>{{valueString}}</pre>
   </div>
 </template>
