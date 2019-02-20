@@ -38,7 +38,32 @@
             >Clone</a
           >
         </li>
+
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            data-toggle="tab"
+            href="#footerslot"
+            role="tab"
+            aria-controls="profile"
+            aria-selected="false"
+            >Footer slot</a
+          >
+        </li>
+
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            data-toggle="tab"
+            href="#headerlot"
+            role="tab"
+            aria-controls="profile"
+            aria-selected="false"
+            >Header slot</a
+          >
+        </li>
       </ul>
+
       <div class="tab-content" id="tab-content">
         <div
           class="tab-pane show active"
@@ -66,6 +91,24 @@
         >
           <clone />
         </div>
+
+        <div
+          class="tab-pane show"
+          id="footerslot"
+          role="tabpanel"
+          aria-labelledby="profile-tab"
+        >
+          <footerslot />
+        </div>
+
+        <div
+          class="tab-pane show"
+          id="headerlot"
+          role="tabpanel"
+          aria-labelledby="profile-tab"
+        >
+          <headerslot />
+        </div>
       </div>
     </div>
   </div>
@@ -75,13 +118,17 @@
 import simple from "./components/simple";
 import twoLists from "./components/two-lists";
 import clone from "./components/clone";
+import footerslot from "./components/footerslot";
+import headerslot from "./components/headerslot";
 
 export default {
   name: "app",
   components: {
     simple,
     twoLists,
-    clone
+    clone,
+    footerslot,
+    headerslot
   }
 };
 </script>
