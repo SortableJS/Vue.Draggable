@@ -20,6 +20,18 @@
             aria-selected="true"
           >Simple</a>
         </li>
+
+         <li class="nav-item">
+          <a
+            class="nav-link"
+            data-toggle="tab"
+            href="#twoLists"
+            role="tab"
+            aria-controls="profile"
+            aria-selected="false"
+          >Two Lists</a>
+        </li>
+
       </ul>
       <div
         class="tab-content"
@@ -32,10 +44,20 @@
           role="tabpanel"
           aria-labelledby="profile-tab"
         >
-
           <simple />
 
         </div>
+
+         <div
+          class="tab-pane show"
+          id="twoLists"
+          role="tabpanel"
+          aria-labelledby="profile-tab"
+        >
+          <twoLists />
+
+        </div>
+
 
       </div>
     </div>
@@ -44,10 +66,13 @@
 
 <script>
 import simple from "./components/simple";
+import twoLists from "./components/two-lists";
+
 export default {
   name: "app",
   components: {
-    simple
+    simple,
+    twoLists
   }
 };
 </script>

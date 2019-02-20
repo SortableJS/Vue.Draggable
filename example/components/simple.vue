@@ -20,11 +20,12 @@
         </div>
       </div>
 
-      <div class="list-group col-6">
+      <div class="col-6">
         <h2>Draggable {{draggingInfo}}</h2>
 
         <draggable
           :list="list"
+          class="list-group"
           @start="dragging=true"
           @end="dragging=false"
         >
