@@ -7,7 +7,7 @@
   "scripts": {
     "serve": "vue-cli-service serve ./example/main.js --open",
     "build": "vue-cli-service build --name vuedraggable --entry ./src/index.js --target lib",
-    "lint": "vue-cli-service lint",
+    "lint": "vue-cli-service lint src example",
     "prepublishOnly": "npm run lint && npm run build",
     "test:unit": "vue-cli-service test:unit"
   },
