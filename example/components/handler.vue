@@ -22,11 +22,7 @@
         </draggable>
       </div>
 
-      <rawDisplayer
-        class="col-3"
-        :value="list"
-        title="List"
-      />
+      <rawDisplayer class="col-3" :value="list" title="List" />
     </div>
   </div>
 </template>
@@ -34,9 +30,8 @@
 <script>
 import draggable from "@/vuedraggable";
 import rawDisplayer from "./raw-displayer.vue";
-let id = 1;
 export default {
-  name: "header",
+  name: "handler",
   components: {
     draggable,
     rawDisplayer

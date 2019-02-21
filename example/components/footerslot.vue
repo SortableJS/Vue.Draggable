@@ -7,11 +7,12 @@
         <draggable
           :list="list"
           class="list-group"
+          :options="{ draggable: '.item' }"
           @start="dragging = true"
           @end="dragging = false"
         >
           <div
-            class="list-group-item"
+            class="list-group-item item"
             v-for="element in list"
             :key="element.name"
           >
