@@ -468,7 +468,6 @@ var draggableComponent = {
       draggingElement = evt.item;
     },
     onDragAdd: function onDragAdd(evt) {
-      this.updateEvenemt(evt);
       var element = evt.item._underlying_vm_;
 
       if (element === undefined) {
@@ -488,7 +487,6 @@ var draggableComponent = {
       });
     },
     onDragRemove: function onDragRemove(evt) {
-      this.updateEvenemt(evt);
       insertNodeAt(this.rootContainer, evt.item, evt.oldIndex);
 
       if (this.isCloning) {
@@ -508,7 +506,6 @@ var draggableComponent = {
       });
     },
     onDragUpdate: function onDragUpdate(evt) {
-      this.updateEvenemt(evt);
       removeNode(evt.item);
       insertNodeAt(evt.from, evt.item, evt.oldIndex);
       var oldIndex = this.context.index;
@@ -522,10 +519,6 @@ var draggableComponent = {
       this.emitChanges({
         moved: moved
       });
-    },
-    updateEvenemt: function updateEvenemt(evt) {
-      this.updateProperty(evt, "newIndex");
-      this.updateProperty(evt, "oldIndex");
     },
     updateProperty: function updateProperty(evt, propertyName) {
       evt.hasOwnProperty(propertyName) && (evt[propertyName] += this.headerOffset);
