@@ -1,5 +1,6 @@
 const config = {
-  configureWebpack: {
+  publicPath: "./",
+  configureWebpack: { 
     output: {
       libraryExport: 'default'
     }
