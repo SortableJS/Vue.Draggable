@@ -18,7 +18,9 @@ Based on and offering all features of [Sortable.js](https://github.com/RubaXa/So
 
 ![demo gif](https://raw.githubusercontent.com/SortableJS/Vue.Draggable/master/example.gif)
 
-## Live Demo
+## Live Demos
+
+https://sortablejs.github.io/Vue.Draggable/
 
 https://david-desmaisons.github.io/draggable-example/
 
@@ -318,7 +320,7 @@ Ex:
 
 #### Footer
 Use the `footer` slot to add none-draggable element inside the vuedraggable component.
-Important: it should be used in conjunction with draggable option to tag draggable element.
+Important: it should be used in conjunction with draggable option to tag draggable elements.
 Note that footer slot will always be added after the default slot regardless its position in the template.
 Ex:
 
@@ -330,32 +332,6 @@ Ex:
     <button slot="footer" @click="addPeople">Add</button>
 </draggable>
 ```
-
-### Gotchas
-  - Drag operation with empty list:
-
-    To be able to drag items on an empty draggable component, set a min-height greater than 0 on the `draggable` component or the `transition-group` if any and ensure the transition group has display: block; otherwise height won't work.
-
-### Fiddle
-
-- Simple:
-https://jsfiddle.net/dede89/sqssmhtz/
-
-- Two Lists:
-https://jsfiddle.net/dede89/32ao2rpm/
-
-- Example with list clone:
-https://jsfiddle.net/dede89/t3m5krea/
-
-- Example with transition-group:
-https://jsfiddle.net/dede89/m2v0orcn/
-
-- Example with table:
-https://jsfiddle.net/dede89/L54yu3L9/
-
-- Example with remove button
- on list elements
- https://jsfiddle.net/dede89/5Leuhh1n/
  
  ### Full demo example
 
