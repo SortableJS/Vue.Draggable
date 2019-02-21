@@ -211,4 +211,8 @@ export default {
 #app {
   text-align: center;
 }
+
+>>> h3 {
+  font-size: 1.4em;
+}
 </style>
