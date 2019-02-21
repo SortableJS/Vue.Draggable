@@ -11,6 +11,16 @@
     "prepublishOnly": "npm run lint && npm run build",
     "test:unit": "vue-cli-service test:unit"
   },
+  "keywords": [
+    "vue",
+    "vuejs",
+    "drag",
+    "and",
+    "drop",
+    "list",
+    "Sortable.js",
+    "component"
+  ],
   "dependencies": {
     "sortablejs": "^1.8.3",
     "vue": "^2.5.22"
@@ -86,10 +96,6 @@
     "dist/*.map",
     "dist/*.js",
     "src/*"
-  ],
-  "keywords": [
-    "vue",
-    "component"
   ],
   "module": "dist/vuedraggable.common.min.js"
 }

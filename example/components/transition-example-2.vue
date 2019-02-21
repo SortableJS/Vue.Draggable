@@ -1,12 +1,10 @@
 <template>
   <div class="justify-content-center jumbotron">
     <div class="row">
-
       <div class="col-2">
-        <button
-          class="btn btn-secondary button"
-          @click="sort"
-        >To original order</button>
+        <button class="btn btn-secondary button" @click="sort">
+          To original order
+        </button>
       </div>
 
       <div class="col-6">
@@ -21,7 +19,7 @@
         >
           <transition-group
             type="transition"
-             :name="!drag? 'flip-list' : null"
+            :name="!drag ? 'flip-list' : null"
           >
             <li
               class="list-group-item"
@@ -30,8 +28,8 @@
             >
               <i
                 :class="
-                element.fixed ? 'fa fa-anchor' : 'glyphicon glyphicon-pushpin'
-              "
+                  element.fixed ? 'fa fa-anchor' : 'glyphicon glyphicon-pushpin'
+                "
                 @click="element.fixed = !element.fixed"
                 aria-hidden="true"
               ></i>
@@ -41,15 +39,9 @@
         </draggable>
       </div>
 
-      <rawDisplayer
-        class="col-3"
-        :value="list"
-        title="List"
-      />
-
+      <rawDisplayer class="col-3" :value="list" title="List" />
     </div>
   </div>
-
 </template>
 
 <script>
@@ -81,9 +73,9 @@ export default {
       drag: false
     };
   },
-  methods:{
-    sort(){
-      this.list = this.list.sort((a,b) => a.order - b.order);
+  methods: {
+    sort() {
+      this.list = this.list.sort((a, b) => a.order - b.order);
     }
   },
   computed: {
