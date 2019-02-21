@@ -329,7 +329,6 @@ const draggableComponent = {
     },
 
     onDragAdd(evt) {
-      this.updateEvenemt(evt);
       const element = evt.item._underlying_vm_;
       if (element === undefined) {
         return;
@@ -343,7 +342,6 @@ const draggableComponent = {
     },
 
     onDragRemove(evt) {
-      this.updateEvenemt(evt);
       insertNodeAt(this.rootContainer, evt.item, evt.oldIndex);
       if (this.isCloning) {
         removeNode(evt.clone);
@@ -357,7 +355,6 @@ const draggableComponent = {
     },
 
     onDragUpdate(evt) {
-      this.updateEvenemt(evt);
       removeNode(evt.item);
       insertNodeAt(evt.from, evt.item, evt.oldIndex);
       const oldIndex = this.context.index;
@@ -365,11 +362,6 @@ const draggableComponent = {
       this.updatePosition(oldIndex, newIndex);
       const moved = { element: this.context.element, oldIndex, newIndex };
       this.emitChanges({ moved });
-    },
-
-    updateEvenemt(evt) {
-      this.updateProperty(evt, "newIndex");
-      this.updateProperty(evt, "oldIndex");
     },
 
     updateProperty(evt, propertyName) {

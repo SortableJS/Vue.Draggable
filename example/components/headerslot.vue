@@ -49,9 +49,9 @@ export default {
   data() {
     return {
       list: [
-        { name: "John", id: 0 },
-        { name: "Joao", id: 1 },
-        { name: "Jean", id: 2 }
+        { name: "John 1", id: 0 },
+        { name: "Joao 2", id: 1 },
+        { name: "Jean 3", id: 2 }
       ],
       dragging: false
     };
