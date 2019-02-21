@@ -6,7 +6,7 @@
   "private": false,
   "scripts": {
     "serve": "vue-cli-service serve ./example/main.js --open",
-    "build:doc": "vue-cli-service build ./example/main.js --dest docs",
+    "build:doc": "vue-cli-service build ./example/main.js --dest docs --mode development",
     "build": "vue-cli-service build --name vuedraggable --entry ./src/vuedraggable.js --target lib",
     "lint": "vue-cli-service lint src example",
     "prepublishOnly": "npm run lint && npm run build",
