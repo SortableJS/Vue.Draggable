@@ -1,7 +1,11 @@
 <template>
   <div class="justify-content-center jumbotron">
     <div class="row">
-      <div class="col-8">
+      <div class="col-1">
+        <button class="btn btn-secondary button" @click="add">Add</button>
+      </div>
+
+      <div class="col-7">
         <h3>Draggable {{ draggingInfo }}</h3>
 
         <draggable
@@ -12,12 +16,14 @@
         >
           <li
             class="list-group-item"
-            v-for="element in list"
+            v-for="(element, idx) in list"
             :key="element.name"
           >
             <i class="fa fa-align-justify handle"></i>
 
             {{ element.name }}
+
+            <i class="fa fa-times close" @click="removeAt(idx)"></i>
           </li>
         </draggable>
       </div>
@@ -28,6 +34,7 @@
 </template>
 
 <script>
+let id = 3;
 import draggable from "@/vuedraggable";
 import rawDisplayer from "./raw-displayer.vue";
 export default {
@@ -50,14 +57,26 @@ export default {
     draggingInfo() {
       return this.dragging ? "under drag" : "";
     }
+  },
+  methods: {
+    removeAt(idx) {
+      this.list.splice(idx, 1);
+    },
+    add: function() {
+      id++;
+      this.list.push({ name: "Juan " + id, id });
+    }
   }
 };
 </script>
 <style scoped>
-.buttons {
-  margin-top: 50px;
+.button {
+  margin-top: 35px;
 }
 .handle {
   float: left;
+}
+.close {
+  float: right;
 }
 </style>

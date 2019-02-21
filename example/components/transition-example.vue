@@ -89,7 +89,7 @@ export default {
 
 <style>
 .button {
-  margin-top: 50px;
+  margin-top: 35px;
 }
 
 .flip-list-move {

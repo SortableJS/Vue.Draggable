@@ -73,6 +73,6 @@ export default {
 </script>
 <style scoped>
 .buttons {
-  margin-top: 50px;
+  margin-top: 35px;
 }
 </style>
