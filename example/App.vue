@@ -68,6 +68,17 @@
           <a
             class="nav-link"
             data-toggle="tab"
+            href="#transitions"
+            role="tab"
+            aria-controls="profile"
+            aria-selected="false"
+          >Transitions</a>
+        </li>
+
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            data-toggle="tab"
             href="#footerslot"
             role="tab"
             aria-controls="profile"
@@ -154,6 +165,15 @@
         >
           <transition-example />
         </div>
+
+         <div
+          class="tab-pane show"
+          id="transitions"
+          role="tabpanel"
+          aria-labelledby="profile-tab"
+        >
+          <transition-example-2 />
+        </div>
       </div>
     </div>
   </div>
@@ -167,6 +187,8 @@ import footerslot from "./components/footerslot";
 import headerslot from "./components/headerslot";
 import handler from "./components/handler";
 import transitionExample from "./components/transition-example";
+import transitionExample2 from "./components/transition-example-2";
+
 
 export default {
   name: "app",
@@ -177,7 +199,8 @@ export default {
     footerslot,
     headerslot,
     handler,
-    transitionExample
+    transitionExample,
+    transitionExample2
   }
 };
 </script>
