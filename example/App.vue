@@ -1,14 +1,8 @@
 <template>
   <div id="app">
-    <img
-      alt="Vue logo"
-      src="./assets/logo.png"
-    />
+    <img alt="Vue logo" src="./assets/logo.png" />
     <div class="container ">
-      <ul
-        class="nav nav-tabs"
-        role="tablist"
-      >
+      <ul class="nav nav-tabs" role="tablist">
         <li class="nav-item">
           <a
             class="nav-link active"
@@ -17,7 +11,8 @@
             role="tab"
             aria-controls="profile"
             aria-selected="true"
-          >Simple</a>
+            >Simple</a
+          >
         </li>
 
         <li class="nav-item">
@@ -28,7 +23,8 @@
             role="tab"
             aria-controls="profile"
             aria-selected="false"
-          >Two Lists</a>
+            >Two Lists</a
+          >
         </li>
 
         <li class="nav-item">
@@ -39,7 +35,8 @@
             role="tab"
             aria-controls="profile"
             aria-selected="false"
-          >Clone</a>
+            >Clone</a
+          >
         </li>
 
         <li class="nav-item">
@@ -50,7 +47,8 @@
             role="tab"
             aria-controls="profile"
             aria-selected="false"
-          >Custom Clone</a>
+            >Custom Clone</a
+          >
         </li>
 
         <li class="nav-item">
@@ -61,7 +59,8 @@
             role="tab"
             aria-controls="profile"
             aria-selected="false"
-          >Handler</a>
+            >Handler</a
+          >
         </li>
 
         <li class="nav-item">
@@ -72,7 +71,8 @@
             role="tab"
             aria-controls="profile"
             aria-selected="false"
-          >Transition</a>
+            >Transition</a
+          >
         </li>
 
         <li class="nav-item">
@@ -83,7 +83,8 @@
             role="tab"
             aria-controls="profile"
             aria-selected="false"
-          >Transitions</a>
+            >Transitions</a
+          >
         </li>
 
         <li class="nav-item">
@@ -94,7 +95,8 @@
             role="tab"
             aria-controls="profile"
             aria-selected="false"
-          >Footer slot</a>
+            >Footer slot</a
+          >
         </li>
 
         <li class="nav-item">
@@ -105,14 +107,12 @@
             role="tab"
             aria-controls="profile"
             aria-selected="false"
-          >Header slot</a>
+            >Header slot</a
+          >
         </li>
       </ul>
 
-      <div
-        class="tab-content"
-        id="tab-content"
-      >
+      <div class="tab-content" id="tab-content">
         <div
           class="tab-pane show active"
           id="simple"

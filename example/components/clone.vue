@@ -11,7 +11,7 @@
         >
           <div
             class="list-group-item"
-            v-for="(element, index) in list1"
+            v-for="element in list1"
             :key="element.name"
           >
             {{ element.name }}
@@ -29,7 +29,7 @@
         >
           <div
             class="list-group-item"
-            v-for="(element, index) in list2"
+            v-for="element in list2"
             :key="element.name"
           >
             {{ element.name }}
