@@ -6,13 +6,14 @@
         <draggable
           class="dragArea list-group"
           :list="list1"
-          :options="{ group: { name: 'people', pull: 'clone', put: false } }"
+          :options="{ group: { name: 'people', pull: 'clone', put: false} }"
+          :clone="cloneDog"
           @change="log"
         >
           <div
             class="list-group-item"
             v-for="(element, index) in list1"
-            :key="element.name"
+            :key="element.id"
           >
             {{ element.name }}
           </div>
@@ -30,16 +31,24 @@
           <div
             class="list-group-item"
             v-for="(element, index) in list2"
-            :key="element.name"
+            :key="element.id"
           >
             {{ element.name }}
           </div>
         </draggable>
       </div>
 
-      <rawDisplayer class="col-3" :value="list1" title="List 1" />
+      <rawDisplayer
+        class="col-3"
+        :value="list1"
+        title="List 1"
+      />
 
-      <rawDisplayer class="col-3" :value="list2" title="List 2" />
+      <rawDisplayer
+        class="col-3"
+        :value="list2"
+        title="List 2"
+      />
     </div>
   </div>
 </template>
@@ -47,6 +56,7 @@
 <script>
 import draggable from "@/vuedraggable";
 import rawDisplayer from "./raw-displayer.vue";
+let idGlobal = 8;
 export default {
   name: "clone",
   components: {
@@ -56,21 +66,27 @@ export default {
   data() {
     return {
       list1: [
-        { name: "John", id: 1 },
-        { name: "Joao", id: 2 },
-        { name: "Jean", id: 3 },
-        { name: "Gerard", id: 4 }
+        { name: "dog 1", id: 1 },
+        { name: "dog 2", id: 2 },
+        { name: "dog 3", id: 3 },
+        { name: "dog 4", id: 4 }
       ],
       list2: [
-        { name: "Juan", id: 5 },
-        { name: "Edgard", id: 6 },
-        { name: "Johnson", id: 7 }
+        { name: "cat 5", id: 5 },
+        { name: "cat 6", id: 6 },
+        { name: "cat 7", id: 7 }
       ]
     };
   },
   methods: {
     log: function(evt) {
       window.console.log(evt);
+    },
+    cloneDog({ id }) {
+      return {
+        id: idGlobal++,
+        name: `cat ${id}`
+      };
     }
   }
 };

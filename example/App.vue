@@ -46,6 +46,17 @@
           <a
             class="nav-link"
             data-toggle="tab"
+            href="#custom-clone"
+            role="tab"
+            aria-controls="profile"
+            aria-selected="false"
+          >Custom Clone</a>
+        </li>
+
+        <li class="nav-item">
+          <a
+            class="nav-link"
+            data-toggle="tab"
             href="#handler"
             role="tab"
             aria-controls="profile"
@@ -131,6 +142,15 @@
 
         <div
           class="tab-pane show"
+          id="custom-clone"
+          role="tabpanel"
+          aria-labelledby="profile-tab"
+        >
+          <custom-clone />
+        </div>
+
+        <div
+          class="tab-pane show"
           id="footerslot"
           role="tabpanel"
           aria-labelledby="profile-tab"
@@ -182,6 +202,7 @@
 import simple from "./components/simple";
 import twoLists from "./components/two-lists";
 import clone from "./components/clone";
+import customClone from "./components/custom-clone";
 import footerslot from "./components/footerslot";
 import headerslot from "./components/headerslot";
 import handler from "./components/handler";
@@ -194,6 +215,7 @@ export default {
     simple,
     twoLists,
     clone,
+    customClone,
     footerslot,
     headerslot,
     handler,

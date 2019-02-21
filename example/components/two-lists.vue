@@ -2,9 +2,9 @@
   <div class=" justify-content-center jumbotron">
     <div class="row">
       <div class="col-3">
-        <h3>Draggable for list 1</h3>
+        <h3>Draggable 1</h3>
         <draggable
-          class="dragArea list-group"
+          class="list-group"
           :list="list1"
           :options="{ group: 'people' }"
           @change="log"
@@ -20,9 +20,9 @@
       </div>
 
       <div class="col-3">
-        <h3>Draggable for list 2</h3>
+        <h3>Draggable 2</h3>
         <draggable
-          class="dragArea list-group"
+          class="list-group"
           :list="list2"
           :options="{ group: 'people' }"
           @change="log"
@@ -86,8 +86,3 @@ export default {
   }
 };
 </script>
-<style>
-.dragArea {
-  min-height: 10px;
-}
-</style>
