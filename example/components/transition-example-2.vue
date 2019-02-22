@@ -68,7 +68,7 @@ export default {
   data() {
     return {
       list: message.map((name, index) => {
-        return { name, order: index + 1, fixed: false };
+        return { name, order: index + 1 };
       }),
       drag: false
     };
