@@ -21,7 +21,9 @@
           >
             <i class="fa fa-align-justify handle"></i>
 
-            {{ element.name }}
+            <span class="text">{{ element.name }} </span>
+
+            <input type="text" class="form-control" v-model="element.text" />
 
             <i class="fa fa-times close" @click="removeAt(idx)"></i>
           </li>
@@ -46,9 +48,9 @@ export default {
   data() {
     return {
       list: [
-        { name: "John", id: 0 },
-        { name: "Joao", id: 1 },
-        { name: "Jean", id: 2 }
+        { name: "John", text: "", id: 0 },
+        { name: "Joao", text: "", id: 1 },
+        { name: "Jean", text: "", id: 2 }
       ],
       dragging: false
     };
@@ -64,7 +66,7 @@ export default {
     },
     add: function() {
       id++;
-      this.list.push({ name: "Juan " + id, id });
+      this.list.push({ name: "Juan " + id, id, text: "" });
     }
   }
 };
@@ -78,5 +80,14 @@ export default {
 }
 .close {
   float: right;
+}
+
+input {
+  display: inline-block;
+  width: 50%;
+}
+
+.text {
+  margin: 20px;
 }
 </style>
