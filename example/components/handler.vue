@@ -2,7 +2,10 @@
   <div class="justify-content-center jumbotron">
     <div class="row">
       <div class="col-1">
-        <button class="btn btn-secondary button" @click="add">Add</button>
+        <button
+          class="btn btn-secondary button"
+          @click="add"
+        >Add</button>
       </div>
 
       <div class="col-7">
@@ -23,14 +26,25 @@
 
             <span class="text">{{ element.name }} </span>
 
-            <input type="text" class="form-control" v-model="element.text" />
+            <input
+              type="text"
+              class="form-control"
+              v-model="element.text"
+            />
 
-            <i class="fa fa-times close" @click="removeAt(idx)"></i>
+            <i
+              class="fa fa-times close"
+              @click="removeAt(idx)"
+            ></i>
           </li>
         </draggable>
       </div>
 
-      <rawDisplayer class="col-3" :value="list" title="List" />
+      <rawDisplayer
+        class="col-3"
+        :value="list"
+        title="List"
+      />
     </div>
   </div>
 </template>
@@ -77,9 +91,14 @@ export default {
 }
 .handle {
   float: left;
+  padding-top: 8px;
+  padding-bottom: 8px;
 }
+
 .close {
   float: right;
+  padding-top: 8px;
+  padding-bottom: 8px;
 }
 
 input {
