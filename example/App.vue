@@ -1,7 +1,9 @@
 <template>
   <div id="app">
     <div class="logo">
-      <img alt="Vue logo" src="./assets/logo.png" />
+      <a href="https://github.com/SortableJS/Vue.Draggable" target="_blank"
+        ><img alt="Vue logo" src="./assets/logo.png"
+      /></a>
     </div>
 
     <div class="container ">
@@ -32,7 +34,23 @@
           v-for="component in componentList"
           :key="component.name"
         >
-          <component :is="component.name"></component>
+          <div class=" justify-content-center jumbotron">
+            <div class="row  icon">
+              <a
+                class="col-2 icon"
+                target="_blank"
+                :href="
+                  `https://github.com/SortableJS/Vue.Draggable/blob/master/example/components/${
+                    component.name
+                  }.vue`
+                "
+              >
+                <i class="fa fa-github icon-large"></i>
+              </a>
+            </div>
+
+            <component :is="component.name"></component>
+          </div>
         </div>
       </div>
     </div>
@@ -108,5 +126,13 @@ export default {
 
 >>> h3 {
   font-size: 1.4em;
+}
+
+.icon i {
+  font-size: 24px;
+}
+
+a {
+  color: black;
 }
 </style>

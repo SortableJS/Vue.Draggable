@@ -1,47 +1,37 @@
 <template>
-  <div class=" justify-content-center jumbotron">
-    <div class="row">
-      <div class="col-3">
-        <h3>Draggable 1</h3>
-        <draggable
-          class="dragArea list-group"
-          :list="list1"
-          :options="{ group: { name: 'people', pull: 'clone', put: false } }"
-          :clone="cloneDog"
-          @change="log"
-        >
-          <div
-            class="list-group-item"
-            v-for="element in list1"
-            :key="element.id"
-          >
-            {{ element.name }}
-          </div>
-        </draggable>
-      </div>
-
-      <div class="col-3">
-        <h3>Draggable 2</h3>
-        <draggable
-          class="dragArea list-group"
-          :list="list2"
-          :options="{ group: 'people' }"
-          @change="log"
-        >
-          <div
-            class="list-group-item"
-            v-for="element in list2"
-            :key="element.id"
-          >
-            {{ element.name }}
-          </div>
-        </draggable>
-      </div>
-
-      <rawDisplayer class="col-3" :value="list1" title="List 1" />
-
-      <rawDisplayer class="col-3" :value="list2" title="List 2" />
+  <div class="row">
+    <div class="col-3">
+      <h3>Draggable 1</h3>
+      <draggable
+        class="dragArea list-group"
+        :list="list1"
+        :options="{ group: { name: 'people', pull: 'clone', put: false } }"
+        :clone="cloneDog"
+        @change="log"
+      >
+        <div class="list-group-item" v-for="element in list1" :key="element.id">
+          {{ element.name }}
+        </div>
+      </draggable>
     </div>
+
+    <div class="col-3">
+      <h3>Draggable 2</h3>
+      <draggable
+        class="dragArea list-group"
+        :list="list2"
+        :options="{ group: 'people' }"
+        @change="log"
+      >
+        <div class="list-group-item" v-for="element in list2" :key="element.id">
+          {{ element.name }}
+        </div>
+      </draggable>
+    </div>
+
+    <rawDisplayer class="col-3" :value="list1" title="List 1" />
+
+    <rawDisplayer class="col-3" :value="list2" title="List 2" />
   </div>
 </template>
 

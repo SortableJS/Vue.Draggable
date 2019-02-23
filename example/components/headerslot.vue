@@ -1,38 +1,36 @@
 <template>
-  <div class="justify-content-center jumbotron">
-    <div class="row">
-      <div class="col-8">
-        <h3>Draggable with header</h3>
+  <div class="row">
+    <div class="col-8">
+      <h3>Draggable with header</h3>
 
-        <draggable
-          :list="list"
-          class="list-group"
-          :options="{ draggable: '.item' }"
-          @start="dragging = true"
-          @end="dragging = false"
+      <draggable
+        :list="list"
+        class="list-group"
+        :options="{ draggable: '.item' }"
+        @start="dragging = true"
+        @end="dragging = false"
+      >
+        <div
+          class="list-group-item item"
+          v-for="element in list"
+          :key="element.name"
         >
-          <div
-            class="list-group-item item"
-            v-for="element in list"
-            :key="element.name"
-          >
-            {{ element.name }}
-          </div>
+          {{ element.name }}
+        </div>
 
-          <div
-            slot="header"
-            class="btn-group list-group-item"
-            role="group"
-            aria-label="Basic example"
-          >
-            <button class="btn btn-secondary" @click="add">Add</button>
-            <button class="btn btn-secondary" @click="replace">Replace</button>
-          </div>
-        </draggable>
-      </div>
-
-      <rawDisplayer class="col-3" :value="list" title="List" />
+        <div
+          slot="header"
+          class="btn-group list-group-item"
+          role="group"
+          aria-label="Basic example"
+        >
+          <button class="btn btn-secondary" @click="add">Add</button>
+          <button class="btn btn-secondary" @click="replace">Replace</button>
+        </div>
+      </draggable>
     </div>
+
+    <rawDisplayer class="col-3" :value="list" title="List" />
   </div>
 </template>
 

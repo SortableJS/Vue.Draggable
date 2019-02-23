@@ -1,13 +1,11 @@
 <template>
-  <div class="justify-content-center jumbotron">
-    <div class="row">
-      <div class="col-8">
-        <h3>Nested draggable</h3>
-        <nested-draggable :tasks="list" />
-      </div>
-
-      <rawDisplayer class="col-3" :value="list" title="List" />
+  <div class="row">
+    <div class="col-8">
+      <h3>Nested draggable</h3>
+      <nested-draggable :tasks="list" />
     </div>
+
+    <rawDisplayer class="col-3" :value="list" title="List" />
   </div>
 </template>
 
