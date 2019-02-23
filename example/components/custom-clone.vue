@@ -39,8 +39,9 @@
 import draggable from "@/vuedraggable";
 let idGlobal = 8;
 export default {
-  name: "clone",
+  name: "custom-clone",
   display: "Custom Clone",
+  order: 3,
   components: {
     draggable
   },

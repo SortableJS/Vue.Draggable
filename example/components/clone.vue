@@ -47,6 +47,7 @@ import draggable from "@/vuedraggable";
 export default {
   name: "clone",
   display: "Clone",
+  order: 2,
   components: {
     draggable
   },

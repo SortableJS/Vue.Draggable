@@ -38,8 +38,9 @@
 import draggable from "@/vuedraggable";
 let id = 1;
 export default {
-  name: "footer-example",
+  name: "footerslot",
   display: "Footer slot",
+  order: 10,
   components: {
     draggable
   },

@@ -38,8 +38,9 @@
 import draggable from "@/vuedraggable";
 let id = 1;
 export default {
-  name: "header-example",
+  name: "headerslot",
   display: "Header slot",
+  order: 11,
   components: {
     draggable
   },

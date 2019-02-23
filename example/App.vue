@@ -1,13 +1,20 @@
 <template>
   <div id="app">
     <div class="logo">
-      <a href="https://github.com/SortableJS/Vue.Draggable" target="_blank"
-        ><img alt="Vue logo" src="./assets/logo.png"
-      /></a>
+      <a
+        href="https://github.com/SortableJS/Vue.Draggable"
+        target="_blank"
+      ><img
+          alt="Vue logo"
+          src="./assets/logo.png"
+        /></a>
     </div>
 
     <div class="container ">
-      <ul class="nav nav-tabs" role="tablist">
+      <ul
+        class="nav nav-tabs"
+        role="tablist"
+      >
         <li
           class="nav-item"
           v-for="component in componentList"
@@ -20,12 +27,14 @@
             :href="`#${component.name}`"
             role="tab"
             aria-controls="profile"
-            >{{ component.display }}</a
-          >
+          >{{ component.display }}</a>
         </li>
       </ul>
 
-      <div class="tab-content" id="tab-content">
+      <div
+        class="tab-content"
+        id="tab-content"
+      >
         <div
           class="tab-pane show"
           :id="component.name"
@@ -69,30 +78,13 @@ const components = requireContext.keys().reduce((acc, key) => {
   return acc;
 }, {});
 
-window.console.log(components);
-
-const componentsToDisplay = [
-  "simple",
-  "two-lists",
-  "clone",
-  "custom-clone",
-  "handle",
-  "transition-example",
-  "transition-example-2",
-  "table-example",
-  "nested-example",
-  "footerslot",
-  "headerslot"
-];
-
 export default {
   name: "app",
   components,
   data() {
-    const componentList = componentsToDisplay.map(name => ({
-      name,
-      display: components[name].display || name
-    }));
+    const componentList = Object.keys(components)
+      .map(key => components[key])
+      .sort((a, b) => a.order - b.order);
     return {
       componentList
     };

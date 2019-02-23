@@ -12,8 +12,9 @@
 <script>
 import nestedDraggable from "./infra/nested";
 export default {
-  name: "clone",
+  name: "nested-example",
   display: "Nested",
+  order: 9,
   components: {
     nestedDraggable
   },

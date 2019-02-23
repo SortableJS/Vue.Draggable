@@ -53,8 +53,9 @@ const message = [
 ];
 
 export default {
-  name: "tranistion-example",
+  name: "transition-example",
   display: "Transition",
+  order: 5,
   components: {
     draggable
   },

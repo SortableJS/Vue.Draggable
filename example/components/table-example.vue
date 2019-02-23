@@ -8,12 +8,14 @@
           <tr>
             <th scope="col">Id</th>
             <th scope="col">Name</th>
+            <th scope="col">Sport</th>
           </tr>
         </thead>
         <draggable v-model="list" :element="'tbody'">
           <tr v-for="item in list" :key="item.name">
             <th scope="row">{{ item.id }}</th>
             <td>{{ item.name }}</td>
+            <td>{{ item.sport }}</td>
           </tr>
         </draggable>
       </table>
@@ -28,16 +30,17 @@ import draggable from "@/vuedraggable";
 export default {
   name: "table-example",
   display: "Table",
+  order: 7,
   components: {
     draggable
   },
   data() {
     return {
       list: [
-        { id: 1, name: "Abby" },
-        { id: 2, name: "Brooke" },
-        { id: 3, name: "Courtenay" },
-        { id: 4, name: "David" }
+        { id: 1, name: "Abby", sport: "basket" },
+        { id: 2, name: "Brooke", sport: "foot" },
+        { id: 3, name: "Courtenay", sport: "volley" },
+        { id: 4, name: "David", sport: "rugby" }
       ],
       dragging: false
     };
