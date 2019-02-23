@@ -1,6 +1,9 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png" />
+    <div class="logo">
+      <img alt="Vue logo" src="./assets/logo.png" />
+    </div>
+
     <div class="container ">
       <ul class="nav nav-tabs" role="tablist">
         <li
@@ -58,6 +61,7 @@ const componentsToDisplay = [
   "handle",
   "transition-example",
   "transition-example-2",
+  "nested-example",
   "footerslot",
   "headerslot"
 ];
@@ -98,7 +102,7 @@ export default {
   width: 400px;
 }
 
-#app {
+.logo {
   text-align: center;
 }
 
