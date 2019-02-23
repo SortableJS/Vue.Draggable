@@ -97,11 +97,6 @@ export default {
       componentList
     };
   },
-  created() {
-    this.$router.afterEach(to => {
-      this.toRoute(to);
-    });
-  },
   mounted() {
     this.toRoute(this.$route);
     $('a[data-toggle="tab"]').on("shown.bs.tab", e => {
@@ -111,6 +106,11 @@ export default {
   methods: {
     toRoute(route) {
       $(`a[data-route="${route.path}"]`).tab("show");
+    }
+  },
+  watch: {
+    $route: function(route) {
+      this.toRoute(route);
     }
   }
 };
