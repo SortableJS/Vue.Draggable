@@ -332,6 +332,12 @@ Ex:
     <button slot="footer" @click="addPeople">Add</button>
 </draggable>
 ```
+
+ ### Example 
+  * [Clone](https://sortablejs.github.io/Vue.Draggable/#/custom-clone)
+  * [Handle](https://sortablejs.github.io/Vue.Draggable/#/handle)
+  * [Tranistion](https://sortablejs.github.io/Vue.Draggable/#/transition-example-2)
+  * [Nested](https://sortablejs.github.io/Vue.Draggable/#/nested-example)
  
  ### Full demo example
 
