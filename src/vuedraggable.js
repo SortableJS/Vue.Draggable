@@ -10,7 +10,9 @@ function buildAttribute(object, propName, value) {
 }
 
 function removeNode(node) {
-  node.parentElement.removeChild(node);
+  if (node.parentElement !== null) {
+    node.parentElement.removeChild(node);
+  }
 }
 
 function insertNodeAt(fatherNode, node, position) {
