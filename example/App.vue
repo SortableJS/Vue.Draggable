@@ -79,6 +79,7 @@ const componentsToDisplay = [
   "handle",
   "transition-example",
   "transition-example-2",
+  "table-example",
   "nested-example",
   "footerslot",
   "headerslot"
