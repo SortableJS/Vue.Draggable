@@ -338,6 +338,7 @@ Ex:
   * [Handle](https://sortablejs.github.io/Vue.Draggable/#/handle)
   * [Transition](https://sortablejs.github.io/Vue.Draggable/#/transition-example-2)
   * [Nested](https://sortablejs.github.io/Vue.Draggable/#/nested-example)
+  * [Table](https://sortablejs.github.io/Vue.Draggable/#/table-example)
  
  ### Full demo example
 
