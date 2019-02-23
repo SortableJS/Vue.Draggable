@@ -45,13 +45,12 @@
 </template>
 <script>
 import draggable from "@/vuedraggable";
-import rawDisplayer from "./raw-displayer.vue";
 
 export default {
   name: "two-lists",
+  display: "Two Lists",
   components: {
-    draggable,
-    rawDisplayer
+    draggable
   },
   data() {
     return {

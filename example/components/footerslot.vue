@@ -38,13 +38,12 @@
 
 <script>
 import draggable from "@/vuedraggable";
-import rawDisplayer from "./raw-displayer.vue";
 let id = 1;
 export default {
   name: "footer-example",
+  display: "Footer slot",
   components: {
-    draggable,
-    rawDisplayer
+    draggable
   },
   data() {
     return {

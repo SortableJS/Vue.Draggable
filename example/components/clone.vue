@@ -46,12 +46,11 @@
 
 <script>
 import draggable from "@/vuedraggable";
-import rawDisplayer from "./raw-displayer.vue";
 export default {
   name: "clone",
+  display: "Clone",
   components: {
-    draggable,
-    rawDisplayer
+    draggable
   },
   data() {
     return {

@@ -43,8 +43,6 @@
 
 <script>
 import draggable from "@/vuedraggable";
-import rawDisplayer from "./raw-displayer.vue";
-
 const message = [
   "vue.draggable",
   "draggable",
@@ -58,9 +56,9 @@ const message = [
 
 export default {
   name: "tranistion-example",
+  display: "Transition",
   components: {
-    draggable,
-    rawDisplayer
+    draggable
   },
   data() {
     return {

@@ -47,13 +47,12 @@
 
 <script>
 import draggable from "@/vuedraggable";
-import rawDisplayer from "./raw-displayer.vue";
 let idGlobal = 8;
 export default {
   name: "clone",
+  display: "Custom Clone",
   components: {
-    draggable,
-    rawDisplayer
+    draggable
   },
   data() {
     return {
