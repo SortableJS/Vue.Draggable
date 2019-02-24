@@ -40,7 +40,7 @@ let id = 1;
 export default {
   name: "footerslot",
   display: "Footer slot",
-  order: 10,
+  order: 11,
   components: {
     draggable
   },

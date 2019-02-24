@@ -14,7 +14,7 @@ import nestedDraggable from "./infra/nested";
 export default {
   name: "nested-example",
   display: "Nested",
-  order: 9,
+  order: 19,
   components: {
     nestedDraggable
   },

@@ -5,37 +5,36 @@
 
       <table class="table table-striped">
         <thead class="thead-dark">
-          <tr>
-            <th scope="col">Id</th>
-            <th scope="col">Name</th>
-            <th scope="col">Sport</th>
-          </tr>
+          <draggable v-model="headers" element="tr">
+            <th v-for="header in headers" :key="header" scope="col">
+              {{ header }}
+            </th>
+          </draggable>
         </thead>
-        <draggable v-model="list" :element="'tbody'">
-          <tr v-for="item in list" :key="item.name">
-            <td scope="row">{{ item.id }}</td>
-            <td>{{ item.name }}</td>
-            <td>{{ item.sport }}</td>
-          </tr>
-        </draggable>
+        <tr v-for="item in list" :key="item.name">
+          <td v-for="header in headers" :key="header">{{ item[header] }}</td>
+        </tr>
       </table>
     </div>
 
-    <rawDisplayer class="col-3" :value="list" title="List" />
+    <rawDisplayer class="col-2" :value="list" title="List" />
+
+    <rawDisplayer class="col-2" :value="headers" title="Headers" />
   </div>
 </template>
 
 <script>
 import draggable from "@/vuedraggable";
 export default {
-  name: "table-example",
-  display: "Table",
-  order: 7,
+  name: "table-column-example",
+  display: "Table Column",
+  order: 8,
   components: {
     draggable
   },
   data() {
     return {
+      headers: ["id", "name", "sport"],
       list: [
         { id: 1, name: "Abby", sport: "basket" },
         { id: 2, name: "Brooke", sport: "foot" },
