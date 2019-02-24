@@ -1,8 +1,8 @@
 {
   "name": "vuedraggable",
-  "version": "2.17.0",
+  "version": "2.18.0",
   "description": "draggable component for vue",
-  "main": "dist/vuedraggable.umd.js",
+  "main": "dist/vuedraggable.umd.min.js",
   "private": false,
   "scripts": {
     "serve": "vue-cli-service serve ./example/main.js --open",
