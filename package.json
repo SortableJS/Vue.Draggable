@@ -38,6 +38,7 @@
     "babel-jest": "^23.6.0",
     "bootstrap": "^4.3.1",
     "component-fixture": "^0.4.1",
+    "element-ui": "^2.5.4",
     "eslint": "^5.8.0",
     "eslint-plugin-vue": "^5.0.0",
     "font-awesome": "^4.7.0",
