@@ -50,6 +50,10 @@ function delegateAndEmit(evtName) {
   };
 }
 
+function groupIsClone(group) {
+  return group.pull === "clone";
+}
+
 const eventsListened = ["Start", "Add", "Remove", "Update", "End"];
 const eventsToEmit = ["Choose", "Sort", "Filter", "Clone"];
 const readonlyProperties = ["Move", ...eventsListened, ...eventsToEmit].map(
@@ -151,7 +155,7 @@ const draggableComponent = {
     if (this.noneFunctionalComponentMode && this.transitionMode) {
       throw new Error(
         `Transition-group inside component is not supported. Please alter element value or remove transition-group. Current element value: ${
-          this.element
+        this.element
         }`
       );
     }
@@ -210,7 +214,7 @@ const draggableComponent = {
       return (
         !!this.options &&
         !!this.options.group &&
-        this.options.group.pull === "clone"
+        groupIsClone(this.options.group)
       );
     },
 
