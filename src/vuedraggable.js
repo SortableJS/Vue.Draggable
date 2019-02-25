@@ -103,7 +103,8 @@ const draggableComponent = {
     return {
       transitionMode: false,
       noneFunctionalComponentMode: false,
-      init: false
+      init: false,
+      isCloning: false
     };
   },
 
@@ -182,14 +183,6 @@ const draggableComponent = {
       return this.transitionMode ? this.$el.children[0] : this.$el;
     },
 
-    isCloning() {
-      return (
-        !!this.options &&
-        !!this.options.group &&
-        this.options.group.pull === "clone"
-      );
-    },
-
     realList() {
       return this.list ? this.list : this.value;
     }
@@ -213,6 +206,14 @@ const draggableComponent = {
   },
 
   methods: {
+    getIsCloning() {
+      return (
+        !!this.options &&
+        !!this.options.group &&
+        this.options.group.pull === "clone"
+      );
+    },
+
     getChildrenNodes() {
       if (!this.init) {
         this.noneFunctionalComponentMode =
@@ -326,6 +327,7 @@ const draggableComponent = {
 
     onDragStart(evt) {
       this.context = this.getUnderlyingVm(evt.item);
+      this.isCloning = this.getIsCloning();
       evt.item._underlying_vm_ = this.clone(this.context.element);
       draggingElement = evt.item;
     },
