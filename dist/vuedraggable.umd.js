@@ -2121,7 +2121,8 @@ var draggableComponent = {
     return {
       transitionMode: false,
       noneFunctionalComponentMode: false,
-      init: false
+      init: false,
+      isCloning: false
     };
   },
   render: function render(h) {
@@ -2203,9 +2204,6 @@ var draggableComponent = {
     rootContainer: function rootContainer() {
       return this.transitionMode ? this.$el.children[0] : this.$el;
     },
-    isCloning: function isCloning() {
-      return !!this.options && !!this.options.group && this.options.group.pull === "clone";
-    },
     realList: function realList() {
       return this.list ? this.list : this.value;
     }
@@ -2226,6 +2224,9 @@ var draggableComponent = {
     }
   },
   methods: {
+    getIsCloning: function getIsCloning() {
+      return !!this.options && !!this.options.group && this.options.group.pull === "clone";
+    },
     getChildrenNodes: function getChildrenNodes() {
       if (!this.init) {
         this.noneFunctionalComponentMode = this.noneFunctionalComponentMode && this.$children.length == 1;
@@ -2351,6 +2352,7 @@ var draggableComponent = {
     },
     onDragStart: function onDragStart(evt) {
       this.context = this.getUnderlyingVm(evt.item);
+      this.isCloning = this.getIsCloning();
       evt.item._underlying_vm_ = this.clone(this.context.element);
       draggingElement = evt.item;
     },
@@ -2453,7 +2455,7 @@ var draggableComponent = {
   }
 };
 
-if ("Vue" in window) {
+if (typeof window !== "undefined" && "Vue" in window) {
   window.Vue.component("draggable", draggableComponent);
 }
 
