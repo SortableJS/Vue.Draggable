@@ -1,5 +1,14 @@
 const Sortable = require("sortablejs");
 
+function getConsole() {
+  if (typeof window !== "undefined") {
+    return window.console;
+  }
+  return global.console;
+}
+
+const console = getConsole();
+
 function buildAttribute(object, propName, value) {
   if (value == undefined) {
     return object;
@@ -51,6 +60,9 @@ function delegateAndEmit(evtName) {
 }
 
 function groupIsClone(group) {
+  if (!group) {
+    return false;
+  }
   const { pull } = group;
   if (typeof pull === "function") {
     return pull() === "clone";
@@ -105,6 +117,8 @@ const props = {
 const draggableComponent = {
   name: "draggable",
 
+  inheritAttrs: true,
+
   props,
 
   data() {
@@ -144,13 +158,26 @@ const draggableComponent = {
     const update = (name, value) => {
       attributes = buildAttribute(attributes, name, value);
     };
-    update("attrs", this.$attrs);
     if (this.componentData) {
       const { on, props } = this.componentData;
       update("on", on);
       update("props", props);
     }
     return h(this.element, attributes, children);
+  },
+
+  created() {
+    if (this.list !== null && this.value !== null) {
+      console.error(
+        "Value and list props are mutually exclusive! Please set one or another"
+      );
+    }
+
+    if (this.options !== undefined) {
+      console.warn(
+        "Options props is deprecated, add sortable options directly as vue.draggable item, or use v-bind."
+      );
+    }
   },
 
   mounted() {
@@ -172,11 +199,17 @@ const draggableComponent = {
       optionsAdded["on" + elt] = emit.bind(this, elt);
     });
 
-    const options = Object.assign({}, this.options, optionsAdded, {
-      onMove: (evt, originalEvent) => {
-        return this.onDragMove(evt, originalEvent);
+    const options = Object.assign(
+      {},
+      this.options,
+      this.$attrs,
+      optionsAdded,
+      {
+        onMove: (evt, originalEvent) => {
+          return this.onDragMove(evt, originalEvent);
+        }
       }
-    });
+    );
     !("draggable" in options) && (options.draggable = ">*");
     this._sortable = new Sortable(this.rootContainer, options);
     this.computeIndexes();
@@ -199,11 +232,14 @@ const draggableComponent = {
   watch: {
     options: {
       handler(newOptionValue) {
-        for (var property in newOptionValue) {
-          if (readonlyProperties.indexOf(property) == -1) {
-            this._sortable.option(property, newOptionValue[property]);
-          }
-        }
+        this.updateOptions(newOptionValue);
+      },
+      deep: true
+    },
+
+    $attrs: {
+      handler(newOptionValue) {
+        this.updateOptions(newOptionValue);
       },
       deep: true
     },
@@ -215,11 +251,25 @@ const draggableComponent = {
 
   methods: {
     getIsCloning() {
-      return (
-        !!this.options &&
-        !!this.options.group &&
-        groupIsClone(this.options.group)
-      );
+      const { group } = this.$attrs;
+      const groupConsideringOption = group || this.getOptionGroup();
+      return groupIsClone(groupConsideringOption);
+    },
+
+    getOptionGroup() {
+      const { options } = this;
+      if (!options) {
+        return undefined;
+      }
+      return options.group;
+    },
+
+    updateOptions(newOptionValue) {
+      for (var property in newOptionValue) {
+        if (readonlyProperties.indexOf(property) == -1) {
+          this._sortable.option(property, newOptionValue[property]);
+        }
+      }
     },
 
     getChildrenNodes() {

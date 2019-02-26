@@ -12,7 +12,7 @@
         class="list-group"
         element="ul"
         v-model="list"
-        :options="dragOptions"
+        v-bind="dragOptions"
         @start="isDragging = true"
         @end="isDragging = false"
       >

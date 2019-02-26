@@ -6,7 +6,7 @@
       <draggable
         :list="list"
         class="list-group"
-        :options="{ draggable: '.item' }"
+        draggable=".item"
         @start="dragging = true"
         @end="dragging = false"
       >

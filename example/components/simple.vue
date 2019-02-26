@@ -1,13 +1,25 @@
 <template>
   <div class="row">
     <div class="col-2">
-      <div
-        class="btn-group-vertical buttons"
-        role="group"
-        aria-label="Basic example"
-      >
-        <button class="btn btn-secondary" @click="add">Add</button>
-        <button class="btn btn-secondary" @click="replace">Replace</button>
+      <div class="form-group">
+        <div
+          class="btn-group-vertical buttons"
+          role="group"
+          aria-label="Basic example"
+        >
+          <button class="btn btn-secondary" @click="add">Add</button>
+          <button class="btn btn-secondary" @click="replace">Replace</button>
+        </div>
+
+        <div class="form-check">
+          <input
+            id="disabled"
+            type="checkbox"
+            v-model="disabled"
+            class="form-check-input"
+          />
+          <label class="form-check-label" for="disabled">Disable DnD</label>
+        </div>
       </div>
     </div>
 
@@ -16,6 +28,7 @@
 
       <draggable
         :list="list"
+        :disabled="disabled"
         class="list-group"
         @start="dragging = true"
         @end="dragging = false"
@@ -46,6 +59,7 @@ export default {
   },
   data() {
     return {
+      disabled: false,
       list: [
         { name: "John", id: 0 },
         { name: "Joao", id: 1 },

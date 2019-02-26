@@ -6,20 +6,20 @@
       <table class="table table-striped">
         <thead class="thead-dark">
           <draggable v-model="headers" element="tr">
-            <th v-for="header in headers" :key="header" scope="col">
-              {{ header }}
-            </th>
+            <th v-for="header in headers" :key="header" scope="col">{{ header }}</th>
           </draggable>
         </thead>
-        <tr v-for="item in list" :key="item.name">
-          <td v-for="header in headers" :key="header">{{ item[header] }}</td>
-        </tr>
+        <tbody>
+          <tr v-for="item in list" :key="item.name">
+            <td v-for="header in headers" :key="header">{{ item[header] }}</td>
+          </tr>
+        </tbody>
       </table>
     </div>
 
-    <rawDisplayer class="col-2" :value="list" title="List" />
+    <rawDisplayer class="col-2" :value="list" title="List"/>
 
-    <rawDisplayer class="col-2" :value="headers" title="Headers" />
+    <rawDisplayer class="col-2" :value="headers" title="Headers"/>
   </div>
 </template>
 

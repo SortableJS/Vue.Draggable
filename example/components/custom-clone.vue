@@ -5,7 +5,7 @@
       <draggable
         class="dragArea list-group"
         :list="list1"
-        :options="{ group: { name: 'people', pull: 'clone', put: false } }"
+        :group="{ name: 'people', pull: 'clone', put: false }"
         :clone="cloneDog"
         @change="log"
       >
@@ -20,7 +20,7 @@
       <draggable
         class="dragArea list-group"
         :list="list2"
-        :options="{ group: 'people' }"
+        group="people"
         @change="log"
       >
         <div class="list-group-item" v-for="element in list2" :key="element.id">

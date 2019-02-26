@@ -11,7 +11,7 @@
         element="ul"
         :list="list"
         class="list-group"
-        :options="{ handle: '.handle' }"
+        handle=".handle"
       >
         <li
           class="list-group-item"
