@@ -51,7 +51,11 @@ function delegateAndEmit(evtName) {
 }
 
 function groupIsClone(group) {
-  return group.pull === "clone";
+  const { pull } = group;
+  if (typeof pull === "function") {
+    return pull() === "clone";
+  }
+  return pull === "clone";
 }
 
 const eventsListened = ["Start", "Add", "Remove", "Update", "End"];
