@@ -10,7 +10,8 @@
     "build": "vue-cli-service build --name vuedraggable --entry ./src/vuedraggable.js --target lib",
     "lint": "vue-cli-service lint src example",
     "prepublishOnly": "npm run lint && npm run build",
-    "test:unit": "vue-cli-service test:unit"
+    "test:unit": "vue-cli-service test:unit --coverage",
+    "test:coverage": "vue-cli-service test:unit --coverage --verbose && codecov"
   },
   "keywords": [
     "vue",
@@ -37,6 +38,7 @@
     "babel-eslint": "^10.0.1",
     "babel-jest": "^23.6.0",
     "bootstrap": "^4.3.1",
+    "codecov": "^3.2.0",
     "component-fixture": "^0.4.1",
     "element-ui": "^2.5.4",
     "eslint": "^5.8.0",
