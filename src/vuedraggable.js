@@ -173,17 +173,17 @@ const draggableComponent = {
   created() {
     if (this.list !== null && this.value !== null) {
       console.error(
-        "Value and list props are mutually exclusive! Please set one or another"
+        "Value and list props are mutually exclusive! Please set one or another."
       );
     }
 
     if (this.element !== "div") {
-      console.warn("Element props is deprecated please use tag props instead.");
+      console.warn("Element props is deprecated please use tag props instead. See https://github.com/SortableJS/Vue.Draggable/blob/master/documentation/migrate.md#element-props");
     }
 
     if (this.options !== undefined) {
       console.warn(
-        "Options props is deprecated, add sortable options directly as vue.draggable item, or use v-bind."
+        "Options props is deprecated, add sortable options directly as vue.draggable item, or use v-bind. See https://github.com/SortableJS/Vue.Draggable/blob/master/documentation/migrate.md#options-props"
       );
     }
   },

@@ -5,16 +5,16 @@
 Migrate from:
 
 ```HTML
-<draggable element="ul">
-  <li v-for="element in list" :key="element.id">{{element.name}}</li>
+<draggable v-for="list" element="ul">
+    <!-- -->
 </draggable>
 ```
 
 To:
 
 ```HTML
-<draggable tag="ul">
-  <li v-for="element in list" :key="element.id">{{element.name}}</li>
+<draggable v-for="list" tag="ul">
+  <!-- -->
 </draggable>
 ```
 
