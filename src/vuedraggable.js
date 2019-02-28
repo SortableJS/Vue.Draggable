@@ -103,6 +103,10 @@ const props = {
     type: String,
     default: "div"
   },
+  tag: {
+    type: String,
+    default: null
+  },
   move: {
     type: Function,
     default: null
@@ -163,7 +167,7 @@ const draggableComponent = {
       update("on", on);
       update("props", props);
     }
-    return h(this.element, attributes, children);
+    return h(this.getTag(), attributes, children);
   },
 
   created() {
@@ -171,6 +175,10 @@ const draggableComponent = {
       console.error(
         "Value and list props are mutually exclusive! Please set one or another"
       );
+    }
+
+    if (this.element !== "div") {
+      console.warn("Element props is deprecated please use tag props instead.");
     }
 
     if (this.options !== undefined) {
@@ -182,12 +190,10 @@ const draggableComponent = {
 
   mounted() {
     this.noneFunctionalComponentMode =
-      this.element.toLowerCase() !== this.$el.nodeName.toLowerCase();
+      this.getTag().toLowerCase() !== this.$el.nodeName.toLowerCase();
     if (this.noneFunctionalComponentMode && this.transitionMode) {
       throw new Error(
-        `Transition-group inside component is not supported. Please alter element value or remove transition-group. Current element value: ${
-        this.element
-        }`
+        `Transition-group inside component is not supported. Please alter tag value or remove transition-group. Current tag value: ${this.getTag()}`
       );
     }
     var optionsAdded = {};
@@ -199,17 +205,11 @@ const draggableComponent = {
       optionsAdded["on" + elt] = emit.bind(this, elt);
     });
 
-    const options = Object.assign(
-      {},
-      this.options,
-      this.$attrs,
-      optionsAdded,
-      {
-        onMove: (evt, originalEvent) => {
-          return this.onDragMove(evt, originalEvent);
-        }
+    const options = Object.assign({}, this.options, this.$attrs, optionsAdded, {
+      onMove: (evt, originalEvent) => {
+        return this.onDragMove(evt, originalEvent);
       }
-    );
+    });
     !("draggable" in options) && (options.draggable = ">*");
     this._sortable = new Sortable(this.rootContainer, options);
     this.computeIndexes();
@@ -250,6 +250,10 @@ const draggableComponent = {
   },
 
   methods: {
+    getTag() {
+      return this.tag || this.element;
+    },
+
     getIsCloning() {
       const { group } = this.$attrs;
       const groupConsideringOption = group || this.getOptionGroup();

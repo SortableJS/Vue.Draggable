@@ -10,7 +10,7 @@
       <h3>Transition</h3>
       <draggable
         class="list-group"
-        element="ul"
+        tag="ul"
         v-model="list"
         v-bind="dragOptions"
         @start="drag = true"

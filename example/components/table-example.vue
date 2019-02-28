@@ -11,7 +11,7 @@
             <th scope="col">Sport</th>
           </tr>
         </thead>
-        <draggable v-model="list" :element="'tbody'">
+        <draggable v-model="list" tag="tbody">
           <tr v-for="item in list" :key="item.name">
             <td scope="row">{{ item.id }}</td>
             <td>{{ item.name }}</td>

@@ -5,8 +5,10 @@
 
       <table class="table table-striped">
         <thead class="thead-dark">
-          <draggable v-model="headers" element="tr">
-            <th v-for="header in headers" :key="header" scope="col">{{ header }}</th>
+          <draggable v-model="headers" tag="tr">
+            <th v-for="header in headers" :key="header" scope="col">
+              {{ header }}
+            </th>
           </draggable>
         </thead>
         <tbody>
@@ -17,9 +19,9 @@
       </table>
     </div>
 
-    <rawDisplayer class="col-2" :value="list" title="List"/>
+    <rawDisplayer class="col-2" :value="list" title="List" />
 
-    <rawDisplayer class="col-2" :value="headers" title="Headers"/>
+    <rawDisplayer class="col-2" :value="headers" title="Headers" />
   </div>
 </template>
 

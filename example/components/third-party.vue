@@ -11,7 +11,7 @@
       </h3>
 
       <draggable
-        element="el-collapse"
+        tag="el-collapse"
         :list="list"
         :component-data="collapseComponentData"
       >

@@ -7,12 +7,7 @@
     <div class="col-7">
       <h3>Draggable {{ draggingInfo }}</h3>
 
-      <draggable
-        element="ul"
-        :list="list"
-        class="list-group"
-        handle=".handle"
-      >
+      <draggable tag="ul" :list="list" class="list-group" handle=".handle">
         <li
           class="list-group-item"
           v-for="(element, idx) in list"

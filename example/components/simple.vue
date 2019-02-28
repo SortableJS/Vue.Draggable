@@ -15,10 +15,10 @@
           <input
             id="disabled"
             type="checkbox"
-            v-model="disabled"
+            v-model="enabled"
             class="form-check-input"
           />
-          <label class="form-check-label" for="disabled">Disable DnD</label>
+          <label class="form-check-label" for="disabled">DnD enabled</label>
         </div>
       </div>
     </div>
@@ -28,7 +28,7 @@
 
       <draggable
         :list="list"
-        :disabled="disabled"
+        :disabled="!enabled"
         class="list-group"
         @start="dragging = true"
         @end="dragging = false"
@@ -59,7 +59,7 @@ export default {
   },
   data() {
     return {
-      disabled: false,
+      enabled: true,
       list: [
         { name: "John", id: 0 },
         { name: "Joao", id: 1 },
