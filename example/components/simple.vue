@@ -30,6 +30,7 @@
         :list="list"
         :disabled="!enabled"
         class="list-group"
+        ghostClass="ghost"
         @start="dragging = true"
         @end="dragging = false"
       >
@@ -86,5 +87,10 @@ export default {
 <style scoped>
 .buttons {
   margin-top: 35px;
+}
+
+.ghost {
+  opacity: 0.5;
+  background: #c8ebfb;
 }
 </style>
