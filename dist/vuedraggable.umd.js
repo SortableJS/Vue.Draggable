@@ -221,13 +221,13 @@ module.exports = function (object, index, value) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(global) {/* harmony import */ var C_Users_david_desmaisons_Documents_project_source_Vue_Draggable_node_modules_babel_runtime_corejs2_core_js_object_assign__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__("5176");
-/* harmony import */ var C_Users_david_desmaisons_Documents_project_source_Vue_Draggable_node_modules_babel_runtime_corejs2_core_js_object_assign__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(C_Users_david_desmaisons_Documents_project_source_Vue_Draggable_node_modules_babel_runtime_corejs2_core_js_object_assign__WEBPACK_IMPORTED_MODULE_0__);
+/* WEBPACK VAR INJECTION */(function(global) {/* harmony import */ var F_source_vuedraggable_node_modules_babel_runtime_corejs2_core_js_object_assign__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__("5176");
+/* harmony import */ var F_source_vuedraggable_node_modules_babel_runtime_corejs2_core_js_object_assign__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(F_source_vuedraggable_node_modules_babel_runtime_corejs2_core_js_object_assign__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var core_js_modules_es7_array_includes__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__("6762");
 /* harmony import */ var core_js_modules_es7_array_includes__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es7_array_includes__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var core_js_modules_es6_string_includes__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__("2fdb");
 /* harmony import */ var core_js_modules_es6_string_includes__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es6_string_includes__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var C_Users_david_desmaisons_Documents_project_source_Vue_Draggable_node_modules_babel_runtime_corejs2_helpers_esm_toConsumableArray__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__("75fc");
+/* harmony import */ var F_source_vuedraggable_node_modules_babel_runtime_corejs2_helpers_esm_toConsumableArray__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__("75fc");
 
 
 
@@ -281,7 +281,7 @@ function _computeIndexes(slots, children, isTransition) {
     return elt.elm;
   });
 
-  var rawIndexes = Object(C_Users_david_desmaisons_Documents_project_source_Vue_Draggable_node_modules_babel_runtime_corejs2_helpers_esm_toConsumableArray__WEBPACK_IMPORTED_MODULE_3__[/* default */ "a"])(children).map(function (elt) {
+  var rawIndexes = Object(F_source_vuedraggable_node_modules_babel_runtime_corejs2_helpers_esm_toConsumableArray__WEBPACK_IMPORTED_MODULE_3__[/* default */ "a"])(children).map(function (elt) {
     return elmFromNodes.indexOf(elt);
   });
 
@@ -356,6 +356,10 @@ var props = {
     type: String,
     default: "div"
   },
+  tag: {
+    type: String,
+    default: null
+  },
   move: {
     type: Function,
     default: null
@@ -397,11 +401,11 @@ var draggableComponent = {
 
     if (header) {
       headerOffset = header.length;
-      children = children ? [].concat(Object(C_Users_david_desmaisons_Documents_project_source_Vue_Draggable_node_modules_babel_runtime_corejs2_helpers_esm_toConsumableArray__WEBPACK_IMPORTED_MODULE_3__[/* default */ "a"])(header), Object(C_Users_david_desmaisons_Documents_project_source_Vue_Draggable_node_modules_babel_runtime_corejs2_helpers_esm_toConsumableArray__WEBPACK_IMPORTED_MODULE_3__[/* default */ "a"])(children)) : Object(C_Users_david_desmaisons_Documents_project_source_Vue_Draggable_node_modules_babel_runtime_corejs2_helpers_esm_toConsumableArray__WEBPACK_IMPORTED_MODULE_3__[/* default */ "a"])(header);
+      children = children ? [].concat(Object(F_source_vuedraggable_node_modules_babel_runtime_corejs2_helpers_esm_toConsumableArray__WEBPACK_IMPORTED_MODULE_3__[/* default */ "a"])(header), Object(F_source_vuedraggable_node_modules_babel_runtime_corejs2_helpers_esm_toConsumableArray__WEBPACK_IMPORTED_MODULE_3__[/* default */ "a"])(children)) : Object(F_source_vuedraggable_node_modules_babel_runtime_corejs2_helpers_esm_toConsumableArray__WEBPACK_IMPORTED_MODULE_3__[/* default */ "a"])(header);
     }
 
     if (footer) {
-      children = children ? [].concat(Object(C_Users_david_desmaisons_Documents_project_source_Vue_Draggable_node_modules_babel_runtime_corejs2_helpers_esm_toConsumableArray__WEBPACK_IMPORTED_MODULE_3__[/* default */ "a"])(children), Object(C_Users_david_desmaisons_Documents_project_source_Vue_Draggable_node_modules_babel_runtime_corejs2_helpers_esm_toConsumableArray__WEBPACK_IMPORTED_MODULE_3__[/* default */ "a"])(footer)) : Object(C_Users_david_desmaisons_Documents_project_source_Vue_Draggable_node_modules_babel_runtime_corejs2_helpers_esm_toConsumableArray__WEBPACK_IMPORTED_MODULE_3__[/* default */ "a"])(footer);
+      children = children ? [].concat(Object(F_source_vuedraggable_node_modules_babel_runtime_corejs2_helpers_esm_toConsumableArray__WEBPACK_IMPORTED_MODULE_3__[/* default */ "a"])(children), Object(F_source_vuedraggable_node_modules_babel_runtime_corejs2_helpers_esm_toConsumableArray__WEBPACK_IMPORTED_MODULE_3__[/* default */ "a"])(footer)) : Object(F_source_vuedraggable_node_modules_babel_runtime_corejs2_helpers_esm_toConsumableArray__WEBPACK_IMPORTED_MODULE_3__[/* default */ "a"])(footer);
     }
 
     this.headerOffset = headerOffset;
@@ -419,24 +423,28 @@ var draggableComponent = {
       update("props", _props);
     }
 
-    return h(this.element, attributes, children);
+    return h(this.getTag(), attributes, children);
   },
   created: function created() {
     if (this.list !== null && this.value !== null) {
-      console.error("Value and list props are mutually exclusive! Please set one or another");
+      console.error("Value and list props are mutually exclusive! Please set one or another.");
+    }
+
+    if (this.element !== "div") {
+      console.warn("Element props is deprecated please use tag props instead. See https://github.com/SortableJS/Vue.Draggable/blob/master/documentation/migrate.md#element-props");
     }
 
     if (this.options !== undefined) {
-      console.warn("Options props is deprecated, add sortable options directly as vue.draggable item, or use v-bind.");
+      console.warn("Options props is deprecated, add sortable options directly as vue.draggable item, or use v-bind. See https://github.com/SortableJS/Vue.Draggable/blob/master/documentation/migrate.md#options-props");
     }
   },
   mounted: function mounted() {
     var _this3 = this;
 
-    this.noneFunctionalComponentMode = this.element.toLowerCase() !== this.$el.nodeName.toLowerCase();
+    this.noneFunctionalComponentMode = this.getTag().toLowerCase() !== this.$el.nodeName.toLowerCase();
 
     if (this.noneFunctionalComponentMode && this.transitionMode) {
-      throw new Error("Transition-group inside component is not supported. Please alter element value or remove transition-group. Current element value: ".concat(this.element));
+      throw new Error("Transition-group inside component is not supported. Please alter tag value or remove transition-group. Current tag value: ".concat(this.getTag()));
     }
 
     var optionsAdded = {};
@@ -447,7 +455,7 @@ var draggableComponent = {
       optionsAdded["on" + elt] = emit.bind(_this3, elt);
     });
 
-    var options = C_Users_david_desmaisons_Documents_project_source_Vue_Draggable_node_modules_babel_runtime_corejs2_core_js_object_assign__WEBPACK_IMPORTED_MODULE_0___default()({}, this.options, this.$attrs, optionsAdded, {
+    var options = F_source_vuedraggable_node_modules_babel_runtime_corejs2_core_js_object_assign__WEBPACK_IMPORTED_MODULE_0___default()({}, this.options, this.$attrs, optionsAdded, {
       onMove: function onMove(evt, originalEvent) {
         return _this3.onDragMove(evt, originalEvent);
       }
@@ -486,6 +494,9 @@ var draggableComponent = {
     }
   },
   methods: {
+    getTag: function getTag() {
+      return this.tag || this.element;
+    },
     getIsCloning: function getIsCloning() {
       var group = this.$attrs.group;
       var groupConsideringOption = group || this.getOptionGroup();
@@ -562,7 +573,7 @@ var draggableComponent = {
       if (this.list) {
         onList(this.list);
       } else {
-        var newList = Object(C_Users_david_desmaisons_Documents_project_source_Vue_Draggable_node_modules_babel_runtime_corejs2_helpers_esm_toConsumableArray__WEBPACK_IMPORTED_MODULE_3__[/* default */ "a"])(this.value);
+        var newList = Object(F_source_vuedraggable_node_modules_babel_runtime_corejs2_helpers_esm_toConsumableArray__WEBPACK_IMPORTED_MODULE_3__[/* default */ "a"])(this.value);
 
         onList(newList);
         this.$emit("input", newList);
@@ -572,7 +583,7 @@ var draggableComponent = {
       var _arguments = arguments;
 
       var spliceList = function spliceList(list) {
-        return list.splice.apply(list, Object(C_Users_david_desmaisons_Documents_project_source_Vue_Draggable_node_modules_babel_runtime_corejs2_helpers_esm_toConsumableArray__WEBPACK_IMPORTED_MODULE_3__[/* default */ "a"])(_arguments));
+        return list.splice.apply(list, Object(F_source_vuedraggable_node_modules_babel_runtime_corejs2_helpers_esm_toConsumableArray__WEBPACK_IMPORTED_MODULE_3__[/* default */ "a"])(_arguments));
       };
 
       this.alterList(spliceList);
@@ -605,7 +616,7 @@ var draggableComponent = {
         var destination = component.getUnderlyingVm(related);
 
         if (destination) {
-          return C_Users_david_desmaisons_Documents_project_source_Vue_Draggable_node_modules_babel_runtime_corejs2_core_js_object_assign__WEBPACK_IMPORTED_MODULE_0___default()(destination, context);
+          return F_source_vuedraggable_node_modules_babel_runtime_corejs2_core_js_object_assign__WEBPACK_IMPORTED_MODULE_0___default()(destination, context);
         }
       }
 
@@ -697,7 +708,7 @@ var draggableComponent = {
         return 0;
       }
 
-      var domChildren = Object(C_Users_david_desmaisons_Documents_project_source_Vue_Draggable_node_modules_babel_runtime_corejs2_helpers_esm_toConsumableArray__WEBPACK_IMPORTED_MODULE_3__[/* default */ "a"])(evt.to.children).filter(function (el) {
+      var domChildren = Object(F_source_vuedraggable_node_modules_babel_runtime_corejs2_helpers_esm_toConsumableArray__WEBPACK_IMPORTED_MODULE_3__[/* default */ "a"])(evt.to.children).filter(function (el) {
         return el.style["display"] !== "none";
       });
 
@@ -717,11 +728,11 @@ var draggableComponent = {
       var draggedContext = this.context;
       var futureIndex = this.computeFutureIndex(relatedContext, evt);
 
-      C_Users_david_desmaisons_Documents_project_source_Vue_Draggable_node_modules_babel_runtime_corejs2_core_js_object_assign__WEBPACK_IMPORTED_MODULE_0___default()(draggedContext, {
+      F_source_vuedraggable_node_modules_babel_runtime_corejs2_core_js_object_assign__WEBPACK_IMPORTED_MODULE_0___default()(draggedContext, {
         futureIndex: futureIndex
       });
 
-      C_Users_david_desmaisons_Documents_project_source_Vue_Draggable_node_modules_babel_runtime_corejs2_core_js_object_assign__WEBPACK_IMPORTED_MODULE_0___default()(evt, {
+      F_source_vuedraggable_node_modules_babel_runtime_corejs2_core_js_object_assign__WEBPACK_IMPORTED_MODULE_0___default()(evt, {
         relatedContext: relatedContext,
         draggedContext: draggedContext
       });
