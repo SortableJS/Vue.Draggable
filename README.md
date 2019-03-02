@@ -167,7 +167,9 @@ Alternative to the `value` prop, list is an array to be synchronized with drag-a
 The main difference is that `list` prop is updated by draggable component using splice method, whereas `value` is immutable.<br>
 **Do not use in conjunction with value prop.**
 
-#### options
+#### options [deprecated]
+**Deprecated: use Sortable options as props; see [below section for more](#All-sortable-options)**
+
 Type: `Object`<br>
 Required: `false`
 
@@ -176,7 +178,29 @@ Note that all the method starting by "on" will be ignored as draggable component
 
 As an example, a drag handle can be added using this binding `:options="{handle:'.handle'}"`. Read the linked documentation for other options available to you.
 
-#### element
+#### All sortable options
+New in version 2.19
+
+Sortable options can be set directly as vue.draggable props since version 2.19.
+
+This means that all [sortable option](https://github.com/RubaXa/Sortable#options) are valid sortable props with the notable exception of all the method starting by "on" as draggable component expose the same API via events.
+
+Example setting an handle and a group option:
+```HTML
+<draggable
+        v-model="list"
+        :group="{ name: 'people', pull: 'clone', put: false }"
+        @change="log"
+      >
+      <!-- -->
+</draggable>
+```
+
+#### element 
+
+**Deprecated as it has been renamed [tag](#tag)**
+
+#### tag
 Type: `String`<br>
 Default: `'div'`
 
