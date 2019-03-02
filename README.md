@@ -77,7 +77,7 @@ Use draggable component:
 
 ### Typical use:
 ``` html
-<draggable v-model="myArray" :options="{group:'people'}" @start="drag=true" @end="drag=false">
+<draggable v-model="myArray" group="people" @start="drag=true" @end="drag=false">
    <div v-for="element in myArray" :key="element.id">{{element.name}}</div>
 </draggable>
 ```
@@ -108,7 +108,7 @@ Draggable component should directly wrap the draggable elements, or a `transitio
 
 ### With footer slot:
 ``` html
-<draggable v-model="myArray" :options="{draggable:'.item'}">
+<draggable v-model="myArray" draggable=".item">
     <div v-for="element in myArray" :key="element.id" class="item">
         {{element.name}}
     </div>
@@ -117,7 +117,7 @@ Draggable component should directly wrap the draggable elements, or a `transitio
 ```
 ### With header slot:
 ``` html
-<draggable v-model="myArray" :options="{draggable:'.item'}">
+<draggable v-model="myArray" draggable=".item'">
     <div v-for="element in myArray" :key="element.id" class="item">
         {{element.name}}
     </div>
@@ -189,6 +189,7 @@ Example setting an handle and a group option:
 ```HTML
 <draggable
         v-model="list"
+        handle=".handle"
         :group="{ name: 'people', pull: 'clone', put: false }"
         @change="log"
       >
@@ -258,14 +259,14 @@ Type: `Object`<br>
 Required: `false`<br>
 Default: `null`<br>
 
-This props is used to pass additional information to child component declared by [element props](#element).<br>
+This props is used to pass additional information to child component declared by [tag props](#tag).<br>
 Value:
 * `props`: props to be passed to the child component
 * `on`: events to be subscribe in the child component
 
 Example (using [element UI library](http://element.eleme.io/#/en-US)):
 ```HTML
-<draggable element="el-collapse" :list="list" :component-data="getComponentData()">
+<draggable tag="el-collapse" :list="list" :component-data="getComponentData()">
     <el-collapse-item v-for="e in list" :title="e.title" :name="e.name" :key="e.name">
         <div>{{e.description}}</div>
      </el-collapse-item>
@@ -334,7 +335,7 @@ Note that header slot will always be added before the default slot regardless it
 Ex:
 
 ``` html
-<draggable v-model="myArray" :options="{draggable:'.item'}">
+<draggable v-model="myArray" draggable=".item">
     <div v-for="element in myArray" :key="element.id" class="item">
         {{element.name}}
     </div>
@@ -349,7 +350,7 @@ Note that footer slot will always be added after the default slot regardless its
 Ex:
 
 ``` html
-<draggable v-model="myArray" :options="{draggable:'.item'}">
+<draggable v-model="myArray" draggable=".item">
     <div v-for="element in myArray" :key="element.id" class="item">
         {{element.name}}
     </div>
