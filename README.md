@@ -185,12 +185,13 @@ Sortable options can be set directly as vue.draggable props since version 2.19.
 
 This means that all [sortable option](https://github.com/RubaXa/Sortable#options) are valid sortable props with the notable exception of all the method starting by "on" as draggable component expose the same API via events.
 
-Example setting an handle and a group option:
+Example setting handle, sortable and a group option:
 ```HTML
 <draggable
         v-model="list"
         handle=".handle"
         :group="{ name: 'people', pull: 'clone', put: false }"
+        :sortable="false"
         @change="log"
       >
       <!-- -->
