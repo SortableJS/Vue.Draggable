@@ -1,6 +1,10 @@
 import { shallowMount } from "@vue/test-utils";
 import Sortable from "sortablejs";
-
+jest.genMockFromModule('sortablejs');
+jest.mock('sortablejs');
+const SortableFake = {
+};
+Sortable.mockImplementation(() => SortableFake);
 import draggable from "@/vuedraggable";
 
 let wrapper;
@@ -11,12 +15,12 @@ let html;
 
 describe("draggable.vue", () => {
   beforeEach(() => {
-    items= ["a", "b", "c"];
-    wrapper = shallowMount(draggable,{
-      propsData:{
+    items = ["a", "b", "c"];
+    wrapper = shallowMount(draggable, {
+      propsData: {
         list: items
       },
-      slots:{
+      slots: {
         default: items.map(item => `<div>${item}</div>`),
         header: "<header/>",
         footer: "<footer/>"
@@ -91,6 +95,10 @@ describe("draggable.vue", () => {
     expect(wrapper.html()).toMatch(/^<div><header><\/header>/);
   })
 
+  it("renders default slot element correctly", () => {
+    expect(wrapper.html()).toContain("<div>a</div><div>b</div><div>c</div>");
+  })
+
   test.each([
     "ul",
     "span",
@@ -105,4 +113,8 @@ describe("draggable.vue", () => {
       expect(wrapper.html()).toMatch(expectedRegex);
     }
   )
+
+  it("keeps a reference to Sortable instance", () => {
+    expect(vm._sortable).toBe(SortableFake);
+  })
 });
