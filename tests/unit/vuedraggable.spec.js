@@ -1,4 +1,6 @@
 import { shallowMount } from "@vue/test-utils";
+import Sortable from "sortablejs";
+
 import draggable from "@/vuedraggable";
 
 let wrapper;
@@ -16,7 +18,7 @@ describe("draggable.vue", () => {
       },
       slots:{
         default: items.map(item => `<div>${item}</div>`),
-        header: "<h1/>",
+        header: "<header/>",
         footer: "<footer/>"
       }
     });
@@ -77,8 +79,16 @@ describe("draggable.vue", () => {
     expect(clone.default(expected)).toBe(expected);
   })
 
-  it("renders correctly", () => {
+  it("renders root element correctly", () => {
     expect(wrapper.html()).toMatch(/^<div>.*<\/div>$/);
+  })
+
+  it("renders footer slot element correctly", () => {
+    expect(wrapper.html()).toMatch(/<footer><\/footer><\/div>$/);
+  })
+
+  it("renders header slot element correctly", () => {
+    expect(wrapper.html()).toMatch(/^<div><header><\/header>/);
   })
 
   test.each([
