@@ -6,6 +6,7 @@ const SortableFake = {
 };
 Sortable.mockImplementation(() => SortableFake);
 import draggable from "@/vuedraggable";
+import Vue from "vue";
 
 let wrapper;
 let vm;
@@ -135,4 +136,26 @@ describe("draggable.vue", () => {
       sortableOption: "value"
     });
   })
+
+  test.each(
+    [
+      ["onChoose", "choose"],
+      ["onSort", "sort"],
+      ["onFilter", "filter"],
+      ["onClone", "clone"]
+    ]
+  )(
+    "when event %s is emitted from sortable",
+    async (evt, vueEvt) => {
+      const callBack = Sortable.mock.calls[0][1][evt];
+      const evtInfo = {
+        data: {}
+      };
+      callBack(evtInfo);
+      await Vue.nextTick();
+      expect(wrapper.emitted()).toEqual({
+        [vueEvt]: [[evtInfo]]
+      });
+    }
+  );
 });
