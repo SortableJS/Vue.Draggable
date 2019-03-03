@@ -24,8 +24,7 @@
     "component"
   ],
   "dependencies": {
-    "sortablejs": "^1.8.3",
-    "vue": "^2.5.22"
+    "sortablejs": "^1.8.3"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.4.0",
@@ -45,9 +44,11 @@
     "eslint-plugin-vue": "^5.0.0",
     "font-awesome": "^4.7.0",
     "jquery": "^3.3.1",
+    "vue": "^2.6.8",
     "vue-cli-plugin-component": "^1.10.5",
     "vue-router": "^3.0.2",
-    "vue-template-compiler": "^2.5.21"
+    "vue-server-renderer": "^2.6.8",
+    "vue-template-compiler": "^2.6.8"
   },
   "eslintConfig": {
     "root": true,
