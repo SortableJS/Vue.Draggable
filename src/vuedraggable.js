@@ -121,7 +121,7 @@ const props = {
 const draggableComponent = {
   name: "draggable",
 
-  inheritAttrs: true,
+  inheritAttrs: false,
 
   props,
 

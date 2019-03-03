@@ -11,14 +11,18 @@ let wrapper;
 let vm;
 let props;
 let items;
-let html;
+let element;
 
 describe("draggable.vue", () => {
   beforeEach(() => {
+    Sortable.mockClear();
     items = ["a", "b", "c"];
     wrapper = shallowMount(draggable, {
       propsData: {
         list: items
+      },
+      attrs: {
+        sortableOption: "value"
       },
       slots: {
         default: items.map(item => `<div>${item}</div>`),
@@ -28,11 +32,15 @@ describe("draggable.vue", () => {
     });
     vm = wrapper.vm;
     props = vm.$options.props;
-    html = wrapper.element;
+    element = wrapper.element;
   });
 
-  it("should instantiate without error", () => {
+  it("instantiate without error", () => {
     expect(wrapper).not.toBeUndefined();
+  });
+
+  it("has draggable name", () => {
+    expect(vm.name).not.toBe("draggable");
   });
 
   test.each([
@@ -116,5 +124,15 @@ describe("draggable.vue", () => {
 
   it("keeps a reference to Sortable instance", () => {
     expect(vm._sortable).toBe(SortableFake);
+  })
+
+  it("creates sortable instance with options", () => {
+    expect(Sortable.mock.calls.length).toBe(1);
+    const parameters = Sortable.mock.calls[0];
+    expect(parameters[0]).toBe(element);
+    expect(parameters[1]).toMatchObject({
+      draggable: ">*",
+      sortableOption: "value"
+    });
   })
 });
