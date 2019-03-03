@@ -56,4 +56,11 @@ describe("draggable.vue", () => {
       expect(propsValue).toEqual(value);
     }
   )
+
+  it("has a clone props, defaulting with identity function", () => {
+    const expected = {};
+    const { clone } = props;
+    expect(clone.type).toBe(Function);
+    expect(clone.default(expected)).toBe(expected);
+  })
 });
