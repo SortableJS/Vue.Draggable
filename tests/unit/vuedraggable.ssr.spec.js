@@ -8,7 +8,7 @@ const draggable = require("@/vuedraggable").default;
 Vue.component('draggable', draggable);
 const app = new Vue({
   name: "test-app",
-  template: `<draggable :list="items"><div v-for="item in items" :key="item"></div></draggable>`,
+  template: `<draggable :list="items"><div v-for="item in items" :key="item">{{item}}</div></draggable>`,
   data:{
     items:["a","b","c"]
   }
@@ -22,6 +22,7 @@ describe("vuedraggable in a SSR context", () => {
   });
 
   it("can be rendered", () => {
-    expect(html).not.toBeNull();
+    const expected = '<div data-server-rendered="true"><div>a</div><div>b</div><div>c</div></div>';
+    expect(html).toEqual(expected);
   })
 })
