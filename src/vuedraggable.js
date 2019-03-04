@@ -333,11 +333,11 @@ const draggableComponent = {
     alterList(onList) {
       if (this.list) {
         onList(this.list);
-      } else {
-        const newList = [...this.value];
-        onList(newList);
-        this.$emit("input", newList);
+        return;
       }
+      const newList = [...this.value];
+      onList(newList);
+      this.$emit("input", newList);
     },
 
     spliceList() {
@@ -364,7 +364,6 @@ const draggableComponent = {
           return Object.assign(destination, context);
         }
       }
-
       return context;
     },
 
