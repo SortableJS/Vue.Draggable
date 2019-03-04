@@ -15,12 +15,18 @@ let props;
 let items;
 let element;
 let input;
+const initialRender = "<div><header></header><div>a</div><div>b</div><div>c</div><footer></footer></div>";
+
+function getEvent(name) {
+  return Sortable.mock.calls[0][1][name];
+}
 
 describe("draggable.vue", () => {
   beforeEach(() => {
     Sortable.mockClear();
     items = ["a", "b", "c"];
     wrapper = shallowMount(draggable, {
+      attachToDocument: true,
       propsData: {
         list: items
       },
@@ -110,6 +116,10 @@ describe("draggable.vue", () => {
     expect(wrapper.html()).toContain("<div>a</div><div>b</div><div>c</div>");
   })
 
+  it("renders correctly", () => {
+    expect(wrapper.html()).toEqual(initialRender);
+  })
+
   test.each([
     "ul",
     "span",
@@ -189,7 +199,7 @@ describe("draggable.vue", () => {
   )(
     "when event %s is emitted from sortable",
     async (evt, vueEvt) => {
-      const callBack = Sortable.mock.calls[0][1][evt];
+      const callBack = getEvent(evt);
       const evtInfo = {
         data: {}
       };
@@ -200,4 +210,63 @@ describe("draggable.vue", () => {
       });
     }
   );
+
+  describe("when initiating a drag operation", () => {
+    let evt;
+    let item;
+    beforeEach(() => {
+      item = element.children[2];
+      evt = { item };
+      const start = getEvent("onStart");
+      start(evt);
+    });
+
+    it("sends a start event", async () => {
+      await Vue.nextTick();
+      expect(wrapper.emitted()).toEqual({
+        start: [[evt]]
+      });
+    })
+
+    it("sets context", async () => {
+      await Vue.nextTick();
+      expect(vm.context).toEqual({
+        element: "b",
+        index: 1
+      });
+    })
+
+    describe("when remove is called", () => {
+      beforeEach(() => {
+        element.removeChild(item);
+        const remove = getEvent("onRemove");
+        remove({
+          item,
+          oldIndex: 2
+        });
+      })
+
+      it("DOM changes should be reverted", async () => {
+        await Vue.nextTick();
+        expect(wrapper.html()).toEqual(initialRender);
+      })
+
+      it("list should be updated", async () => {
+        await Vue.nextTick();
+        expect(vm.list).toEqual(["a", "c"]);
+      })
+      
+      it("sends a remove event", async () => {
+        await Vue.nextTick();
+        const expectedEvt = { item, oldIndex: 2 };
+        expect(wrapper.emitted().remove).toEqual([[expectedEvt]]);
+      })
+
+      it("sends a change event", async () => {
+        await Vue.nextTick();
+        const expectedEvt = { removed: { element: "b", oldIndex: 1 } };
+        expect(wrapper.emitted().change).toEqual([[expectedEvt]]);
+      })
+    })
+  });
 });
