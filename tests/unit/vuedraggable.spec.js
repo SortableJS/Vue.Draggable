@@ -255,7 +255,7 @@ describe("draggable.vue", () => {
         await Vue.nextTick();
         expect(vm.list).toEqual(["a", "c"]);
       })
-      
+
       it("sends a remove event", async () => {
         await Vue.nextTick();
         const expectedEvt = { item, oldIndex: 2 };
@@ -265,6 +265,48 @@ describe("draggable.vue", () => {
       it("sends a change event", async () => {
         await Vue.nextTick();
         const expectedEvt = { removed: { element: "b", oldIndex: 1 } };
+        expect(wrapper.emitted().change).toEqual([[expectedEvt]]);
+      })
+    })
+
+    describe("when update is called", () => {
+      beforeEach(() => {
+        const firstDraggable = element.children[1];
+        element.removeChild(item);
+        element.insertBefore(item, firstDraggable);
+        const update = getEvent("onUpdate");
+        update({
+          item,
+          oldIndex: 2,
+          newIndex: 1,
+          from: element
+        });
+      })
+
+      it("DOM changes should be reverted", async () => {
+        await Vue.nextTick();
+        expect(wrapper.html()).toEqual(initialRender);
+      })
+
+      it("list should be updated", async () => {
+        await Vue.nextTick();
+        expect(vm.list).toEqual(["b", "a", "c"]);
+      })
+
+      it("sends a update event", async () => {
+        await Vue.nextTick();
+        const expectedEvt = {
+          item,
+          oldIndex: 2,
+          newIndex: 1,
+          from: element
+        };
+        expect(wrapper.emitted().update).toEqual([[expectedEvt]]);
+      })
+
+      it("sends a change event", async () => {
+        await Vue.nextTick();
+        const expectedEvt = { moved: { element: "b", oldIndex: 1, newIndex: 0 } };
         expect(wrapper.emitted().change).toEqual([[expectedEvt]]);
       })
     })
