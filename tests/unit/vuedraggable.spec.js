@@ -13,6 +13,7 @@ let wrapper;
 let vm;
 let props;
 let items;
+let item;
 let element;
 let input;
 const initialRender = "<div><header></header><div>a</div><div>b</div><div>c</div><footer></footer></div>";
@@ -212,9 +213,51 @@ describe("draggable.vue when initialized with list", () => {
     }
   );
 
+  describe("when add is called", () => {
+    let newItem;
+    beforeEach(async() => {
+      await Vue.nextTick();
+      newItem = document.createElement("div");
+      const newContent = document.createTextNode("d");
+      newItem.appendChild(newContent);
+      newItem._underlying_vm_ = "d";
+      const last = element.children[3];
+      element.insertBefore(newItem, last);
+      const add = getEvent("onAdd");
+      add({
+        item: newItem,
+        newIndex: 3
+      });
+    })
+
+    it("DOM changes should be reverted", async () => {
+      await Vue.nextTick();
+      expect(wrapper.html()).toEqual(initialRender);
+    })
+
+    it("list should be updated", async () => {
+      await Vue.nextTick();
+      expect(vm.list).toEqual(["a", "b", "d", "c",]);
+    })
+
+    it("sends a update event", async () => {
+      await Vue.nextTick();
+      const expectedEvt = {
+        item: newItem,
+        newIndex: 3
+      };
+      expect(wrapper.emitted().add).toEqual([[expectedEvt]]);
+    })
+
+    it("sends a change event", async () => {
+      await Vue.nextTick();
+      const expectedEvt = { added: { element: "d", newIndex: 2 } };
+      expect(wrapper.emitted().change).toEqual([[expectedEvt]]);
+    })
+  });
+
   describe("when initiating a drag operation", () => {
     let evt;
-    let item;
     beforeEach(() => {
       item = element.children[2];
       evt = { item };
@@ -312,10 +355,10 @@ describe("draggable.vue when initialized with list", () => {
       })
     });
 
-    describe("when sending DragEnd", () =>{
+    describe("when sending DragEnd", () => {
       let endEvt;
       beforeEach(() => {
-        endEvt={
+        endEvt = {
           data: "data"
         };
         const onEnd = getEvent("onEnd");
@@ -336,7 +379,7 @@ describe("draggable.vue when initialized with value", () => {
     items = ["a", "b", "c"];
     wrapper = shallowMount(draggable, {
       attachToDocument: true,
-      propsData:{
+      propsData: {
         value: items
       },
       slots: {
@@ -350,7 +393,6 @@ describe("draggable.vue when initialized with value", () => {
 
   describe("when initiating a drag operation", () => {
     let evt;
-    let item;
     beforeEach(() => {
       item = element.children[1];
       evt = { item };
@@ -450,10 +492,10 @@ describe("draggable.vue when initialized with value", () => {
       })
     });
 
-    describe("when sending DragEnd", () =>{
+    describe("when sending DragEnd", () => {
       let endEvt;
       beforeEach(() => {
-        endEvt={
+        endEvt = {
           data: "data"
         };
         const onEnd = getEvent("onEnd");
