@@ -309,6 +309,22 @@ describe("draggable.vue", () => {
         const expectedEvt = { moved: { element: "b", oldIndex: 1, newIndex: 0 } };
         expect(wrapper.emitted().change).toEqual([[expectedEvt]]);
       })
+    });
+
+    describe("when sending DragEnd", () =>{
+      let endEvt;
+      beforeEach(() => {
+        endEvt={
+          data: "data"
+        };
+        const onEnd = getEvent("onEnd");
+        onEnd(endEvt);
+      })
+
+      it("sends a update event", async () => {
+        await Vue.nextTick();
+        expect(wrapper.emitted().end).toEqual([[endEvt]]);
+      })
     })
   });
 });
