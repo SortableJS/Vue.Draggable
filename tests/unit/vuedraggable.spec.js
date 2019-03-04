@@ -1,4 +1,4 @@
-import { shallowMount } from "@vue/test-utils";
+import { mount, shallowMount } from "@vue/test-utils";
 import Sortable from "sortablejs";
 jest.genMockFromModule('sortablejs');
 jest.mock('sortablejs');
@@ -7,12 +7,14 @@ const SortableFake = {
 Sortable.mockImplementation(() => SortableFake);
 import draggable from "@/vuedraggable";
 import Vue from "vue";
+import Fake from "./helper/FakeComponent.js"
 
 let wrapper;
 let vm;
 let props;
 let items;
 let element;
+let input;
 
 describe("draggable.vue", () => {
   beforeEach(() => {
@@ -122,6 +124,46 @@ describe("draggable.vue", () => {
       expect(wrapper.html()).toMatch(expectedRegex);
     }
   )
+
+  describe("when using component as tag", () => {
+    beforeEach(() => {
+      input = jest.fn();
+      wrapper = mount(draggable, {
+        propsData: {
+          tag: "child",
+          componentData: {
+            on: {
+              input
+            },
+            props: {
+              prop1: "info",
+              prop2: true
+            }
+          }
+        },
+        stubs: {
+          child: Fake
+        }
+      });
+    });
+
+    it("instantiate child component", async () => {
+      const child = wrapper.find(Fake);
+      expect(child).not.toBeNull();
+    })
+
+    it("pass data to tag child", async () => {
+      const fakeChild = wrapper.find(Fake);
+      expect(fakeChild.props("prop1")).toEqual("info");
+    })
+
+    it("pass data to tag child", async () => {
+      const child = wrapper.find(Fake);
+      const evt = { data: 33 };
+      child.vm.$emit('input', evt);
+      expect(input).toHaveBeenCalledWith(evt);
+    })
+  });
 
   it("keeps a reference to Sortable instance", () => {
     expect(vm._sortable).toBe(SortableFake);
