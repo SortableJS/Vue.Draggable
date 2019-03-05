@@ -3,6 +3,7 @@ import Sortable from "sortablejs";
 jest.genMockFromModule('sortablejs');
 jest.mock('sortablejs');
 const SortableFake = {
+  destroy: jest.fn()
 };
 Sortable.mockImplementation(() => SortableFake);
 import draggable from "@/vuedraggable";
@@ -26,6 +27,7 @@ function getEvent(name) {
 describe("draggable.vue when initialized with list", () => {
   beforeEach(() => {
     Sortable.mockClear();
+    SortableFake.destroy.mockClear();
     items = ["a", "b", "c"];
     wrapper = shallowMount(draggable, {
       attachToDocument: true,
@@ -383,6 +385,16 @@ describe("draggable.vue when initialized with list", () => {
         expect(wrapper.emitted().end).toEqual([[endEvt]]);
       })
     })
+  });
+
+  it("does calls Sortable destroy when mounted",()=>{
+    expect(SortableFake.destroy.mock.calls.length).toBe(0);
+  });
+
+  it("calls Sortable destroy when destroyed",()=>{
+    wrapper.destroy();
+    expect(SortableFake.destroy).toHaveBeenCalled();
+    expect(SortableFake.destroy.mock.calls.length).toBe(1);
   });
 });
 
