@@ -301,6 +301,50 @@ describe("draggable.vue when initialized with list", () => {
       });
     })
 
+    describe("when calling onMove", () => {
+      let evt;
+      let originalEvt;
+      let move;
+      let doMove;
+
+      beforeEach(() => {
+        //item = element.children[2];
+        evt = {
+          to: element,
+          related: element,
+          willInsertAfter: false
+        };
+        originalEvt = {};
+        move = getEvent("onMove");
+        doMove = () => move(evt, originalEvt);
+      });
+
+      it("returns true when move props is null", () => {
+        const actual = doMove();
+        expect(actual).toBe(true);
+      });
+
+      describe("when move is set", () => {
+        let move;
+        beforeEach(() => {
+          move = jest.fn();
+          wrapper.setProps({ move });
+        })
+
+        test.each([
+          true,
+          false
+        ])(
+          "returns move result %o",
+          (result) => {
+            move.mockImplementation(() => result)
+            const actual = doMove();
+            expect(actual).toBe(result);
+          }
+        )
+      });
+    });
+
     describe("when remove is called", () => {
       beforeEach(() => {
         element.removeChild(item);
@@ -430,13 +474,11 @@ describe("draggable.vue when initialized with list", () => {
   ])(
     "when option %s change for value %o, calls sortable option with %s attribute",
     (attribute, value, sortableAttribute) => {
-      wrapper.setProps({options: { [attribute]: value }});
+      wrapper.setProps({ options: { [attribute]: value } });
       expect(SortableFake.option).toHaveBeenCalledWith(sortableAttribute, value);
     }
   );
-
 })
-
 
 describe("draggable.vue when initialized with value", () => {
   beforeEach(() => {
