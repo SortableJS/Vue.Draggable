@@ -3,7 +3,8 @@ import Sortable from "sortablejs";
 jest.genMockFromModule('sortablejs');
 jest.mock('sortablejs');
 const SortableFake = {
-  destroy: jest.fn()
+  destroy: jest.fn(),
+  option: jest.fn()
 };
 Sortable.mockImplementation(() => SortableFake);
 import draggable from "@/vuedraggable";
@@ -24,10 +25,15 @@ function getEvent(name) {
   return Sortable.mock.calls[0][1][name];
 }
 
+function resetMocks() {
+  Sortable.mockClear();
+  SortableFake.destroy.mockClear();
+  SortableFake.option.mockClear();
+}
+
 describe("draggable.vue when initialized with list", () => {
   beforeEach(() => {
-    Sortable.mockClear();
-    SortableFake.destroy.mockClear();
+    resetMocks();
     items = ["a", "b", "c"];
     wrapper = shallowMount(draggable, {
       attachToDocument: true,
@@ -230,7 +236,7 @@ describe("draggable.vue when initialized with list", () => {
 
   describe("when add is called", () => {
     let newItem;
-    beforeEach(async() => {
+    beforeEach(async () => {
       await Vue.nextTick();
       newItem = document.createElement("div");
       const newContent = document.createTextNode("d");
@@ -387,16 +393,50 @@ describe("draggable.vue when initialized with list", () => {
     })
   });
 
-  it("does calls Sortable destroy when mounted",()=>{
+  it("does calls Sortable destroy when mounted", () => {
     expect(SortableFake.destroy.mock.calls.length).toBe(0);
   });
 
-  it("calls Sortable destroy when destroyed",()=>{
+  it("calls Sortable destroy when destroyed", () => {
     wrapper.destroy();
     expect(SortableFake.destroy).toHaveBeenCalled();
     expect(SortableFake.destroy.mock.calls.length).toBe(1);
   });
-});
+
+  describe("when attribute changes:", () => {
+    const { error } = console;
+    beforeEach(() => {
+      console.error = () => { };
+    });
+    afterEach(() => {
+      console.error = error;
+    })
+
+    test.each([
+      ["sortableOption", "newValue", "sortableOption"],
+      ["to-be-camelized", 1, "toBeCamelized"]
+    ])(
+      "attribute %s change for value %o, calls sortable option with %s attribute",
+      (attribute, value, sortableAttribute) => {
+        vm.$attrs = { [attribute]: value };
+        expect(SortableFake.option).toHaveBeenCalledWith(sortableAttribute, value);
+      }
+    );
+  });
+
+  test.each([
+    ["sortableOption", "newValue", "sortableOption"],
+    ["to-be-camelized", 1, "toBeCamelized"]
+  ])(
+    "when option %s change for value %o, calls sortable option with %s attribute",
+    (attribute, value, sortableAttribute) => {
+      wrapper.setProps({options: { [attribute]: value }});
+      expect(SortableFake.option).toHaveBeenCalledWith(sortableAttribute, value);
+    }
+  );
+
+})
+
 
 describe("draggable.vue when initialized with value", () => {
   beforeEach(() => {
