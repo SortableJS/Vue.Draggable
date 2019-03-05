@@ -30,7 +30,7 @@
         :list="list"
         :disabled="!enabled"
         class="list-group"
-        ghostClass="ghost"
+        ghost-class="ghost"
         @start="dragging = true"
         @end="dragging = false"
       >

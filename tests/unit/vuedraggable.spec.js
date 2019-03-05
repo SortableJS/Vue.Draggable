@@ -33,7 +33,8 @@ describe("draggable.vue when initialized with list", () => {
         list: items
       },
       attrs: {
-        sortableOption: "value"
+        sortableOption: "value",
+        "to-be-camelized": true
       },
       slots: {
         default: items.map(item => `<div>${item}</div>`),
@@ -187,7 +188,8 @@ describe("draggable.vue when initialized with list", () => {
     expect(parameters[0]).toBe(element);
     expect(parameters[1]).toMatchObject({
       draggable: ">*",
-      sortableOption: "value"
+      sortableOption: "value",
+      toBeCamelized: true
     });
   })
 

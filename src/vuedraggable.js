@@ -1,13 +1,5 @@
-const Sortable = require("sortablejs");
-
-function getConsole() {
-  if (typeof window !== "undefined") {
-    return window.console;
-  }
-  return global.console;
-}
-
-const console = getConsole();
+import Sortable from "sortablejs";
+import { console, camelize } from "./util/helper";
 
 function buildAttribute(object, propName, value) {
   if (value == undefined) {
@@ -207,7 +199,12 @@ const draggableComponent = {
       optionsAdded["on" + elt] = emit.bind(this, elt);
     });
 
-    const options = Object.assign({}, this.options, this.$attrs, optionsAdded, {
+    const attributes = Object.keys(this.$attrs).reduce((res, key) => {
+      res[camelize(key)] = this.$attrs[key];
+      return res;
+    }, {});
+
+    const options = Object.assign({}, this.options, attributes, optionsAdded, {
       onMove: (evt, originalEvent) => {
         return this.onDragMove(evt, originalEvent);
       }
@@ -272,8 +269,9 @@ const draggableComponent = {
 
     updateOptions(newOptionValue) {
       for (var property in newOptionValue) {
-        if (readonlyProperties.indexOf(property) == -1) {
-          this._sortable.option(property, newOptionValue[property]);
+        const value = camelize(property);
+        if (readonlyProperties.indexOf(value) == -1) {
+          this._sortable.option(value, newOptionValue[property]);
         }
       }
     },
