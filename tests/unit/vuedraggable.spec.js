@@ -215,6 +215,17 @@ describe("draggable.vue when initialized with list", () => {
     }
   );
 
+  it("creates sortable instance with options", () => {
+    expect(Sortable.mock.calls.length).toBe(1);
+    const parameters = Sortable.mock.calls[0];
+    expect(parameters[0]).toBe(element);
+    expect(parameters[1]).toMatchObject({
+      draggable: ">*",
+      sortableOption: "value",
+      toBeCamelized: true
+    });
+  })
+
   describe("when add is called", () => {
     let newItem;
     beforeEach(async() => {
