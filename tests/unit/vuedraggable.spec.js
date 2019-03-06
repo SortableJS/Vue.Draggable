@@ -302,19 +302,19 @@ describe("draggable.vue when initialized with list", () => {
     })
 
     describe("when calling onMove", () => {
-      let evt;
       let originalEvt;
       let move;
       let doMove;
 
       beforeEach(() => {
-        //item = element.children[2];
         evt = {
           to: element,
-          related: element,
+          related: element.children[1],
           willInsertAfter: false
         };
-        originalEvt = {};
+        originalEvt = {
+          domInfo: true
+        };
         move = getEvent("onMove");
         doMove = () => move(evt, originalEvt);
       });
@@ -329,7 +329,69 @@ describe("draggable.vue when initialized with list", () => {
         beforeEach(() => {
           move = jest.fn();
           wrapper.setProps({ move });
-        })
+        });
+
+        it("calls move with list information", () => {
+          const expectedEvt = {
+            draggedContext: {
+              element: "b",
+              futureIndex: 0,
+              index: 1
+            },
+            relatedContext: {
+              component: vm,
+              element: "a",
+              index: 0,
+              list: ["a", "b", "c"]
+            },
+            to: element,
+            related: element.children[1],
+            willInsertAfter: false
+          };
+          doMove();
+          expect(move.mock.calls.length).toBe(1);
+          expect(move).toHaveBeenCalledWith(expectedEvt, originalEvt);
+        });
+
+
+        test.each([
+          [1, false, 0, { element: "a", index: 0 }],
+          [2, false, 1, { element: "b", index: 1 }],
+          [3, false, 2, { element: "c", index: 2 }],
+
+          // Will insert after is not taken into account if the dragging
+          // element is in the target list
+          [1, true, 0, { element: "a", index: 0 }],
+          [2, true, 1, { element: "b", index: 1 }],
+          [3, true, 2, { element: "c", index: 2 }],
+        ])(
+          "when context is of index %n with insert after %o has futureIndex: %n and context: %o",
+          (index, willInsertAfter, futureIndex, context) => {
+            evt.willInsertAfter = willInsertAfter;
+            evt.related = element.children[index];
+
+            const expectedEvt = {
+              draggedContext: {
+                element: "b",
+                futureIndex,
+                index: 1
+              },
+              relatedContext: {
+                component: vm,
+                element: context.element,
+                index: context.index,
+                list: ["a", "b", "c"]
+              },
+              to: element,
+              related: element.children[index],
+              willInsertAfter
+            };
+
+            doMove();
+            expect(move.mock.calls.length).toBe(1);
+            expect(move).toHaveBeenCalledWith(expectedEvt, originalEvt);
+          }
+        )
 
         test.each([
           true,
@@ -437,16 +499,6 @@ describe("draggable.vue when initialized with list", () => {
     })
   });
 
-  it("does calls Sortable destroy when mounted", () => {
-    expect(SortableFake.destroy.mock.calls.length).toBe(0);
-  });
-
-  it("calls Sortable destroy when destroyed", () => {
-    wrapper.destroy();
-    expect(SortableFake.destroy).toHaveBeenCalled();
-    expect(SortableFake.destroy.mock.calls.length).toBe(1);
-  });
-
   describe("when attribute changes:", () => {
     const { error } = console;
     beforeEach(() => {
@@ -478,6 +530,16 @@ describe("draggable.vue when initialized with list", () => {
       expect(SortableFake.option).toHaveBeenCalledWith(sortableAttribute, value);
     }
   );
+
+  it("does calls Sortable destroy when mounted", () => {
+    expect(SortableFake.destroy.mock.calls.length).toBe(0);
+  });
+
+  it("calls Sortable destroy when destroyed", () => {
+    wrapper.destroy();
+    expect(SortableFake.destroy).toHaveBeenCalled();
+    expect(SortableFake.destroy.mock.calls.length).toBe(1);
+  });
 })
 
 describe("draggable.vue when initialized with value", () => {
