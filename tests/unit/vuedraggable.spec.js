@@ -146,6 +146,16 @@ describe("draggable.vue when initialized with list", () => {
     }
   )
 
+  it("computes indexes", async () => {
+    await Vue.nextTick();
+    //To be altered
+    expect(vm.visibleIndexes).toEqual([-1, 0, 1, 2, -1]);
+  });
+
+  it("set realList", () => {
+    expect(vm.realList).toEqual(["a", "b", "c"]);
+  });
+
   describe("when using component as tag", () => {
     beforeEach(() => {
       input = jest.fn();
@@ -560,12 +570,16 @@ describe("draggable.vue when initialized with value", () => {
     element = wrapper.element;
   });
 
-  it("computes indexes", async () =>{
+  it("computes indexes", async () => {
     await Vue.nextTick();
     expect(vm.visibleIndexes).toEqual([0, 1, 2]);
   });
 
-  it("transition mode should be false", async () =>{
+  it("set realList", () => {
+    expect(vm.realList).toEqual(["a", "b", "c"]);
+  });
+
+  it("transition mode should be false", () => {
     expect(vm.transitionMode).toBe(false);
   });
 
