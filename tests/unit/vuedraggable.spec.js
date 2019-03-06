@@ -152,6 +152,14 @@ describe("draggable.vue when initialized with list", () => {
     expect(vm.visibleIndexes).toEqual([-1, 0, 1, 2, -1]);
   });
 
+  it("update indexes", async () => {
+    await Vue.nextTick();
+    const computeIndexes = jest.fn();
+    wrapper.setMethods({ computeIndexes })
+    wrapper.setProps({list: ["c", "d", "e", "f", "g"]});
+    expect(computeIndexes).toHaveBeenCalled()
+  });
+
   it("set realList", () => {
     expect(vm.realList).toEqual(["a", "b", "c"]);
   });
@@ -573,6 +581,14 @@ describe("draggable.vue when initialized with value", () => {
   it("computes indexes", async () => {
     await Vue.nextTick();
     expect(vm.visibleIndexes).toEqual([0, 1, 2]);
+  });
+
+  it("update indexes", async () => {
+    await Vue.nextTick();
+    const computeIndexes = jest.fn();
+    wrapper.setMethods({ computeIndexes })
+    wrapper.setProps({value: ["c", "d", "e", "f", "g"]});
+    expect(computeIndexes).toHaveBeenCalled()
   });
 
   it("set realList", () => {
