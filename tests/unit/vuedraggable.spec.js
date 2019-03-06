@@ -560,6 +560,15 @@ describe("draggable.vue when initialized with value", () => {
     element = wrapper.element;
   });
 
+  it("computes indexes", async () =>{
+    await Vue.nextTick();
+    expect(vm.visibleIndexes).toEqual([0, 1, 2]);
+  });
+
+  it("transition mode should be false", async () =>{
+    expect(vm.transitionMode).toBe(false);
+  });
+
   describe("when initiating a drag operation", () => {
     let evt;
     beforeEach(() => {
