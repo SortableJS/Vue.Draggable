@@ -760,6 +760,12 @@ describe("draggable.vue when initialized with a transition group", () => {
     expect(wrapper.html()).toEqual(initialRenderTransition);
   })
 
+  it("creates sortable instance with options on transition root", () => {
+    expect(Sortable.mock.calls.length).toBe(1);
+    const parameters = Sortable.mock.calls[0];
+    expect(parameters[0]).toBe(element.children[0]);
+  })
+
   describe("when initiating a drag operation", () => {
     let evt;
     beforeEach(() => {
