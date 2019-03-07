@@ -20,6 +20,7 @@ let element;
 let input;
 const initialRender = "<div><header></header><div>a</div><div>b</div><div>c</div><footer></footer></div>";
 const initialRenderRaw = "<div><div>a</div><div>b</div><div>c</div></div>";
+const initialRenderTransition = "<div><span><div>a</div><div>b</div><div>c</div></span></div>";
 
 function getEvent(name) {
   return Sortable.mock.calls[0][1][name];
@@ -583,6 +584,10 @@ describe("draggable.vue when initialized with value", () => {
     expect(vm.visibleIndexes).toEqual([0, 1, 2]);
   });
 
+  it("renders correctly", () => {
+    expect(wrapper.html()).toEqual(initialRenderRaw);
+  })
+
   it("update indexes", async () => {
     await Vue.nextTick();
     const computeIndexes = jest.fn();
@@ -689,6 +694,163 @@ describe("draggable.vue when initialized with value", () => {
           oldIndex: 1,
           newIndex: 0,
           from: element
+        };
+        expect(wrapper.emitted().update).toEqual([[expectedEvt]]);
+      })
+
+      it("sends a change event", async () => {
+        await Vue.nextTick();
+        const expectedEvt = { moved: { element: "b", oldIndex: 1, newIndex: 0 } };
+        expect(wrapper.emitted().change).toEqual([[expectedEvt]]);
+      })
+    });
+
+    describe("when sending DragEnd", () => {
+      let endEvt;
+      beforeEach(() => {
+        endEvt = {
+          data: "data"
+        };
+        const onEnd = getEvent("onEnd");
+        onEnd(endEvt);
+      })
+
+      it("sends a update event", async () => {
+        await Vue.nextTick();
+        expect(wrapper.emitted().end).toEqual([[endEvt]]);
+      })
+    })
+  });
+});
+
+describe("draggable.vue when initialized with a transition group", () => {
+  beforeEach(() => {
+    Sortable.mockClear();
+    items = ["a", "b", "c"];
+    const inside = items.map(item => `<div>${item}</div>`).join("");
+    const template =`<transition-group>${inside}</transition-group>`
+    wrapper = shallowMount(draggable, {
+      attachToDocument: true,
+      propsData: {
+        value: items
+      },
+      slots: {
+        default: template,
+      }
+    });
+    vm = wrapper.vm;
+    props = vm.$options.props;
+    element = wrapper.element;
+  });
+
+  it("computes indexes", async () => {
+    await Vue.nextTick();
+    expect(vm.visibleIndexes).toEqual([0, 1, 2]);
+  });
+
+  it("set realList", () => {
+    expect(vm.realList).toEqual(["a", "b", "c"]);
+  });
+
+  it("transition mode should be false", () => {
+    expect(vm.transitionMode).toBe(true);
+  });
+
+  it("enders correctly", () => {
+    expect(wrapper.html()).toEqual(initialRenderTransition);
+  })
+
+  describe("when initiating a drag operation", () => {
+    let evt;
+    beforeEach(() => {
+      item = element.children[0].children[1];
+      evt = { item };
+      const start = getEvent("onStart");
+      start(evt);
+    });
+
+    it("sends a start event", async () => {
+      await Vue.nextTick();
+      expect(wrapper.emitted()).toEqual({
+        start: [[evt]]
+      });
+    })
+
+    it("sets context", async () => {
+      await Vue.nextTick();
+      expect(vm.context).toEqual({
+        element: "b",
+        index: 1
+      });
+    })
+
+    describe("when remove is called", () => {
+      beforeEach(() => {
+        element.children[0].removeChild(item);
+        const remove = getEvent("onRemove");
+        remove({
+          item,
+          oldIndex: 1
+        });
+      })
+
+      it("DOM changes should be reverted", async () => {
+        await Vue.nextTick();
+        expect(wrapper.html()).toEqual(initialRenderTransition);
+      })
+
+      it("input should with updated value", async () => {
+        await Vue.nextTick();
+        const expected = ["a", "c"];
+        expect(wrapper.emitted().input).toEqual([[expected]]);
+      })
+
+      it("sends a remove event", async () => {
+        await Vue.nextTick();
+        const expectedEvt = { item, oldIndex: 1 };
+        expect(wrapper.emitted().remove).toEqual([[expectedEvt]]);
+      })
+
+      it("sends a change event", async () => {
+        await Vue.nextTick();
+        const expectedEvt = { removed: { element: "b", oldIndex: 1 } };
+        expect(wrapper.emitted().change).toEqual([[expectedEvt]]);
+      })
+    })
+
+    describe("when update is called", () => {
+      beforeEach(() => {
+        const transitionRoot = element.children[0];
+        const firstDraggable = transitionRoot.children[0];
+        transitionRoot.removeChild(item);
+        transitionRoot.insertBefore(item, firstDraggable);
+        const update = getEvent("onUpdate");
+        update({
+          item,
+          oldIndex: 1,
+          newIndex: 0,
+          from: transitionRoot
+        });
+      })
+
+      it("DOM changes should be reverted", async () => {
+        await Vue.nextTick();
+        expect(wrapper.html()).toEqual(initialRenderTransition);
+      })
+
+      it("send an input event", async () => {
+        await Vue.nextTick();
+        const expected = ["b", "a", "c"];
+        expect(wrapper.emitted().input).toEqual([[expected]]);
+      })
+
+      it("sends a update event", async () => {
+        await Vue.nextTick();
+        const expectedEvt = {
+          item,
+          oldIndex: 1,
+          newIndex: 0,
+          from: element.children[0]
         };
         expect(wrapper.emitted().update).toEqual([[expectedEvt]]);
       })
