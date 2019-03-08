@@ -580,7 +580,6 @@ describe("draggable.vue when initialized with list", () => {
     })
   });
 
-
   describe("when initiating a drag operation in clone context", () => {
     let evt;
     beforeEach(() => {
@@ -592,6 +591,73 @@ describe("draggable.vue when initialized with list", () => {
         },
         attrs: {
           group: { pull: "clone" }
+        },
+        slots: {
+          default: items.map(item => `<div>${item}</div>`),
+        }
+      });
+      vm = wrapper.vm;
+      element = wrapper.element;
+      item = element.children[1];
+      evt = { item };
+      const start = getEvent("onStart");
+      start(evt);
+    });
+
+    it("sets the isCloning flag", () => {
+      expect(vm.isCloning).toBe(true);
+    })
+
+    describe("when remove is called", () => {
+      beforeEach(() => {
+        var clone = item.cloneNode(true);
+        wrapper.element.insertBefore(clone, item);
+        wrapper.element.removeChild(item);
+        const remove = getEvent("onRemove");
+        remove({
+          item,
+          clone,
+          oldIndex: 1
+        });
+      })
+
+      it("DOM changes should be reverted", async () => {
+        await Vue.nextTick();
+        expect(wrapper.html()).toEqual(initialRenderRaw);
+      })
+
+      it("list should be not updated", async () => {
+        await Vue.nextTick();
+        expect(vm.list).toEqual(["a", "b", "c"]);
+      })
+
+      it("sends a remove event", async () => {
+        await Vue.nextTick();
+        expect(wrapper.emitted().remove).toEqual([[{
+          item,
+          clone: item,
+          oldIndex: 1
+        }]]);
+      })
+
+      it("does not send a change event", async () => {
+        await Vue.nextTick();
+        expect(wrapper.emitted().change).toBeUndefined();
+      })
+    })
+  });
+
+  describe("when initiating a drag operation in clone context using a pull function", () => {
+    let evt;
+    beforeEach(() => {
+      resetMocks();
+      wrapper = shallowMount(draggable, {
+        attachToDocument: true,
+        propsData: {
+          list: items
+        },
+        attrs: {
+          group: { pull: () => "clone" }
         },
         slots: {
           default: items.map(item => `<div>${item}</div>`),
