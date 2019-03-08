@@ -595,6 +595,16 @@ describe("draggable.vue when initialized with list", () => {
         expect(SortableFake.option).toHaveBeenCalledWith(sortableAttribute, value);
       }
     );
+
+    test.each(["Start", "Add", "Remove", "Update", "End", "Choose", "Sort", "Filter", "Clone", "Move"])
+    ("do not call option when updating option on%s",
+    (callBack) =>{
+      vm.$attrs = { [`on${callBack}`]: jest.fn() };
+      expect(SortableFake.option).not.toHaveBeenCalled();
+    });
+
+
+
   });
 
   test.each([
@@ -616,6 +626,11 @@ describe("draggable.vue when initialized with list", () => {
     wrapper.destroy();
     expect(SortableFake.destroy).toHaveBeenCalled();
     expect(SortableFake.destroy.mock.calls.length).toBe(1);
+  });
+
+  it("does not throw when sortable is not set", () => {
+    delete vm._sortable;
+    expect(() =>wrapper.destroy()).not.toThrow();
   });
 })
 
