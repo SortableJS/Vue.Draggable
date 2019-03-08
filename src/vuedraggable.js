@@ -162,10 +162,6 @@ const draggableComponent = {
     return h(this.getTag(), attributes, children);
   },
 
-  renderError (h, err) {
-    return h('pre', { style: { color: 'red' }}, err.stack)
-  },
-
   created() {
     if (this.list !== null && this.value !== null) {
       console.error(

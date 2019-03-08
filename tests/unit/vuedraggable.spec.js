@@ -56,6 +56,64 @@ describe("draggable.vue when initialized with list", () => {
     element = wrapper.element;
   });
 
+  describe("when initialized with incorrect props", () => {
+    const { error } = console;
+    const { warn } = console;
+
+    beforeEach(() => {
+      console.error = jest.fn();
+      console.warn = jest.fn();
+    });
+
+    afterEach(() => {
+      console.error = error;
+      console.warn = warn;
+    })
+
+    it("log an error when list and value are both not null", () => {
+      wrapper = shallowMount(draggable, {
+        attachToDocument: true,
+        propsData: {
+          list: [],
+          value: []
+        },
+        slots: {
+          default: ""
+        }
+      });
+      expect(console.error).toBeCalledWith("Value and list props are mutually exclusive! Please set one or another.");
+    });
+
+    it("warns when options is used", () => {
+      wrapper = shallowMount(draggable, {
+        attachToDocument: true,
+        propsData: {
+          options: {
+            group: "led zeppelin"
+          }
+        },
+        slots: {
+          default: ""
+        }
+      });
+      expect(console.warn).toBeCalledWith("Options props is deprecated, add sortable options directly as vue.draggable item, or use v-bind. See https://github.com/SortableJS/Vue.Draggable/blob/master/documentation/migrate.md#options-props");
+    });
+
+    it("warns when element is used", () => {
+      wrapper = shallowMount(draggable, {
+        attachToDocument: true,
+        propsData: {
+         element: "li"
+        },
+        slots: {
+          default: ""
+        }
+      });
+      expect(console.warn).toBeCalledWith( "Element props is deprecated please use tag props instead. See https://github.com/SortableJS/Vue.Draggable/blob/master/documentation/migrate.md#element-props");
+    });
+
+  });
+
   it("instantiate without error", () => {
     expect(wrapper).not.toBeUndefined();
   });
@@ -157,7 +215,7 @@ describe("draggable.vue when initialized with list", () => {
     await Vue.nextTick();
     const computeIndexes = jest.fn();
     wrapper.setMethods({ computeIndexes })
-    wrapper.setProps({list: ["c", "d", "e", "f", "g"]});
+    wrapper.setProps({ list: ["c", "d", "e", "f", "g"] });
     expect(computeIndexes).toHaveBeenCalled()
   });
 
@@ -592,7 +650,7 @@ describe("draggable.vue when initialized with value", () => {
     await Vue.nextTick();
     const computeIndexes = jest.fn();
     wrapper.setMethods({ computeIndexes })
-    wrapper.setProps({value: ["c", "d", "e", "f", "g"]});
+    wrapper.setProps({ value: ["c", "d", "e", "f", "g"] });
     expect(computeIndexes).toHaveBeenCalled()
   });
 
@@ -728,7 +786,7 @@ describe("draggable.vue when initialized with a transition group", () => {
     Sortable.mockClear();
     items = ["a", "b", "c"];
     const inside = items.map(item => `<div>${item}</div>`).join("");
-    const template =`<transition-group>${inside}</transition-group>`
+    const template = `<transition-group>${inside}</transition-group>`
     wrapper = shallowMount(draggable, {
       attachToDocument: true,
       propsData: {
