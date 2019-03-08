@@ -363,6 +363,10 @@ describe("draggable.vue when initialized with list", () => {
       start(evt);
     });
 
+    it("sets the isCloning flag", () => {
+      expect(vm.isCloning).toBe(false);
+    })
+
     it("sends a start event", async () => {
       await Vue.nextTick();
       expect(wrapper.emitted()).toEqual({
@@ -600,6 +604,10 @@ describe("draggable.vue when initialized with list", () => {
       const start = getEvent("onStart");
       start(evt);
     });
+
+    it("sets the isCloning flag", () => {
+      expect(vm.isCloning).toBe(true);
+    })
 
     describe("when remove is called", () => {
       beforeEach(() => {
