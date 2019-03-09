@@ -28,23 +28,13 @@
           aria-label="Basic example"
           key="footer"
         >
-          <button
-            class="btn btn-secondary"
-            @click="add"
-          >Add</button>
-          <button
-            class="btn btn-secondary"
-            @click="replace"
-          >Replace</button>
+          <button class="btn btn-secondary" @click="add">Add</button>
+          <button class="btn btn-secondary" @click="replace">Replace</button>
         </div>
       </draggable>
     </div>
 
-    <rawDisplayer
-      class="col-3"
-      :value="list"
-      title="List"
-    />
+    <rawDisplayer class="col-3" :value="list" title="List" />
   </div>
 </template>
 
