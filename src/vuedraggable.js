@@ -459,7 +459,10 @@ const draggableComponent = {
       const draggedContext = this.context;
       const futureIndex = this.computeFutureIndex(relatedContext, evt);
       Object.assign(draggedContext, { futureIndex });
-      const sendEvt = Object.assign({}, evt, { relatedContext, draggedContext });
+      const sendEvt = Object.assign({}, evt, {
+        relatedContext,
+        draggedContext
+      });
       return onMove(sendEvt, originalEvent);
     },
 

@@ -4,9 +4,12 @@
       <h3>Draggable with footer</h3>
 
       <draggable
+        tag="transition-group"
+        :componentData="componentData"
         :list="list"
         class="list-group"
         draggable=".item"
+        :animation="100"
         @start="dragging = true"
         @end="dragging = false"
       >
@@ -23,14 +26,25 @@
           class="btn-group list-group-item"
           role="group"
           aria-label="Basic example"
+          key="footer"
         >
-          <button class="btn btn-secondary" @click="add">Add</button>
-          <button class="btn btn-secondary" @click="replace">Replace</button>
+          <button
+            class="btn btn-secondary"
+            @click="add"
+          >Add</button>
+          <button
+            class="btn btn-secondary"
+            @click="replace"
+          >Replace</button>
         </div>
       </draggable>
     </div>
 
-    <rawDisplayer class="col-3" :value="list" title="List" />
+    <rawDisplayer
+      class="col-3"
+      :value="list"
+      title="List"
+    />
   </div>
 </template>
 
@@ -51,7 +65,13 @@ export default {
         { name: "Joao", id: 1 },
         { name: "Jean", id: 2 }
       ],
-      dragging: false
+      dragging: false,
+      componentData: {
+        props: {
+          type: "transition",
+          name: "flip-list"
+        }
+      }
     };
   },
   methods: {
@@ -64,4 +84,12 @@ export default {
   }
 };
 </script>
-<style scoped></style>
+<style scoped>
+.flip-list-move {
+  transition: transform 0.5s;
+}
+
+.no-move {
+  transition: transform 0s;
+}
+</style>

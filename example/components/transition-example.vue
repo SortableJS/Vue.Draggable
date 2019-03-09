@@ -16,7 +16,7 @@
         @start="isDragging = true"
         @end="isDragging = false"
       >
-        <transition-group type="transition" :name="'flip-list'">
+        <transition-group type="transition" name="flip-list">
           <li
             class="list-group-item"
             v-for="element in list"
