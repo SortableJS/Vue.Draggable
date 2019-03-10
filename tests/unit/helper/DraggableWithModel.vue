@@ -1,5 +1,5 @@
 <template>
-  <draggable :list="array" tag="span">
+  <draggable v-model="array" tag="span">
     <div
       v-for="item in array"
       :key="item"

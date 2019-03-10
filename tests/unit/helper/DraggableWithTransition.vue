@@ -1,9 +1,11 @@
 <template>
-  <draggable :list="array" tag="span">
-    <div
-      v-for="item in array"
-      :key="item"
-    >{{item}}</div>
+  <draggable v-model="array">
+    <transition-group>
+      <div
+        v-for="item in array"
+        :key="item"
+      >{{item}}</div>
+    </transition-group>
   </draggable>
 </template>
 <script>
