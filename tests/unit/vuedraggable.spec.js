@@ -207,8 +207,7 @@ describe("draggable.vue when initialized with list", () => {
 
   it("computes indexes", async () => {
     await Vue.nextTick();
-    //To be altered
-    expect(vm.visibleIndexes).toEqual([-1, 0, 1, 2, -1]);
+    expect(vm.visibleIndexes).toEqual([-1, 0, 1, 2, 3]);
   });
 
   it("update indexes", async () => {

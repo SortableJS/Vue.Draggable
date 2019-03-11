@@ -28,13 +28,16 @@ function computeVmIndex(vnodes, element) {
   return vnodes.map(elt => elt.elm).indexOf(element);
 }
 
-function computeIndexes(slots, children, isTransition) {
+function computeIndexes(slots, children, isTransition, footerOffset) {
   if (!slots) {
     return [];
   }
 
   const elmFromNodes = slots.map(elt => elt.elm);
-  const rawIndexes = [...children].map(elt => elmFromNodes.indexOf(elt));
+  const footerIndex = children.length - footerOffset;
+  const rawIndexes = [...children].map((elt, idx) =>
+    idx >= footerIndex ? elmFromNodes.length : elmFromNodes.indexOf(elt)
+  );
   return isTransition ? rawIndexes.filter(ind => ind !== -1) : rawIndexes;
 }
 
@@ -140,6 +143,7 @@ const draggableComponent = {
       }
     }
     let headerOffset = 0;
+    let footerOffset = 0;
     let children = slots;
     const { header, footer } = this.$slots;
     if (header) {
@@ -147,9 +151,11 @@ const draggableComponent = {
       children = children ? [...header, ...children] : [...header];
     }
     if (footer) {
+      footerOffset = footer.length;
       children = children ? [...children, ...footer] : [...footer];
     }
     this.headerOffset = headerOffset;
+    this.footerOffset = footerOffset;
     var attributes = null;
     const update = (name, value) => {
       attributes = buildAttribute(attributes, name, value);
@@ -295,7 +301,8 @@ const draggableComponent = {
         this.visibleIndexes = computeIndexes(
           this.getChildrenNodes(),
           this.rootContainer.children,
-          this.transitionMode
+          this.transitionMode,
+          this.footerOffset
         );
       });
     },

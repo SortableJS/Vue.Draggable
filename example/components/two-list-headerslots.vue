@@ -42,8 +42,8 @@
           role="group"
           aria-label="Basic example"
         >
-          <button class="btn btn-secondary" @click="add">Add</button>
-          <button class="btn btn-secondary" @click="replace">Replace</button>
+          <button class="btn btn-secondary" @click="add2">Add</button>
+          <button class="btn btn-secondary" @click="replace2">Replace</button>
         </div>
       </draggable>
     </div>
@@ -58,7 +58,7 @@
 import draggable from "@/vuedraggable";
 let id = 1;
 export default {
-  name: "headerslots",
+  name: "two-list-headerslots",
   display: "Two list header slot",
   order: 13,
   components: {
@@ -80,8 +80,15 @@ export default {
     },
     replace: function() {
       this.list = [{ name: "Edgard", id: id++ }];
+    },
+    add2: function() {
+      this.list2.push({ name: "Juan " + id, id: id++ });
+    },
+    replace2: function() {
+      this.list2 = [{ name: "Edgard", id: id++ }];
     }
   }
 };
 </script>
-<style scoped></style>
+<style scoped>
+</style>
