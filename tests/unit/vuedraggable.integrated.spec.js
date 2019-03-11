@@ -33,23 +33,20 @@ describe.each([
   [DraggableWithTransition, "draggable with transition", expectedDomTransition]
 ])
   (
-    "should update list with component: %s %s",
+    "should update list and DOM with component: %s %s",
     (component, _, expectedDom) => {
 
-      beforeEach(() => {
-        jest.resetAllMocks();
-        wrapper = mount(component, {
-          attachToDocument: true
-        });
-        vm = wrapper.vm;
-        element = wrapper.find('span').element;
-      });
-
       describe("when handling sort", () => {
-        let item;
 
         beforeEach(async () => {
-          item = element.children[2];
+          jest.resetAllMocks();
+          wrapper = mount(component, {
+            attachToDocument: true
+          });
+          vm = wrapper.vm;
+          element = wrapper.find('span').element;
+
+          const item = element.children[2];
           const startEvt = { item };
           getEvent("onStart")(startEvt);
           await Vue.nextTick();
@@ -64,7 +61,7 @@ describe.each([
             from: element
           });
           await Vue.nextTick();
-        })
+        });
 
         it("sends a change event", async () => {
           const draggableWrapper = wrapper.find(draggable);
