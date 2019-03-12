@@ -2496,6 +2496,32 @@ module.exports = __webpack_require__("584a").Array.isArray;
 
 /***/ }),
 
+/***/ "f559":
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+// 21.1.3.18 String.prototype.startsWith(searchString [, position ])
+
+var $export = __webpack_require__("5ca1");
+var toLength = __webpack_require__("9def");
+var context = __webpack_require__("d2c8");
+var STARTS_WITH = 'startsWith';
+var $startsWith = ''[STARTS_WITH];
+
+$export($export.P + $export.F * __webpack_require__("5147")(STARTS_WITH), 'String', {
+  startsWith: function startsWith(searchString /* , position = 0 */) {
+    var that = context(this, searchString, STARTS_WITH);
+    var index = toLength(Math.min(arguments.length > 1 ? arguments[1] : undefined, that.length));
+    var search = String(searchString);
+    return $startsWith
+      ? $startsWith.call(that, search, index)
+      : that.slice(index, index + search.length) === search;
+  }
+});
+
+
+/***/ }),
+
 /***/ "f772":
 /***/ (function(module, exports) {
 
@@ -2536,6 +2562,9 @@ if (typeof window !== 'undefined') {
 // EXTERNAL MODULE: ./node_modules/@babel/runtime-corejs2/core-js/object/assign.js
 var object_assign = __webpack_require__("5176");
 var assign_default = /*#__PURE__*/__webpack_require__.n(object_assign);
+
+// EXTERNAL MODULE: ./node_modules/core-js/modules/es6.string.starts-with.js
+var es6_string_starts_with = __webpack_require__("f559");
 
 // EXTERNAL MODULE: ./node_modules/@babel/runtime-corejs2/core-js/object/keys.js
 var keys = __webpack_require__("a4bb");
@@ -2603,6 +2632,7 @@ var helper = __webpack_require__("c649");
 
 
 
+
 function buildAttribute(object, propName, value) {
   if (value == undefined) {
     return object;
@@ -2630,7 +2660,7 @@ function computeVmIndex(vnodes, element) {
   }).indexOf(element);
 }
 
-function _computeIndexes(slots, children, isTransition) {
+function _computeIndexes(slots, children, isTransition, footerOffset) {
   if (!slots) {
     return [];
   }
@@ -2638,9 +2668,10 @@ function _computeIndexes(slots, children, isTransition) {
   var elmFromNodes = slots.map(function (elt) {
     return elt.elm;
   });
+  var footerIndex = children.length - footerOffset;
 
-  var rawIndexes = _toConsumableArray(children).map(function (elt) {
-    return elmFromNodes.indexOf(elt);
+  var rawIndexes = _toConsumableArray(children).map(function (elt, idx) {
+    return idx >= footerIndex ? elmFromNodes.length : elmFromNodes.indexOf(elt);
   });
 
   return isTransition ? rawIndexes.filter(function (ind) {
@@ -2741,6 +2772,8 @@ var draggableComponent = {
     };
   },
   render: function render(h) {
+    var _this3 = this;
+
     var slots = this.$slots.default;
 
     if (slots && slots.length === 1) {
@@ -2752,6 +2785,7 @@ var draggableComponent = {
     }
 
     var headerOffset = 0;
+    var footerOffset = 0;
     var children = slots;
     var _this$$slots = this.$slots,
         header = _this$$slots.header,
@@ -2763,15 +2797,26 @@ var draggableComponent = {
     }
 
     if (footer) {
+      footerOffset = footer.length;
       children = children ? [].concat(_toConsumableArray(children), _toConsumableArray(footer)) : _toConsumableArray(footer);
     }
 
     this.headerOffset = headerOffset;
+    this.footerOffset = footerOffset;
     var attributes = null;
 
     var update = function update(name, value) {
       attributes = buildAttribute(attributes, name, value);
     };
+
+    var attrs = keys_default()(this.$attrs).filter(function (key) {
+      return key === "id" || key.startsWith("data-");
+    }).reduce(function (res, key) {
+      res[key] = _this3.$attrs[key];
+      return res;
+    }, {});
+
+    update("attrs", attrs);
 
     if (this.componentData) {
       var _this$componentData = this.componentData,
@@ -2797,7 +2842,7 @@ var draggableComponent = {
     }
   },
   mounted: function mounted() {
-    var _this3 = this;
+    var _this4 = this;
 
     this.noneFunctionalComponentMode = this.getTag().toLowerCase() !== this.$el.nodeName.toLowerCase();
 
@@ -2807,20 +2852,20 @@ var draggableComponent = {
 
     var optionsAdded = {};
     eventsListened.forEach(function (elt) {
-      optionsAdded["on" + elt] = delegateAndEmit.call(_this3, elt);
+      optionsAdded["on" + elt] = delegateAndEmit.call(_this4, elt);
     });
     eventsToEmit.forEach(function (elt) {
-      optionsAdded["on" + elt] = emit.bind(_this3, elt);
+      optionsAdded["on" + elt] = emit.bind(_this4, elt);
     });
 
     var attributes = keys_default()(this.$attrs).reduce(function (res, key) {
-      res[Object(helper["a" /* camelize */])(key)] = _this3.$attrs[key];
+      res[Object(helper["a" /* camelize */])(key)] = _this4.$attrs[key];
       return res;
     }, {});
 
     var options = assign_default()({}, this.options, attributes, optionsAdded, {
       onMove: function onMove(evt, originalEvent) {
-        return _this3.onDragMove(evt, originalEvent);
+        return _this4.onDragMove(evt, originalEvent);
       }
     });
 
@@ -2897,10 +2942,10 @@ var draggableComponent = {
       return this.transitionMode ? rawNodes[0].child.$slots.default : rawNodes;
     },
     computeIndexes: function computeIndexes() {
-      var _this4 = this;
+      var _this5 = this;
 
       this.$nextTick(function () {
-        _this4.visibleIndexes = _computeIndexes(_this4.getChildrenNodes(), _this4.rootContainer.children, _this4.transitionMode);
+        _this5.visibleIndexes = _computeIndexes(_this5.getChildrenNodes(), _this5.rootContainer.children, _this5.transitionMode, _this5.footerOffset);
       });
     },
     getUnderlyingVm: function getUnderlyingVm(htmlElt) {
@@ -2928,10 +2973,10 @@ var draggableComponent = {
       return __vue__.$parent;
     },
     emitChanges: function emitChanges(evt) {
-      var _this5 = this;
+      var _this6 = this;
 
       this.$nextTick(function () {
-        _this5.$emit("change", evt);
+        _this6.$emit("change", evt);
       });
     },
     alterList: function alterList(onList) {
@@ -3098,12 +3143,12 @@ var draggableComponent = {
         futureIndex: futureIndex
       });
 
-      assign_default()(evt, {
+      var sendEvt = assign_default()({}, evt, {
         relatedContext: relatedContext,
         draggedContext: draggedContext
       });
 
-      return onMove(evt, originalEvent);
+      return onMove(sendEvt, originalEvent);
     },
     onDragEnd: function onDragEnd() {
       this.computeIndexes();

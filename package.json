@@ -1,6 +1,6 @@
 {
   "name": "vuedraggable",
-  "version": "2.19.1",
+  "version": "2.19.2",
   "description": "draggable component for vue",
   "main": "dist/vuedraggable.umd.min.js",
   "private": false,
@@ -24,7 +24,7 @@
     "component"
   ],
   "dependencies": {
-    "sortablejs": "^1.8.3"
+    "sortablejs": "^1.8.4"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.4.0",
