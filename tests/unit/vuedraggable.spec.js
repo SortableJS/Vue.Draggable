@@ -520,47 +520,52 @@ describe("draggable.vue when initialized with list", () => {
       })
     })
 
-    describe("when update is called", () => {
-      beforeEach(() => {
-        const firstDraggable = element.children[1];
-        element.removeChild(item);
-        element.insertBefore(item, firstDraggable);
-        const update = getEvent("onUpdate");
-        update({
-          item,
-          oldIndex: 2,
-          newIndex: 1,
-          from: element
+    describe.each([
+      [ 1, ["b", "a", "c"]],
+      [ 3, ["a", "c", "b"]]
+    ])
+      ("when update is called with new index being %i",
+        (index, expectedList) => {
+          beforeEach(() => {
+            const firstDraggable = element.children[index];
+            element.removeChild(item);
+            element.insertBefore(item, firstDraggable);
+            const update = getEvent("onUpdate");
+            update({
+              item,
+              oldIndex: 2,
+              newIndex: index,
+              from: element
+            });
+          })
+
+          it("DOM changes should be reverted", async () => {
+            await Vue.nextTick();
+            expect(wrapper.html()).toEqual(initialRender);
+          })
+
+          it("list should be updated", async () => {
+            await Vue.nextTick();
+            expect(vm.list).toEqual(expectedList);
+          })
+
+          it("sends a update event", async () => {
+            await Vue.nextTick();
+            const expectedEvt = {
+              item,
+              oldIndex: 2,
+              newIndex: index,
+              from: element
+            };
+            expect(wrapper.emitted().update).toEqual([[expectedEvt]]);
+          })
+
+          it("sends a change event", async () => {
+            await Vue.nextTick();
+            const expectedEvt = { moved: { element: "b", oldIndex: 1, newIndex: index-1 } };
+            expect(wrapper.emitted().change).toEqual([[expectedEvt]]);
+          })
         });
-      })
-
-      it("DOM changes should be reverted", async () => {
-        await Vue.nextTick();
-        expect(wrapper.html()).toEqual(initialRender);
-      })
-
-      it("list should be updated", async () => {
-        await Vue.nextTick();
-        expect(vm.list).toEqual(["b", "a", "c"]);
-      })
-
-      it("sends a update event", async () => {
-        await Vue.nextTick();
-        const expectedEvt = {
-          item,
-          oldIndex: 2,
-          newIndex: 1,
-          from: element
-        };
-        expect(wrapper.emitted().update).toEqual([[expectedEvt]]);
-      })
-
-      it("sends a change event", async () => {
-        await Vue.nextTick();
-        const expectedEvt = { moved: { element: "b", oldIndex: 1, newIndex: 0 } };
-        expect(wrapper.emitted().change).toEqual([[expectedEvt]]);
-      })
-    });
 
     describe("when sending DragEnd", () => {
       let endEvt;
