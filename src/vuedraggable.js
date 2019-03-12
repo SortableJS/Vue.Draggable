@@ -160,6 +160,14 @@ const draggableComponent = {
     const update = (name, value) => {
       attributes = buildAttribute(attributes, name, value);
     };
+    const attrs = Object.keys(this.$attrs)
+      .filter(key => key === "id" || key.startsWith("data-"))
+      .reduce((res, key) => {
+        res[key] = this.$attrs[key];
+        return res;
+      }, {});
+    update("attrs", attrs);
+
     if (this.componentData) {
       const { on, props } = this.componentData;
       update("on", on);

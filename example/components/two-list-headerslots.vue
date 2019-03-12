@@ -3,7 +3,14 @@
     <div class="col-4">
       <h3>First draggable with header</h3>
 
-      <draggable :list="list" class="list-group" draggable=".item" group="a">
+      <draggable
+        id="first"
+        data-source="juju"
+        :list="list"
+        class="list-group"
+        draggable=".item"
+        group="a"
+      >
         <div
           class="list-group-item item"
           v-for="element in list"

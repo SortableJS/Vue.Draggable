@@ -767,9 +767,50 @@ describe("draggable.vue when initialized with list", () => {
     expect(SortableFake.destroy.mock.calls.length).toBe(1);
   });
 
-  it("does not throw when sortable is not set", () => {
+  it("does not throw on destroy when sortable is not set", () => {
     delete vm._sortable;
     expect(() => wrapper.destroy()).not.toThrow();
+  });
+
+  it("renders id as html attribute", () => {
+    wrapper = shallowMount(draggable, {
+      propsData: {
+        list: []
+      },
+      attrs: {
+        id: "my-id",
+      },
+      slots: {
+        default: "",
+      }
+    });
+
+    const element = wrapper.find("#my-id");
+    expect(element.is("div")).toBe(true);
+    expect(element.html()).toEqual(wrapper.html());
+  });
+
+  test.each([
+    ["data-valor", "a"],
+    ["data-valor2", "bd"],
+    ["data-attribute", "efg"]
+  ])(
+    "renders attribute %s with value %s as html attribute", 
+    (attribute, value) => {
+    wrapper = shallowMount(draggable, {
+      propsData: {
+        list: []
+      },
+      attrs: {
+        [attribute]: value,
+      },
+      slots: {
+        default: "",
+      }
+    });
+    const element = wrapper.find(`[${attribute}='${value}']`);
+    expect(element.is("div")).toBe(true);
+    expect(element.html()).toEqual(wrapper.html());
   });
 })
 
