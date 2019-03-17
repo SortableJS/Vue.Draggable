@@ -356,12 +356,12 @@ Ex:
     <button slot="footer" @click="addPeople">Add</button>
 </draggable>
 ```
- ### Gochas
+ ### Gotchas
  
  Children elements inside v-for should be keyed as any element in Vue.js. Be carefull to provide revelant key values in particular:
  * typically providing array index as keys won't work as key should be linked to the items content
  * cloned elements should provide updated keys, it is doable using the [clone props](#clone) for example
-
+ * for inputs to set cursor/caret position on click set options filter and preventOnFilter to 'input' and false respectively
 
  ### Example 
   * [Clone](https://sortablejs.github.io/Vue.Draggable/#/custom-clone)
