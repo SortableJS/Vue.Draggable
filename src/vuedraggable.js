@@ -169,9 +169,10 @@ const draggableComponent = {
     update("attrs", attrs);
 
     if (this.componentData) {
-      const { on, props } = this.componentData;
+      const { on, props, attrs } = this.componentData;
       update("on", on);
       update("props", props);
+      Object.assign(attributes.attrs, attrs);
     }
     return h(this.getTag(), attributes, children);
   },
