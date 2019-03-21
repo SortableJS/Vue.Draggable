@@ -47,6 +47,14 @@ https://david-desmaisons.github.io/draggable-example/
 
 Admin Dashboard Templates made with Vue, React and Angular.
 
+
+## Donate
+
+Find this project useful? You can buy me a :coffee: or a :beer:
+
+[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif)](https://www.paypal.com/donate/?token=w2ATDOwaPqx8SByX1HiHiXuSUPX5py0ab2l3PNBX2AimUvBcntNNRxYOuiqMSE8H3MswLW&fromUL=true&country.x=US&locale.x=en_US)
+
+
 ## Installation
 
 ### With npm or yarn 
