@@ -54,17 +54,6 @@ function delegateAndEmit(evtName) {
   };
 }
 
-function groupIsClone(group) {
-  if (!group) {
-    return false;
-  }
-  const { pull } = group;
-  if (typeof pull === "function") {
-    return pull() === "clone";
-  }
-  return pull === "clone";
-}
-
 const eventsListened = ["Start", "Add", "Remove", "Update", "End"];
 const eventsToEmit = ["Choose", "Sort", "Filter", "Clone"];
 const readonlyProperties = ["Move", ...eventsListened, ...eventsToEmit].map(
@@ -125,7 +114,6 @@ const draggableComponent = {
       transitionMode: false,
       noneFunctionalComponentMode: false,
       init: false,
-      isCloning: false
     };
   },
 
@@ -268,12 +256,6 @@ const draggableComponent = {
       return this.tag || this.element;
     },
 
-    getIsCloning() {
-      const { group } = this.$attrs;
-      const groupConsideringOption = group || this.getOptionGroup();
-      return groupIsClone(groupConsideringOption);
-    },
-
     getOptionGroup() {
       const { options } = this;
       if (!options) {
@@ -404,7 +386,6 @@ const draggableComponent = {
 
     onDragStart(evt) {
       this.context = this.getUnderlyingVm(evt.item);
-      this.isCloning = this.getIsCloning();
       evt.item._underlying_vm_ = this.clone(this.context.element);
       draggingElement = evt.item;
     },
@@ -423,8 +404,8 @@ const draggableComponent = {
     },
 
     onDragRemove(evt) {
-      insertNodeAt(this.rootContainer, evt.item, evt.oldIndex);
-      if (this.isCloning) {
+      insertNodeAt(this.rootContainer, evt.item, evt.oldIndex);    
+      if ( evt.pullMode === "clone") {
         removeNode(evt.clone);
         return;
       }
