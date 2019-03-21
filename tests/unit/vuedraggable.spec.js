@@ -232,6 +232,9 @@ describe("draggable.vue when initialized with list", () => {
             on: {
               input
             },
+            attrs: {
+              attribute1: "value1"
+            },
             props: {
               prop1: "info",
               prop2: true
@@ -254,11 +257,17 @@ describe("draggable.vue when initialized with list", () => {
       expect(fakeChild.props("prop1")).toEqual("info");
     })
 
-    it("pass data to tag child", async () => {
+    it("pass event listener to tag child", async () => {
       const child = wrapper.find(Fake);
       const evt = { data: 33 };
       child.vm.$emit('input', evt);
       expect(input).toHaveBeenCalledWith(evt);
+    })
+
+    it("pass attributes to tag child", async () => {
+      const child = wrapper.find(Fake);
+      const attrValue = child.attributes("attribute1");
+      expect(attrValue).toEqual("value1");
     })
   });
 
@@ -521,8 +530,8 @@ describe("draggable.vue when initialized with list", () => {
     })
 
     describe.each([
-      [ 1, ["b", "a", "c"]],
-      [ 3, ["a", "c", "b"]]
+      [1, ["b", "a", "c"]],
+      [3, ["a", "c", "b"]]
     ])
       ("when update is called with new index being %i",
         (index, expectedList) => {
@@ -562,7 +571,7 @@ describe("draggable.vue when initialized with list", () => {
 
           it("sends a change event", async () => {
             await Vue.nextTick();
-            const expectedEvt = { moved: { element: "b", oldIndex: 1, newIndex: index-1 } };
+            const expectedEvt = { moved: { element: "b", oldIndex: 1, newIndex: index - 1 } };
             expect(wrapper.emitted().change).toEqual([[expectedEvt]]);
           })
         });
@@ -795,23 +804,23 @@ describe("draggable.vue when initialized with list", () => {
     ["data-valor2", "bd"],
     ["data-attribute", "efg"]
   ])(
-    "renders attribute %s with value %s as html attribute", 
+    "renders attribute %s with value %s as html attribute",
     (attribute, value) => {
-    wrapper = shallowMount(draggable, {
-      propsData: {
-        list: []
-      },
-      attrs: {
-        [attribute]: value,
-      },
-      slots: {
-        default: "",
-      }
+      wrapper = shallowMount(draggable, {
+        propsData: {
+          list: []
+        },
+        attrs: {
+          [attribute]: value,
+        },
+        slots: {
+          default: "",
+        }
+      });
+      const element = wrapper.find(`[${attribute}='${value}']`);
+      expect(element.is("div")).toBe(true);
+      expect(element.html()).toEqual(wrapper.html());
     });
-    const element = wrapper.find(`[${attribute}='${value}']`);
-    expect(element.is("div")).toBe(true);
-    expect(element.html()).toEqual(wrapper.html());
-  });
 })
 
 describe("draggable.vue when initialized with value", () => {

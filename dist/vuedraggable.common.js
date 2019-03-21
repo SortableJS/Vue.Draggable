@@ -2821,9 +2821,12 @@ var draggableComponent = {
     if (this.componentData) {
       var _this$componentData = this.componentData,
           on = _this$componentData.on,
-          _props = _this$componentData.props;
+          _props = _this$componentData.props,
+          _attrs = _this$componentData.attrs;
       update("on", on);
       update("props", _props);
+
+      assign_default()(attributes.attrs, _attrs);
     }
 
     return h(this.getTag(), attributes, children);
