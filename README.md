@@ -261,6 +261,7 @@ Default: `null`<br>
 This props is used to pass additional information to child component declared by [tag props](#tag).<br>
 Value:
 * `props`: props to be passed to the child component
+* `attrs`: attrs to be passed to the child component
 * `on`: events to be subscribe in the child component
 
 Example (using [element UI library](http://element.eleme.io/#/en-US)):
@@ -284,6 +285,9 @@ methods: {
         on: {
           change: this.handleChange,
           input: this.inputChanged
+        },
+        attrs:{
+          wrap: true
         },
         props: {
           value: this.activeNames
