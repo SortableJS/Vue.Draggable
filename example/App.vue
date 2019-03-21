@@ -13,7 +13,7 @@
     </a>
 
     <div class="logo">
-      <img alt="Vue logo" src="./assets/logo.png" />
+      <img alt="Vue.draggable logo" src="./assets/logo.png" />
     </div>
 
     <div class="container ">
