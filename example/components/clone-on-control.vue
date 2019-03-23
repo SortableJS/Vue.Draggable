@@ -12,7 +12,7 @@
           class="dragArea list-group"
           :list="list1"
           :clone="clone"
-          :group="{ name: 'people', pull: pullFunction}"
+          :group="{ name: 'people', pull: pullFunction }"
           @start="start"
         >
           <div
@@ -27,11 +27,7 @@
 
       <div class="col-3">
         <h3>Draggable 2</h3>
-        <draggable
-          class="dragArea list-group"
-          :list="list2"
-          group="people"
-        >
+        <draggable class="dragArea list-group" :list="list2" group="people">
           <div
             class="list-group-item"
             v-for="element in list2"
@@ -42,17 +38,9 @@
         </draggable>
       </div>
 
-      <rawDisplayer
-        class="col-3"
-        :value="list1"
-        title="List 1"
-      />
+      <rawDisplayer class="col-3" :value="list1" title="List 1" />
 
-      <rawDisplayer
-        class="col-3"
-        :value="list2"
-        title="List 2"
-      />
+      <rawDisplayer class="col-3" :value="list2" title="List 2" />
     </div>
   </div>
 </template>
