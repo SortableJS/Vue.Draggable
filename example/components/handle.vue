@@ -34,7 +34,7 @@ import draggable from "@/vuedraggable";
 export default {
   name: "handle",
   display: "Handle",
-  order: 4,
+  order: 5,
   components: {
     draggable
   },

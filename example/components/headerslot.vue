@@ -40,7 +40,7 @@ let id = 1;
 export default {
   name: "headerslot",
   display: "Header slot",
-  order: 12,
+  order: 13,
   components: {
     draggable
   },

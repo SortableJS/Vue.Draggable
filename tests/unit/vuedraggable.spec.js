@@ -371,10 +371,6 @@ describe("draggable.vue when initialized with list", () => {
       start(evt);
     });
 
-    it("sets the isCloning flag", () => {
-      expect(vm.isCloning).toBe(false);
-    })
-
     it("sends a start event", async () => {
       await Vue.nextTick();
       expect(wrapper.emitted()).toEqual({
@@ -602,9 +598,6 @@ describe("draggable.vue when initialized with list", () => {
         propsData: {
           list: items
         },
-        attrs: {
-          group: { pull: "clone" }
-        },
         slots: {
           default: items.map(item => `<div>${item}</div>`),
         }
@@ -617,10 +610,6 @@ describe("draggable.vue when initialized with list", () => {
       start(evt);
     });
 
-    it("sets the isCloning flag", () => {
-      expect(vm.isCloning).toBe(true);
-    })
-
     describe("when remove is called", () => {
       beforeEach(() => {
         var clone = item.cloneNode(true);
@@ -630,6 +619,7 @@ describe("draggable.vue when initialized with list", () => {
         remove({
           item,
           clone,
+          pullMode: "clone",
           oldIndex: 1
         });
       })
@@ -649,6 +639,7 @@ describe("draggable.vue when initialized with list", () => {
         expect(wrapper.emitted().remove).toEqual([[{
           item,
           clone: item,
+          pullMode: "clone",
           oldIndex: 1
         }]]);
       })
@@ -684,10 +675,6 @@ describe("draggable.vue when initialized with list", () => {
       start(evt);
     });
 
-    it("sets the isCloning flag", () => {
-      expect(vm.isCloning).toBe(true);
-    })
-
     describe("when remove is called", () => {
       beforeEach(() => {
         var clone = item.cloneNode(true);
@@ -697,6 +684,7 @@ describe("draggable.vue when initialized with list", () => {
         remove({
           item,
           clone,
+          pullMode: "clone",
           oldIndex: 1
         });
       })
@@ -716,6 +704,7 @@ describe("draggable.vue when initialized with list", () => {
         expect(wrapper.emitted().remove).toEqual([[{
           item,
           clone: item,
+          pullMode: "clone",
           oldIndex: 1
         }]]);
       })

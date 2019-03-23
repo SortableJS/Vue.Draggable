@@ -67,7 +67,7 @@ let id = 1;
 export default {
   name: "two-list-headerslots",
   display: "Two list header slot",
-  order: 13,
+  order: 14,
   components: {
     draggable
   },

@@ -37,7 +37,7 @@ import draggable from "@/vuedraggable";
 export default {
   name: "third-party",
   display: "Third party",
-  order: 9,
+  order: 10,
   components: {
     draggable
   },

@@ -56,7 +56,7 @@ const message = [
 export default {
   name: "transition-example-2",
   display: "Transitions",
-  order: 6,
+  order: 7,
   components: {
     draggable
   },
