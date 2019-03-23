@@ -55,7 +55,7 @@ const message = [
 export default {
   name: "transition-example",
   display: "Transition",
-  order: 5,
+  order: 6,
   components: {
     draggable
   },

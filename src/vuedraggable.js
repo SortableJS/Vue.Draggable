@@ -113,7 +113,7 @@ const draggableComponent = {
     return {
       transitionMode: false,
       noneFunctionalComponentMode: false,
-      init: false,
+      init: false
     };
   },
 
@@ -404,8 +404,8 @@ const draggableComponent = {
     },
 
     onDragRemove(evt) {
-      insertNodeAt(this.rootContainer, evt.item, evt.oldIndex);    
-      if ( evt.pullMode === "clone") {
+      insertNodeAt(this.rootContainer, evt.item, evt.oldIndex);
+      if (evt.pullMode === "clone") {
         removeNode(evt.clone);
         return;
       }

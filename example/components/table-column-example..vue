@@ -30,7 +30,7 @@ import draggable from "@/vuedraggable";
 export default {
   name: "table-column-example",
   display: "Table Column",
-  order: 8,
+  order: 9,
   components: {
     draggable
   },
