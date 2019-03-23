@@ -256,14 +256,6 @@ const draggableComponent = {
       return this.tag || this.element;
     },
 
-    getOptionGroup() {
-      const { options } = this;
-      if (!options) {
-        return undefined;
-      }
-      return options.group;
-    },
-
     updateOptions(newOptionValue) {
       for (var property in newOptionValue) {
         const value = camelize(property);
