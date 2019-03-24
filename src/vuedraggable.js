@@ -1,5 +1,5 @@
 import Sortable from "sortablejs";
-import { console, camelize } from "./util/helper";
+import { insertNodeAt, camelize, console, removeNode } from "./util/helper";
 
 function buildAttribute(object, propName, value) {
   if (value == undefined) {
@@ -8,20 +8,6 @@ function buildAttribute(object, propName, value) {
   object = object == null ? {} : object;
   object[propName] = value;
   return object;
-}
-
-function removeNode(node) {
-  if (node.parentElement !== null) {
-    node.parentElement.removeChild(node);
-  }
-}
-
-function insertNodeAt(fatherNode, node, position) {
-  const refNode =
-    position === 0
-      ? fatherNode.children[0]
-      : fatherNode.children[position - 1].nextSibling;
-  fatherNode.insertBefore(node, refNode);
 }
 
 function computeVmIndex(vnodes, element) {
@@ -52,6 +38,54 @@ function delegateAndEmit(evtName) {
     }
     emit.call(this, evtName, evtData);
   };
+}
+
+function isTransition(slots) {
+  if (!slots || slots.length !== 1) {
+    return false;
+  }
+  const [{ componentOptions }] = slots;
+  if (!componentOptions) {
+    return false;
+  }
+  return ["transition-group", "TransitionGroup"].includes(componentOptions.tag);
+}
+
+function computeChildrenAndOffsets(children, { header, footer }) {
+  let headerOffset = 0;
+  let footerOffset = 0;
+  if (header) {
+    headerOffset = header.length;
+    children = children ? [...header, ...children] : [...header];
+  }
+  if (footer) {
+    footerOffset = footer.length;
+    children = children ? [...children, ...footer] : [...footer];
+  }
+  return { children, headerOffset, footerOffset };
+}
+
+function getComponentAttributes($attrs, componentData) {
+  let attributes = null;
+  const update = (name, value) => {
+    attributes = buildAttribute(attributes, name, value);
+  };
+  const attrs = Object.keys($attrs)
+    .filter(key => key === "id" || key.startsWith("data-"))
+    .reduce((res, key) => {
+      res[key] = $attrs[key];
+      return res;
+    }, {});
+  update("attrs", attrs);
+
+  if (!componentData) {
+    return attributes;
+  }
+  const { on, props, attrs: componentDataAttrs } = componentData;
+  update("on", on);
+  update("props", props);
+  Object.assign(attributes.attrs, componentDataAttrs);
+  return attributes;
 }
 
 const eventsListened = ["Start", "Add", "Remove", "Update", "End"];
@@ -119,49 +153,11 @@ const draggableComponent = {
 
   render(h) {
     const slots = this.$slots.default;
-    if (slots && slots.length === 1) {
-      const child = slots[0];
-      if (
-        child.componentOptions &&
-        ["transition-group", "TransitionGroup"].includes(
-          child.componentOptions.tag
-        )
-      ) {
-        this.transitionMode = true;
-      }
-    }
-    let headerOffset = 0;
-    let footerOffset = 0;
-    let children = slots;
-    const { header, footer } = this.$slots;
-    if (header) {
-      headerOffset = header.length;
-      children = children ? [...header, ...children] : [...header];
-    }
-    if (footer) {
-      footerOffset = footer.length;
-      children = children ? [...children, ...footer] : [...footer];
-    }
+    this.transitionMode = isTransition(slots);
+    const { children, headerOffset, footerOffset } = computeChildrenAndOffsets(slots, this.$slots);
     this.headerOffset = headerOffset;
     this.footerOffset = footerOffset;
-    var attributes = null;
-    const update = (name, value) => {
-      attributes = buildAttribute(attributes, name, value);
-    };
-    const attrs = Object.keys(this.$attrs)
-      .filter(key => key === "id" || key.startsWith("data-"))
-      .reduce((res, key) => {
-        res[key] = this.$attrs[key];
-        return res;
-      }, {});
-    update("attrs", attrs);
-
-    if (this.componentData) {
-      const { on, props, attrs } = this.componentData;
-      update("on", on);
-      update("props", props);
-      Object.assign(attributes.attrs, attrs);
-    }
+    const attributes = getComponentAttributes(this.$attrs, this.componentData);
     return h(this.getTag(), attributes, children);
   },
 
