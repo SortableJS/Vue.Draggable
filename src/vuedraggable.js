@@ -2,10 +2,10 @@ import Sortable from "sortablejs";
 import { insertNodeAt, camelize, console, removeNode } from "./util/helper";
 
 function buildAttribute(object, propName, value) {
-  if (value == undefined) {
+  if (value === undefined) {
     return object;
   }
-  object = object == null ? {} : object;
+  object = object || {};
   object[propName] = value;
   return object;
 }
@@ -154,7 +154,10 @@ const draggableComponent = {
   render(h) {
     const slots = this.$slots.default;
     this.transitionMode = isTransition(slots);
-    const { children, headerOffset, footerOffset } = computeChildrenAndOffsets(slots, this.$slots);
+    const { children, headerOffset, footerOffset } = computeChildrenAndOffsets(
+      slots,
+      this.$slots
+    );
     this.headerOffset = headerOffset;
     this.footerOffset = footerOffset;
     const attributes = getComponentAttributes(this.$attrs, this.componentData);
@@ -255,7 +258,7 @@ const draggableComponent = {
     updateOptions(newOptionValue) {
       for (var property in newOptionValue) {
         const value = camelize(property);
-        if (readonlyProperties.indexOf(value) == -1) {
+        if (readonlyProperties.indexOf(value) === -1) {
           this._sortable.option(value, newOptionValue[property]);
         }
       }
@@ -264,7 +267,7 @@ const draggableComponent = {
     getChildrenNodes() {
       if (!this.init) {
         this.noneFunctionalComponentMode =
-          this.noneFunctionalComponentMode && this.$children.length == 1;
+          this.noneFunctionalComponentMode && this.$children.length === 1;
         this.init = true;
       }
 
@@ -428,7 +431,7 @@ const draggableComponent = {
       );
       const currentDOMIndex = domChildren.indexOf(evt.related);
       const currentIndex = relatedContext.component.getVmIndex(currentDOMIndex);
-      const draggedInList = domChildren.indexOf(draggingElement) != -1;
+      const draggedInList = domChildren.indexOf(draggingElement) !== -1;
       return draggedInList || !evt.willInsertAfter
         ? currentIndex
         : currentIndex + 1;

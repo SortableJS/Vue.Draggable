@@ -12,11 +12,62 @@
       />
     </a>
 
-    <div class="logo">
-      <img alt="Vue.draggable logo" src="./assets/logo.png" />
-    </div>
-
     <div class="container ">
+      <div class="jumbotron logo">
+        <img
+          class="draggable"
+          alt="Vue.draggable logo"
+          src="./assets/logo.svg"
+        />
+
+        <div id="badges">
+          <a
+            target="_blank"
+            href="https://circleci.com/gh/SortableJS/Vue.Draggable"
+            ><img
+              src="https://circleci.com/gh/SortableJS/Vue.Draggable.svg?style=shield"
+            />
+          </a>
+          <a
+            target="_blank"
+            href="https://codecov.io/gh/SortableJS/Vue.Draggable"
+            ><img
+              src="https://codecov.io/gh/SortableJS/Vue.Draggable/branch/master/graph/badge.svg"
+            />
+          </a>
+          <a
+            target="_blank"
+            href="https://codebeat.co/projects/github-com-sortablejs-vue-draggable-master"
+            ><img
+              src="https://codebeat.co/badges/7a6c27c8-2d0b-47b9-af55-c2eea966e713"
+            />
+          </a>
+          <a
+            target="_blank"
+            href="https://github.com/SortableJS/Vue.Draggable/issues?q=is%3Aopen+is%3Aissue"
+            ><img
+              src="https://img.shields.io/github/issues/SortableJS/Vue.Draggable.svg"
+            />
+          </a>
+          <a target="_blank" href="https://www.npmjs.com/package/vuedraggable"
+            ><img src="https://img.shields.io/npm/dt/vuedraggable.svg" />
+          </a>
+          <a target="_blank" href="https://www.npmjs.com/package/vuedraggable"
+            ><img src="https://img.shields.io/npm/dm/vuedraggable.svg" />
+          </a>
+          <a target="_blank" href="https://www.npmjs.com/package/vuedraggable"
+            ><img src="https://img.shields.io/npm/v/vuedraggable.svg" />
+          </a>
+          <a
+            target="_blank"
+            href="https://github.com/SortableJS/Vue.Draggable/blob/master/LICENSE"
+            ><img
+              src="https://img.shields.io/github/license/SortableJS/Vue.Draggable.svg"
+            />
+          </a>
+        </div>
+      </div>
+
       <ul class="nav nav-tabs" role="tablist">
         <li
           class="nav-item"
@@ -113,8 +164,14 @@ export default {
   width: 400px;
 }
 
-.logo {
+.jumbotron.logo {
   text-align: center;
+  padding-top: 32px;
+  padding-bottom: 16px;
+}
+
+.jumbotron.logo .draggable {
+  height: 200px;
 }
 
 >>> h3 {
@@ -127,5 +184,19 @@ export default {
 
 a {
   color: black;
+}
+
+#badges {
+  text-align: center;
+  padding: 10px;
+}
+
+#badges img {
+  padding-left: 2px;
+  padding-right: 2px;
+}
+
+#tab-content {
+  min-height: 500px;
 }
 </style>
