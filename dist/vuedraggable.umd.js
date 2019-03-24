@@ -826,6 +826,16 @@ module.exports = function (bitmap, value) {
 
 /***/ }),
 
+/***/ "469f":
+/***/ (function(module, exports, __webpack_require__) {
+
+__webpack_require__("6c1c");
+__webpack_require__("1654");
+module.exports = __webpack_require__("7d7b");
+
+
+/***/ }),
+
 /***/ "481b":
 /***/ (function(module, exports) {
 
@@ -1206,6 +1216,13 @@ module.exports = $export;
 
 /***/ }),
 
+/***/ "5d73":
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__("469f");
+
+/***/ }),
+
 /***/ "5f1b":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -1533,6 +1550,20 @@ module.exports = __webpack_require__("584a").getIteratorMethod = function (it) {
   if (it != undefined) return it[ITERATOR]
     || it['@@iterator']
     || Iterators[classof(it)];
+};
+
+
+/***/ }),
+
+/***/ "7d7b":
+/***/ (function(module, exports, __webpack_require__) {
+
+var anObject = __webpack_require__("e4ae");
+var get = __webpack_require__("7cd6");
+module.exports = __webpack_require__("584a").getIterator = function (it) {
+  var iterFn = get(it);
+  if (typeof iterFn != 'function') throw TypeError(it + ' is not iterable!');
+  return anObject(iterFn.call(it));
 };
 
 
@@ -2196,8 +2227,10 @@ module.exports = Object.keys || function keys(O) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(global) {/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return console; });
+/* WEBPACK VAR INJECTION */(function(global) {/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return insertNodeAt; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return camelize; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return console; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return removeNode; });
 /* harmony import */ var core_js_modules_es6_regexp_replace__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__("a481");
 /* harmony import */ var core_js_modules_es6_regexp_replace__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es6_regexp_replace__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var F_source_vuedraggable_node_modules_babel_runtime_corejs2_core_js_object_create__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__("4aa6");
@@ -2230,6 +2263,18 @@ var camelize = cached(function (str) {
     return c ? c.toUpperCase() : "";
   });
 });
+
+function removeNode(node) {
+  if (node.parentElement !== null) {
+    node.parentElement.removeChild(node);
+  }
+}
+
+function insertNodeAt(fatherNode, node, position) {
+  var refNode = position === 0 ? fatherNode.children[0] : fatherNode.children[position - 1].nextSibling;
+  fatherNode.insertBefore(node, refNode);
+}
+
 
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__("c8ba")))
 
@@ -2589,6 +2634,53 @@ var es6_string_includes = __webpack_require__("2fdb");
 var is_array = __webpack_require__("a745");
 var is_array_default = /*#__PURE__*/__webpack_require__.n(is_array);
 
+// CONCATENATED MODULE: ./node_modules/@babel/runtime-corejs2/helpers/esm/arrayWithHoles.js
+
+function _arrayWithHoles(arr) {
+  if (is_array_default()(arr)) return arr;
+}
+// EXTERNAL MODULE: ./node_modules/@babel/runtime-corejs2/core-js/get-iterator.js
+var get_iterator = __webpack_require__("5d73");
+var get_iterator_default = /*#__PURE__*/__webpack_require__.n(get_iterator);
+
+// CONCATENATED MODULE: ./node_modules/@babel/runtime-corejs2/helpers/esm/iterableToArrayLimit.js
+
+function _iterableToArrayLimit(arr, i) {
+  var _arr = [];
+  var _n = true;
+  var _d = false;
+  var _e = undefined;
+
+  try {
+    for (var _i = get_iterator_default()(arr), _s; !(_n = (_s = _i.next()).done); _n = true) {
+      _arr.push(_s.value);
+
+      if (i && _arr.length === i) break;
+    }
+  } catch (err) {
+    _d = true;
+    _e = err;
+  } finally {
+    try {
+      if (!_n && _i["return"] != null) _i["return"]();
+    } finally {
+      if (_d) throw _e;
+    }
+  }
+
+  return _arr;
+}
+// CONCATENATED MODULE: ./node_modules/@babel/runtime-corejs2/helpers/esm/nonIterableRest.js
+function _nonIterableRest() {
+  throw new TypeError("Invalid attempt to destructure non-iterable instance");
+}
+// CONCATENATED MODULE: ./node_modules/@babel/runtime-corejs2/helpers/esm/slicedToArray.js
+
+
+
+function _slicedToArray(arr, i) {
+  return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest();
+}
 // CONCATENATED MODULE: ./node_modules/@babel/runtime-corejs2/helpers/esm/arrayWithoutHoles.js
 
 function _arrayWithoutHoles(arr) {
@@ -2642,25 +2734,15 @@ var helper = __webpack_require__("c649");
 
 
 
+
 function buildAttribute(object, propName, value) {
-  if (value == undefined) {
+  if (value === undefined) {
     return object;
   }
 
-  object = object == null ? {} : object;
+  object = object || {};
   object[propName] = value;
   return object;
-}
-
-function removeNode(node) {
-  if (node.parentElement !== null) {
-    node.parentElement.removeChild(node);
-  }
-}
-
-function insertNodeAt(fatherNode, node, position) {
-  var refNode = position === 0 ? fatherNode.children[0] : fatherNode.children[position - 1].nextSibling;
-  fatherNode.insertBefore(node, refNode);
 }
 
 function computeVmIndex(vnodes, element) {
@@ -2708,18 +2790,73 @@ function delegateAndEmit(evtName) {
   };
 }
 
-function groupIsClone(group) {
-  if (!group) {
+function vuedraggable_isTransition(slots) {
+  if (!slots || slots.length !== 1) {
     return false;
   }
 
-  var pull = group.pull;
+  var _slots = _slicedToArray(slots, 1),
+      componentOptions = _slots[0].componentOptions;
 
-  if (typeof pull === "function") {
-    return pull() === "clone";
+  if (!componentOptions) {
+    return false;
   }
 
-  return pull === "clone";
+  return ["transition-group", "TransitionGroup"].includes(componentOptions.tag);
+}
+
+function computeChildrenAndOffsets(children, _ref) {
+  var header = _ref.header,
+      footer = _ref.footer;
+  var headerOffset = 0;
+  var footerOffset = 0;
+
+  if (header) {
+    headerOffset = header.length;
+    children = children ? [].concat(_toConsumableArray(header), _toConsumableArray(children)) : _toConsumableArray(header);
+  }
+
+  if (footer) {
+    footerOffset = footer.length;
+    children = children ? [].concat(_toConsumableArray(children), _toConsumableArray(footer)) : _toConsumableArray(footer);
+  }
+
+  return {
+    children: children,
+    headerOffset: headerOffset,
+    footerOffset: footerOffset
+  };
+}
+
+function getComponentAttributes($attrs, componentData) {
+  var attributes = null;
+
+  var update = function update(name, value) {
+    attributes = buildAttribute(attributes, name, value);
+  };
+
+  var attrs = keys_default()($attrs).filter(function (key) {
+    return key === "id" || key.startsWith("data-");
+  }).reduce(function (res, key) {
+    res[key] = $attrs[key];
+    return res;
+  }, {});
+
+  update("attrs", attrs);
+
+  if (!componentData) {
+    return attributes;
+  }
+
+  var on = componentData.on,
+      props = componentData.props,
+      componentDataAttrs = componentData.attrs;
+  update("on", on);
+  update("props", props);
+
+  assign_default()(attributes.attrs, componentDataAttrs);
+
+  return attributes;
 }
 
 var eventsListened = ["Start", "Add", "Remove", "Update", "End"];
@@ -2728,7 +2865,7 @@ var readonlyProperties = ["Move"].concat(eventsListened, eventsToEmit).map(funct
   return "on" + evt;
 });
 var draggingElement = null;
-var props = {
+var vuedraggable_props = {
   options: Object,
   list: {
     type: Array,
@@ -2771,73 +2908,26 @@ var props = {
 var draggableComponent = {
   name: "draggable",
   inheritAttrs: false,
-  props: props,
+  props: vuedraggable_props,
   data: function data() {
     return {
       transitionMode: false,
       noneFunctionalComponentMode: false,
-      init: false,
-      isCloning: false
+      init: false
     };
   },
   render: function render(h) {
-    var _this3 = this;
-
     var slots = this.$slots.default;
+    this.transitionMode = vuedraggable_isTransition(slots);
 
-    if (slots && slots.length === 1) {
-      var child = slots[0];
-
-      if (child.componentOptions && ["transition-group", "TransitionGroup"].includes(child.componentOptions.tag)) {
-        this.transitionMode = true;
-      }
-    }
-
-    var headerOffset = 0;
-    var footerOffset = 0;
-    var children = slots;
-    var _this$$slots = this.$slots,
-        header = _this$$slots.header,
-        footer = _this$$slots.footer;
-
-    if (header) {
-      headerOffset = header.length;
-      children = children ? [].concat(_toConsumableArray(header), _toConsumableArray(children)) : _toConsumableArray(header);
-    }
-
-    if (footer) {
-      footerOffset = footer.length;
-      children = children ? [].concat(_toConsumableArray(children), _toConsumableArray(footer)) : _toConsumableArray(footer);
-    }
+    var _computeChildrenAndOf = computeChildrenAndOffsets(slots, this.$slots),
+        children = _computeChildrenAndOf.children,
+        headerOffset = _computeChildrenAndOf.headerOffset,
+        footerOffset = _computeChildrenAndOf.footerOffset;
 
     this.headerOffset = headerOffset;
     this.footerOffset = footerOffset;
-    var attributes = null;
-
-    var update = function update(name, value) {
-      attributes = buildAttribute(attributes, name, value);
-    };
-
-    var attrs = keys_default()(this.$attrs).filter(function (key) {
-      return key === "id" || key.startsWith("data-");
-    }).reduce(function (res, key) {
-      res[key] = _this3.$attrs[key];
-      return res;
-    }, {});
-
-    update("attrs", attrs);
-
-    if (this.componentData) {
-      var _this$componentData = this.componentData,
-          on = _this$componentData.on,
-          _props = _this$componentData.props,
-          _attrs = _this$componentData.attrs;
-      update("on", on);
-      update("props", _props);
-
-      assign_default()(attributes.attrs, _attrs);
-    }
-
+    var attributes = getComponentAttributes(this.$attrs, this.componentData);
     return h(this.getTag(), attributes, children);
   },
   created: function created() {
@@ -2854,7 +2944,7 @@ var draggableComponent = {
     }
   },
   mounted: function mounted() {
-    var _this4 = this;
+    var _this3 = this;
 
     this.noneFunctionalComponentMode = this.getTag().toLowerCase() !== this.$el.nodeName.toLowerCase();
 
@@ -2864,20 +2954,20 @@ var draggableComponent = {
 
     var optionsAdded = {};
     eventsListened.forEach(function (elt) {
-      optionsAdded["on" + elt] = delegateAndEmit.call(_this4, elt);
+      optionsAdded["on" + elt] = delegateAndEmit.call(_this3, elt);
     });
     eventsToEmit.forEach(function (elt) {
-      optionsAdded["on" + elt] = emit.bind(_this4, elt);
+      optionsAdded["on" + elt] = emit.bind(_this3, elt);
     });
 
     var attributes = keys_default()(this.$attrs).reduce(function (res, key) {
-      res[Object(helper["a" /* camelize */])(key)] = _this4.$attrs[key];
+      res[Object(helper["a" /* camelize */])(key)] = _this3.$attrs[key];
       return res;
     }, {});
 
     var options = assign_default()({}, this.options, attributes, optionsAdded, {
       onMove: function onMove(evt, originalEvent) {
-        return _this4.onDragMove(evt, originalEvent);
+        return _this3.onDragMove(evt, originalEvent);
       }
     });
 
@@ -2917,32 +3007,18 @@ var draggableComponent = {
     getTag: function getTag() {
       return this.tag || this.element;
     },
-    getIsCloning: function getIsCloning() {
-      var group = this.$attrs.group;
-      var groupConsideringOption = group || this.getOptionGroup();
-      return groupIsClone(groupConsideringOption);
-    },
-    getOptionGroup: function getOptionGroup() {
-      var options = this.options;
-
-      if (!options) {
-        return undefined;
-      }
-
-      return options.group;
-    },
     updateOptions: function updateOptions(newOptionValue) {
       for (var property in newOptionValue) {
         var value = Object(helper["a" /* camelize */])(property);
 
-        if (readonlyProperties.indexOf(value) == -1) {
+        if (readonlyProperties.indexOf(value) === -1) {
           this._sortable.option(value, newOptionValue[property]);
         }
       }
     },
     getChildrenNodes: function getChildrenNodes() {
       if (!this.init) {
-        this.noneFunctionalComponentMode = this.noneFunctionalComponentMode && this.$children.length == 1;
+        this.noneFunctionalComponentMode = this.noneFunctionalComponentMode && this.$children.length === 1;
         this.init = true;
       }
 
@@ -2954,10 +3030,10 @@ var draggableComponent = {
       return this.transitionMode ? rawNodes[0].child.$slots.default : rawNodes;
     },
     computeIndexes: function computeIndexes() {
-      var _this5 = this;
+      var _this4 = this;
 
       this.$nextTick(function () {
-        _this5.visibleIndexes = _computeIndexes(_this5.getChildrenNodes(), _this5.rootContainer.children, _this5.transitionMode, _this5.footerOffset);
+        _this4.visibleIndexes = _computeIndexes(_this4.getChildrenNodes(), _this4.rootContainer.children, _this4.transitionMode, _this4.footerOffset);
       });
     },
     getUnderlyingVm: function getUnderlyingVm(htmlElt) {
@@ -2975,8 +3051,8 @@ var draggableComponent = {
         element: element
       };
     },
-    getUnderlyingPotencialDraggableComponent: function getUnderlyingPotencialDraggableComponent(_ref) {
-      var __vue__ = _ref.__vue__;
+    getUnderlyingPotencialDraggableComponent: function getUnderlyingPotencialDraggableComponent(_ref2) {
+      var __vue__ = _ref2.__vue__;
 
       if (!__vue__ || !__vue__.$options || __vue__.$options._componentTag !== "transition-group") {
         return __vue__;
@@ -2985,10 +3061,10 @@ var draggableComponent = {
       return __vue__.$parent;
     },
     emitChanges: function emitChanges(evt) {
-      var _this6 = this;
+      var _this5 = this;
 
       this.$nextTick(function () {
-        _this6.$emit("change", evt);
+        _this5.$emit("change", evt);
       });
     },
     alterList: function alterList(onList) {
@@ -3018,9 +3094,9 @@ var draggableComponent = {
 
       this.alterList(updatePosition);
     },
-    getRelatedContextFromMoveEvent: function getRelatedContextFromMoveEvent(_ref2) {
-      var to = _ref2.to,
-          related = _ref2.related;
+    getRelatedContextFromMoveEvent: function getRelatedContextFromMoveEvent(_ref3) {
+      var to = _ref3.to,
+          related = _ref3.related;
       var component = this.getUnderlyingPotencialDraggableComponent(to);
 
       if (!component) {
@@ -3066,7 +3142,6 @@ var draggableComponent = {
     },
     onDragStart: function onDragStart(evt) {
       this.context = this.getUnderlyingVm(evt.item);
-      this.isCloning = this.getIsCloning();
       evt.item._underlying_vm_ = this.clone(this.context.element);
       draggingElement = evt.item;
     },
@@ -3077,7 +3152,7 @@ var draggableComponent = {
         return;
       }
 
-      removeNode(evt.item);
+      Object(helper["d" /* removeNode */])(evt.item);
       var newIndex = this.getVmIndex(evt.newIndex);
       this.spliceList(newIndex, 0, element);
       this.computeIndexes();
@@ -3090,10 +3165,10 @@ var draggableComponent = {
       });
     },
     onDragRemove: function onDragRemove(evt) {
-      insertNodeAt(this.rootContainer, evt.item, evt.oldIndex);
+      Object(helper["c" /* insertNodeAt */])(this.rootContainer, evt.item, evt.oldIndex);
 
-      if (this.isCloning) {
-        removeNode(evt.clone);
+      if (evt.pullMode === "clone") {
+        Object(helper["d" /* removeNode */])(evt.clone);
         return;
       }
 
@@ -3109,8 +3184,8 @@ var draggableComponent = {
       });
     },
     onDragUpdate: function onDragUpdate(evt) {
-      removeNode(evt.item);
-      insertNodeAt(evt.from, evt.item, evt.oldIndex);
+      Object(helper["d" /* removeNode */])(evt.item);
+      Object(helper["c" /* insertNodeAt */])(evt.from, evt.item, evt.oldIndex);
       var oldIndex = this.context.index;
       var newIndex = this.getVmIndex(evt.newIndex);
       this.updatePosition(oldIndex, newIndex);
@@ -3137,7 +3212,7 @@ var draggableComponent = {
 
       var currentDOMIndex = domChildren.indexOf(evt.related);
       var currentIndex = relatedContext.component.getVmIndex(currentDOMIndex);
-      var draggedInList = domChildren.indexOf(draggingElement) != -1;
+      var draggedInList = domChildren.indexOf(draggingElement) !== -1;
       return draggedInList || !evt.willInsertAfter ? currentIndex : currentIndex + 1;
     },
     onDragMove: function onDragMove(evt, originalEvent) {
