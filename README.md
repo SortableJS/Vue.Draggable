@@ -371,6 +371,7 @@ Ex:
  ### Gochas
  
  - Vue.draggable children should always map the list or value prop using a v-for directive
+   * You may use [header](https://github.com/SortableJS/Vue.Draggable#header) and [footer](https://github.com/SortableJS/Vue.Draggable#footer) slot to by-pass this limitation.
  
  - Children elements inside v-for should be keyed as any element in Vue.js. Be carefull to provide revelant key values in particular:
     * typically providing array index as keys won't work as key should be linked to the items content
