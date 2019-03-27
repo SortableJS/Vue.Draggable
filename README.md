@@ -37,7 +37,7 @@ https://david-desmaisons.github.io/draggable-example/
 * Compatible with Vue.js 2.0 transition-group
 * Cancellation support
 * Events reporting any changes when full control is needed
-* Reuse existing UI library components (such as [vuetify](https://vuetifyjs.com), [element](http://element.eleme.io/), or [vue material](https://vuematerial.io) etc...) and make them draggable using `element` and `componentData` props
+* Reuse existing UI library components (such as [vuetify](https://vuetifyjs.com), [element](http://element.eleme.io/), or [vue material](https://vuematerial.io) etc...) and make them draggable using `tag` and `componentData` props
 
 ## Backers
 
