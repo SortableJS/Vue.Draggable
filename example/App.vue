@@ -1,6 +1,9 @@
 <template>
   <div id="app">
-    <a href="https://github.com/SortableJS/Vue.Draggable" target="_blank">
+    <a
+      href="https://github.com/SortableJS/Vue.Draggable"
+      target="_blank"
+    >
       <img
         style="position: fixed; top: 0; right: 0; border: 0; z-index:99999"
         width="149"
@@ -24,51 +27,50 @@
           <a
             target="_blank"
             href="https://circleci.com/gh/SortableJS/Vue.Draggable"
-            ><img
-              src="https://circleci.com/gh/SortableJS/Vue.Draggable.svg?style=shield"
-            />
+          ><img src="https://circleci.com/gh/SortableJS/Vue.Draggable.svg?style=shield" />
           </a>
           <a
             target="_blank"
             href="https://codecov.io/gh/SortableJS/Vue.Draggable"
-            ><img
-              src="https://codecov.io/gh/SortableJS/Vue.Draggable/branch/master/graph/badge.svg"
-            />
+          ><img src="https://codecov.io/gh/SortableJS/Vue.Draggable/branch/master/graph/badge.svg" />
           </a>
           <a
             target="_blank"
             href="https://codebeat.co/projects/github-com-sortablejs-vue-draggable-master"
-            ><img
-              src="https://codebeat.co/badges/7a6c27c8-2d0b-47b9-af55-c2eea966e713"
-            />
+          ><img src="https://codebeat.co/badges/7a6c27c8-2d0b-47b9-af55-c2eea966e713" />
           </a>
           <a
             target="_blank"
             href="https://github.com/SortableJS/Vue.Draggable/issues?q=is%3Aopen+is%3Aissue"
-            ><img
-              src="https://img.shields.io/github/issues/SortableJS/Vue.Draggable.svg"
-            />
+          ><img src="https://img.shields.io/github/issues/SortableJS/Vue.Draggable.svg" />
           </a>
-          <a target="_blank" href="https://www.npmjs.com/package/vuedraggable"
-            ><img src="https://img.shields.io/npm/dt/vuedraggable.svg" />
+          <a
+            target="_blank"
+            href="https://www.npmjs.com/package/vuedraggable"
+          ><img src="https://img.shields.io/npm/dt/vuedraggable.svg" />
           </a>
-          <a target="_blank" href="https://www.npmjs.com/package/vuedraggable"
-            ><img src="https://img.shields.io/npm/dm/vuedraggable.svg" />
+          <a
+            target="_blank"
+            href="https://www.npmjs.com/package/vuedraggable"
+          ><img src="https://img.shields.io/npm/dm/vuedraggable.svg" />
           </a>
-          <a target="_blank" href="https://www.npmjs.com/package/vuedraggable"
-            ><img src="https://img.shields.io/npm/v/vuedraggable.svg" />
+          <a
+            target="_blank"
+            href="https://www.npmjs.com/package/vuedraggable"
+          ><img src="https://img.shields.io/npm/v/vuedraggable.svg" />
           </a>
           <a
             target="_blank"
             href="https://github.com/SortableJS/Vue.Draggable/blob/master/LICENSE"
-            ><img
-              src="https://img.shields.io/github/license/SortableJS/Vue.Draggable.svg"
-            />
+          ><img src="https://img.shields.io/github/license/SortableJS/Vue.Draggable.svg" />
           </a>
         </div>
       </div>
 
-      <ul class="nav nav-tabs" role="tablist">
+      <ul
+        class="nav nav-tabs"
+        role="tablist"
+      >
         <li
           class="nav-item"
           v-for="component in componentList"
@@ -81,12 +83,14 @@
             :href="`#${component.name}`"
             role="tab"
             aria-controls="profile"
-            >{{ component.display }}</a
-          >
+          >{{ component.display }}</a>
         </li>
       </ul>
 
-      <div class="tab-content" id="tab-content">
+      <div
+        class="tab-content"
+        id="tab-content"
+      >
         <div
           class="tab-pane show"
           :id="component.name"
@@ -96,9 +100,12 @@
           :key="component.name"
         >
           <div class=" justify-content-center jumbotron">
-            <div class="row  icon">
+            <div
+              class="row  icon"
+             
+            >
               <a
-                class="col-2 icon"
+                class="col-2 icon github"
                 target="_blank"
                 :href="
                   `https://github.com/SortableJS/Vue.Draggable/blob/master/example/components/${
@@ -106,7 +113,7 @@
                   }.vue`
                 "
               >
-                <i class="fa fa-github icon-large"></i>
+                <i class="fa fa-github icon-large" v-tooltip="{content:'view code on Github', placement: 'bottom'}"></i>
               </a>
             </div>
 
@@ -120,6 +127,7 @@
 
 <script>
 import $ from "jquery";
+import { VTooltip } from "v-tooltip";
 
 const requireContext = require.context("./components/", false, /\.vue$/);
 
@@ -130,6 +138,9 @@ const components = requireContext.keys().reduce((acc, key) => {
 }, {});
 
 export default {
+  directives: {
+    tooltip: VTooltip
+  },
   name: "app",
   components,
   data() {
@@ -159,7 +170,7 @@ export default {
 };
 </script>
 
-<style scoped="true">
+<style>
 .main-application {
   width: 400px;
 }
@@ -176,6 +187,10 @@ export default {
 
 >>> h3 {
   font-size: 1.4em;
+}
+
+a.github {
+  color: black;
 }
 
 .icon i {
@@ -198,5 +213,62 @@ a {
 
 #tab-content {
   min-height: 500px;
+}
+
+.tooltip[x-placement^="bottom"] {
+  margin-top: 5px;
+}
+
+.tooltip[x-placement^="bottom"] .tooltip-arrow {
+  border-width: 0 5px 5px 5px;
+  border-left-color: transparent !important;
+  border-right-color: transparent !important;
+  border-top-color: transparent !important;
+  top: -5px;
+  left: calc(50% - 5px);
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.tooltip[x-placement^="right"] {
+  margin-left: 5px;
+}
+
+.tooltip[x-placement^="right"] .tooltip-arrow {
+  border-width: 5px 5px 5px 0;
+  border-left-color: transparent !important;
+  border-top-color: transparent !important;
+  border-bottom-color: transparent !important;
+  left: -5px;
+  top: calc(50% - 5px);
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.tooltip[x-placement^="left"] {
+  margin-right: 5px;
+}
+
+.tooltip[x-placement^="left"] .tooltip-arrow {
+  border-width: 5px 0 5px 5px;
+  border-top-color: transparent !important;
+  border-right-color: transparent !important;
+  border-bottom-color: transparent !important;
+  right: -5px;
+  top: calc(50% - 5px);
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.tooltip[aria-hidden="true"] {
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.15s, visibility 0.15s;
+}
+
+.tooltip[aria-hidden="false"] {
+  visibility: visible;
+  opacity: 1;
+  transition: opacity 0.15s;
 }
 </style>
