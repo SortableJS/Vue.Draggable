@@ -99,13 +99,14 @@
           v-for="component in componentList"
           :key="component.name"
         >
-          <div class=" justify-content-center jumbotron">
-            <div
-              class="row  icon"
-             
-            >
+
+          <div class=" justify-content-center jumbotron main-container">
+            <div class="row icon-container">
+
+              <div>{{component.instruction}}</div>
+
               <a
-                class="col-2 icon github"
+                class="icon github"
                 target="_blank"
                 :href="
                   `https://github.com/SortableJS/Vue.Draggable/blob/master/example/components/${
@@ -113,7 +114,10 @@
                   }.vue`
                 "
               >
-                <i class="fa fa-github icon-large" v-tooltip="{content:'view code on Github', placement: 'bottom'}"></i>
+                <button class="btn btn-secondary">
+                  View code
+                  <i class="fa fa-github icon-large"></i>
+                </button>
               </a>
             </div>
 
@@ -127,7 +131,6 @@
 
 <script>
 import $ from "jquery";
-import { VTooltip } from "v-tooltip";
 
 const requireContext = require.context("./components/", false, /\.vue$/);
 
@@ -138,9 +141,6 @@ const components = requireContext.keys().reduce((acc, key) => {
 }, {});
 
 export default {
-  directives: {
-    tooltip: VTooltip
-  },
   name: "app",
   components,
   data() {
@@ -171,6 +171,10 @@ export default {
 </script>
 
 <style>
+#app .main-container {
+  padding-top: 40px;
+}
+
 .main-application {
   width: 400px;
 }
@@ -185,16 +189,24 @@ export default {
   height: 200px;
 }
 
+.icon-container {
+  justify-content: space-between;
+  flex-direction: row;
+  padding-bottom: 15px;
+  margin-left: 15px;
+}
+
 >>> h3 {
   font-size: 1.4em;
 }
 
 a.github {
   color: black;
+  float: left;
 }
 
 .icon i {
-  font-size: 24px;
+  font-size: 20px;
 }
 
 a {

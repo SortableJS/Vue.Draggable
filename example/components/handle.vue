@@ -34,6 +34,7 @@ import draggable from "@/vuedraggable";
 export default {
   name: "handle",
   display: "Handle",
+  instruction: "Drag using the handle icon",
   order: 5,
   components: {
     draggable
