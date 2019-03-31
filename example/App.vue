@@ -189,11 +189,11 @@ export default {
   height: 200px;
 }
 
-.icon-container {
+.row.icon-container {
   justify-content: space-between;
   flex-direction: row;
   padding-bottom: 15px;
-  margin-left: 15px;
+  margin-left: 0;
 }
 
 >>> h3 {
