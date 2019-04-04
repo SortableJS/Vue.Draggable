@@ -176,11 +176,6 @@ Alternative to the `value` prop, list is an array to be synchronized with drag-a
 The main difference is that `list` prop is updated by draggable component using splice method, whereas `value` is immutable.<br>
 **Do not use in conjunction with value prop.**
 
-#### options [deprecated]
-**Deprecated: use Sortable options as props; see [below section for more](#All-sortable-options)**
-
-[Legacy documentation](https://github.com/SortableJS/Vue.Draggable/blob/master/documentation/legacy.options.md)
-
 #### All sortable options
 New in version 2.19
 
@@ -203,10 +198,6 @@ Example setting handle, sortable and a group option:
       <!-- -->
 </draggable>
 ```
-
-#### element 
-
-**Deprecated as it has been renamed [tag](#tag)**
 
 #### tag
 Type: `String`<br>
