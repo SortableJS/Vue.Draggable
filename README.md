@@ -78,7 +78,7 @@ npm i -S vuedraggable
 
 ```
 
-[cf example section](https://github.com/SortableJS/Vue.Draggable/tree/master/examples)
+[cf example section](https://github.com/SortableJS/Vue.Draggable/tree/master/example)
 
 ## For Vue.js 2.0
 
