@@ -9,11 +9,7 @@
         :group="{ name: 'people', pull: pullFunction }"
         @start="start"
       >
-        <div
-          class="list-group-item"
-          v-for="element in list1"
-          :key="element.id"
-        >
+        <div class="list-group-item" v-for="element in list1" :key="element.id">
           {{ element.name }}
         </div>
       </draggable>
@@ -21,32 +17,16 @@
 
     <div class="col-3">
       <h3>Draggable 2</h3>
-      <draggable
-        class="dragArea list-group"
-        :list="list2"
-        group="people"
-      >
-        <div
-          class="list-group-item"
-          v-for="element in list2"
-          :key="element.id"
-        >
+      <draggable class="dragArea list-group" :list="list2" group="people">
+        <div class="list-group-item" v-for="element in list2" :key="element.id">
           {{ element.name }}
         </div>
       </draggable>
     </div>
 
-    <rawDisplayer
-      class="col-3"
-      :value="list1"
-      title="List 1"
-    />
+    <rawDisplayer class="col-3" :value="list1" title="List 1" />
 
-    <rawDisplayer
-      class="col-3"
-      :value="list2"
-      title="List 2"
-    />
+    <rawDisplayer class="col-3" :value="list2" title="List 2" />
   </div>
 </template>
 

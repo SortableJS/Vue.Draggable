@@ -1,9 +1,6 @@
 <template>
   <div id="app">
-    <a
-      href="https://github.com/SortableJS/Vue.Draggable"
-      target="_blank"
-    >
+    <a href="https://github.com/SortableJS/Vue.Draggable" target="_blank">
       <img
         style="position: fixed; top: 0; right: 0; border: 0; z-index:99999"
         width="149"
@@ -27,50 +24,51 @@
           <a
             target="_blank"
             href="https://circleci.com/gh/SortableJS/Vue.Draggable"
-          ><img src="https://circleci.com/gh/SortableJS/Vue.Draggable.svg?style=shield" />
+            ><img
+              src="https://circleci.com/gh/SortableJS/Vue.Draggable.svg?style=shield"
+            />
           </a>
           <a
             target="_blank"
             href="https://codecov.io/gh/SortableJS/Vue.Draggable"
-          ><img src="https://codecov.io/gh/SortableJS/Vue.Draggable/branch/master/graph/badge.svg" />
+            ><img
+              src="https://codecov.io/gh/SortableJS/Vue.Draggable/branch/master/graph/badge.svg"
+            />
           </a>
           <a
             target="_blank"
             href="https://codebeat.co/projects/github-com-sortablejs-vue-draggable-master"
-          ><img src="https://codebeat.co/badges/7a6c27c8-2d0b-47b9-af55-c2eea966e713" />
+            ><img
+              src="https://codebeat.co/badges/7a6c27c8-2d0b-47b9-af55-c2eea966e713"
+            />
           </a>
           <a
             target="_blank"
             href="https://github.com/SortableJS/Vue.Draggable/issues?q=is%3Aopen+is%3Aissue"
-          ><img src="https://img.shields.io/github/issues/SortableJS/Vue.Draggable.svg" />
+            ><img
+              src="https://img.shields.io/github/issues/SortableJS/Vue.Draggable.svg"
+            />
           </a>
-          <a
-            target="_blank"
-            href="https://www.npmjs.com/package/vuedraggable"
-          ><img src="https://img.shields.io/npm/dt/vuedraggable.svg" />
+          <a target="_blank" href="https://www.npmjs.com/package/vuedraggable"
+            ><img src="https://img.shields.io/npm/dt/vuedraggable.svg" />
           </a>
-          <a
-            target="_blank"
-            href="https://www.npmjs.com/package/vuedraggable"
-          ><img src="https://img.shields.io/npm/dm/vuedraggable.svg" />
+          <a target="_blank" href="https://www.npmjs.com/package/vuedraggable"
+            ><img src="https://img.shields.io/npm/dm/vuedraggable.svg" />
           </a>
-          <a
-            target="_blank"
-            href="https://www.npmjs.com/package/vuedraggable"
-          ><img src="https://img.shields.io/npm/v/vuedraggable.svg" />
+          <a target="_blank" href="https://www.npmjs.com/package/vuedraggable"
+            ><img src="https://img.shields.io/npm/v/vuedraggable.svg" />
           </a>
           <a
             target="_blank"
             href="https://github.com/SortableJS/Vue.Draggable/blob/master/LICENSE"
-          ><img src="https://img.shields.io/github/license/SortableJS/Vue.Draggable.svg" />
+            ><img
+              src="https://img.shields.io/github/license/SortableJS/Vue.Draggable.svg"
+            />
           </a>
         </div>
       </div>
 
-      <ul
-        class="nav nav-tabs"
-        role="tablist"
-      >
+      <ul class="nav nav-tabs" role="tablist">
         <li
           class="nav-item"
           v-for="component in componentList"
@@ -83,14 +81,12 @@
             :href="`#${component.name}`"
             role="tab"
             aria-controls="profile"
-          >{{ component.display }}</a>
+            >{{ component.display }}</a
+          >
         </li>
       </ul>
 
-      <div
-        class="tab-content"
-        id="tab-content"
-      >
+      <div class="tab-content" id="tab-content">
         <div
           class="tab-pane show"
           :id="component.name"
@@ -99,11 +95,9 @@
           v-for="component in componentList"
           :key="component.name"
         >
-
           <div class=" justify-content-center jumbotron main-container">
             <div class="row icon-container">
-
-              <div>{{component.instruction}}</div>
+              <div>{{ component.instruction }}</div>
 
               <a
                 class="icon github"
