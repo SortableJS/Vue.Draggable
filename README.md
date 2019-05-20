@@ -192,7 +192,7 @@ Example setting handle, sortable and a group option:
         handle=".handle"
         :group="{ name: 'people', pull: 'clone', put: false }"
         ghost-class="ghost"
-        :sortable="false"
+        :sort="false"
         @change="log"
       >
       <!-- -->
