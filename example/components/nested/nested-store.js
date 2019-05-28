@@ -3,7 +3,7 @@ import Vue from "vue";
 
 Vue.use(Vuex);
 
-export const nestedA = {
+export const nested = {
   namespaced: true,
   state: {
     elements: [
@@ -18,12 +18,12 @@ export const nestedA = {
         elements: [
           {
             id: 4,
-            name: "King",
+            name: "Lord Farquad",
             elements: []
           },
           {
             id: 5,
-            name: "Queen",
+            name: "Prince Charming",
             elements: []
           }
         ]
@@ -45,4 +45,4 @@ export const nestedA = {
       commit("updateElements", payload);
     }
   }
-}
+};

@@ -1,25 +1,31 @@
 <style scoped>
 .item-container {
-  border: solid black 1px;
-  min-height: 2rem;
+  max-width: 20rem;
+  margin: 0;
 }
 
 .item {
   padding: 1rem;
-
+  border: solid black 1px;
+  background-color: #fefefe;
 }
 .item-sub {
-  padding:1rem;
-  margin: 0 0 0 1rem
+  margin: 0 0 0 1rem;
 }
 </style>
 
-
 <template>
-  <draggable v-bind="dragOptions" class="item-container" :list="list" :value="value" @input="emitter">
-    <div class="item-group" :key="el.id" v-for="(el, i) in realValue">
+  <draggable
+    v-bind="dragOptions"
+    tag="div"
+    class="item-container"
+    :list="list"
+    :value="value"
+    @input="emitter"
+  >
+    <div class="item-group" :key="el.id" v-for="el in realValue">
       <div class="item">{{ el.name }}</div>
-      <nested-test class="item-sub" :list="el.elements"/>
+      <nested-test class="item-sub" :list="el.elements" />
     </div>
   </draggable>
 </template>
@@ -38,11 +44,17 @@ export default {
   },
   computed: {
     dragOptions() {
-      return {transition: 200,}
+      return {
+        animation: 0,
+        group: "description",
+        disabled: false,
+        ghostClass: "ghost"
+      };
     },
+    // this.value when input = v-model
+    // this.list  when input != v-model
     realValue() {
-      const test = this.value ? this.value : this.list;
-      return test;
+      return this.value ? this.value : this.list;
     }
   },
   props: {

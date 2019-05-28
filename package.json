@@ -21,7 +21,8 @@
     "drop",
     "list",
     "Sortable.js",
-    "component"
+    "component",
+    "nested"
   ],
   "dependencies": {
     "sortablejs": "^1.9.0"

@@ -1,7 +1,7 @@
 <template>
-  <div class="row">
-    <nested-test class="col-8"  v-model="elements"/>
-    <raw-displayer class="col-4" :title="'Vuex Store'" :value="elements"/>
+  <div class="justify-content-between row">
+    <nested-test class="col-8" v-model="elements" />
+    <raw-displayer class="col-4" :title="'Vuex Store'" :value="elements" />
   </div>
 </template>
 
@@ -11,7 +11,7 @@ import rawDisplayer from "./infra/raw-displayer.vue";
 
 export default {
   name: "nested-with-vmodel",
-  display: "Nested with v-model & Vuex",
+  display: "Nested (v-model & vuex)",
   order: 16,
   components: {
     NestedTest,
@@ -20,11 +20,10 @@ export default {
   computed: {
     elements: {
       get() {
-        return this.$store.state.nestedA.elements;
+        return this.$store.state.nested.elements;
       },
       set(value) {
-        console.log(value);
-        this.$store.dispatch("nestedA/updateElements", value);
+        this.$store.dispatch("nested/updateElements", value);
       }
     }
   },
