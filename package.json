@@ -2,12 +2,17 @@
   "name": "vuedraggable",
   "version": "2.21.0",
   "description": "draggable component for vue",
-  "main": "dist/vuedraggable.umd.min.js",
+  "cdn": "dist/vuedraggable.umd.min.js",
+  "main": "dist/vuedraggable.js",
+  "unpkg": "dist/vuedraggable.umd.min.js",
+  "module": "dist/vuedraggable.esm.js",
+  "jsdelivr": "dist/vuedraggable.umd.min.js",
+  "umd:main": "dist/vuedraggable.umd.js",
   "private": false,
   "scripts": {
     "serve": "vue-cli-service serve ./example/main.js --open",
     "build:doc": "vue-cli-service build ./example/main.js --dest docs --mode development",
-    "build": "vue-cli-service build --name vuedraggable --entry ./src/vuedraggable.js --target lib",
+    "build": "bili",
     "lint": "vue-cli-service lint src example",
     "prepublishOnly": "npm run lint && npm run test:unit && npm run build:doc && npm run build",
     "test:unit": "vue-cli-service test:unit --coverage",
@@ -36,6 +41,7 @@
     "babel-core": "7.0.0-bridge.0",
     "babel-eslint": "^10.0.1",
     "babel-jest": "^23.6.0",
+    "bili": "^4.8.0",
     "bootstrap": "^4.3.1",
     "codecov": "^3.2.0",
     "component-fixture": "^0.4.1",
@@ -79,6 +85,5 @@
     "dist/*.map",
     "dist/*.js",
     "src/*"
-  ],
-  "module": "dist/vuedraggable.common.js"
+  ]
 }
