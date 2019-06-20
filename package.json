@@ -2,6 +2,7 @@
   "name": "vuedraggable",
   "version": "2.21.0",
   "description": "draggable component for vue",
+  "license": "MIT",
   "main": "dist/vuedraggable.umd.min.js",
   "private": false,
   "scripts": {
