@@ -17,7 +17,6 @@
           my-2
           style="background: red"
         >
-
           <draggable
             :list="row.items"
             tag="v-layout"
@@ -34,16 +33,11 @@
               <v-card style="height: 100px;">{{ item.title }}</v-card>
             </v-flex>
           </draggable>
-
         </v-flex>
       </draggable>
     </div>
 
-    <rawDisplayer
-      class="col-3"
-      :value="rows"
-      title="List"
-    />
+    <rawDisplayer class="col-3" :value="rows" title="List" />
   </div>
 </template>
 
@@ -78,7 +72,7 @@ export default {
           index: 2,
           items: [
             {
-              title: "item 2",
+              title: "item 2"
             },
             {
               title: "item 3"
