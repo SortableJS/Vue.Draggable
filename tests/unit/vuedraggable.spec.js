@@ -289,6 +289,7 @@ describe("draggable.vue when initialized with list", () => {
   test.each(
     [
       ["onChoose", "choose"],
+      ["onUnchoose", "unchoose"],
       ["onSort", "sort"],
       ["onFilter", "filter"],
       ["onClone", "clone"]
@@ -736,7 +737,7 @@ describe("draggable.vue when initialized with list", () => {
       }
     );
 
-    test.each(["Start", "Add", "Remove", "Update", "End", "Choose", "Sort", "Filter", "Clone", "Move"])
+    test.each(["Start", "Add", "Remove", "Update", "End", "Choose", "Unchoose", "Sort", "Filter", "Clone", "Move"])
       ("do not call option when updating option on%s",
         (callBack) => {
           vm.$attrs = { [`on${callBack}`]: jest.fn() };
