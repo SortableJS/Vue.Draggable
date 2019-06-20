@@ -300,8 +300,8 @@ methods: {
 
 * Support for Sortable events:
 
-  `start`, `add`, `remove`, `update`, `end`, `choose`, `sort`, `filter`, `clone`<br>
-  Events are called whenever onStart, onAdd, onRemove, onUpdate, onEnd, onChoose, onSort, onClone are fired by Sortable.js with the same argument.<br>
+  `start`, `add`, `remove`, `update`, `end`, `choose`, `unchoose`, `sort`, `filter`, `clone`<br>
+  Events are called whenever onStart, onAdd, onRemove, onUpdate, onEnd, onChoose, onUnchoose, onSort, onClone are fired by Sortable.js with the same argument.<br>
   [See here for reference](https://github.com/RubaXa/Sortable#event-object-demo)
 
   Note that SortableJS OnMove callback is mapped with the [move prop](https://github.com/SortableJS/Vue.Draggable/blob/master/README.md#move)
