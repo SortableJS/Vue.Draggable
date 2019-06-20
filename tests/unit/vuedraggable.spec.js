@@ -283,6 +283,26 @@ describe("draggable.vue when initialized with list", () => {
     })
   });
 
+  test.each([
+    [Fake, true],
+    [FakeFunctional, false]
+  ])(
+    "when using component as tag",
+    (component, expectedNoneFunctionalComponentMode) => {
+      wrapper = mount(draggable, {
+        propsData: {
+          tag: "child",
+        },
+        stubs: {
+          child: component
+        }
+      });
+      const { vm: { noneFunctionalComponentMode } } = wrapper;
+      expect(noneFunctionalComponentMode).toBe(expectedNoneFunctionalComponentMode);
+    }
+  )
+
+
   it("keeps a reference to Sortable instance", () => {
     expect(vm._sortable).toBe(SortableFake);
   })
