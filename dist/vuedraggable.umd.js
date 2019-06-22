@@ -2912,8 +2912,7 @@ var draggableComponent = {
   data: function data() {
     return {
       transitionMode: false,
-      noneFunctionalComponentMode: false,
-      init: false
+      noneFunctionalComponentMode: false
     };
   },
   render: function render(h) {
@@ -2946,7 +2945,7 @@ var draggableComponent = {
   mounted: function mounted() {
     var _this3 = this;
 
-    this.noneFunctionalComponentMode = this.getTag().toLowerCase() !== this.$el.nodeName.toLowerCase();
+    this.noneFunctionalComponentMode = this.getTag().toLowerCase() !== this.$el.nodeName.toLowerCase() && !this.getIsFunctional();
 
     if (this.noneFunctionalComponentMode && this.transitionMode) {
       throw new Error("Transition-group inside component is not supported. Please alter tag value or remove transition-group. Current tag value: ".concat(this.getTag()));
@@ -3004,6 +3003,10 @@ var draggableComponent = {
     }
   },
   methods: {
+    getIsFunctional: function getIsFunctional() {
+      var fnOptions = this._vnode.fnOptions;
+      return fnOptions && fnOptions.functional;
+    },
     getTag: function getTag() {
       return this.tag || this.element;
     },
@@ -3017,11 +3020,6 @@ var draggableComponent = {
       }
     },
     getChildrenNodes: function getChildrenNodes() {
-      if (!this.init) {
-        this.noneFunctionalComponentMode = this.noneFunctionalComponentMode && this.$children.length === 1;
-        this.init = true;
-      }
-
       if (this.noneFunctionalComponentMode) {
         return this.$children[0].$slots.default;
       }

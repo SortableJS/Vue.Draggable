@@ -36,11 +36,7 @@
       </draggable>
     </div>
 
-    <rawDisplayer
-      class="col-3"
-      :value="rows"
-      title="List"
-    />
+    <rawDisplayer class="col-3" :value="rows" title="List" />
   </div>
 </template>
 
