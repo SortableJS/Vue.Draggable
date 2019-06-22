@@ -2,7 +2,6 @@
   <div class="row">
     <div class="col-8">
       <h3>Draggable</h3>
-
       <draggable
         v-model="rows"
         tag="v-layout"
@@ -28,7 +27,7 @@
               :key="item.title"
               xs4
               pa-3
-              class="row"
+              class="row-v"
             >
               <v-card style="height: 100px;">{{ item.title }}</v-card>
             </v-flex>
@@ -37,7 +36,11 @@
       </draggable>
     </div>
 
-    <rawDisplayer class="col-3" :value="rows" title="List" />
+    <rawDisplayer
+      class="col-3"
+      :value="rows"
+      title="List"
+    />
   </div>
 </template>
 
@@ -87,6 +90,11 @@ export default {
 <style scoped>
 .buttons {
   margin-top: 35px;
+}
+
+.row-v {
+  height: 150px;
+  width: 200px;
 }
 
 .ghost {
