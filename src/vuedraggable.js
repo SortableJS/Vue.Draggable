@@ -146,8 +146,7 @@ const draggableComponent = {
   data() {
     return {
       transitionMode: false,
-      noneFunctionalComponentMode: false,
-      init: false
+      noneFunctionalComponentMode: false
     };
   },
 
@@ -186,7 +185,8 @@ const draggableComponent = {
 
   mounted() {
     this.noneFunctionalComponentMode =
-      this.getTag().toLowerCase() !== this.$el.nodeName.toLowerCase();
+      this.getTag().toLowerCase() !== this.$el.nodeName.toLowerCase() &&
+      !this.getIsFunctional();
     if (this.noneFunctionalComponentMode && this.transitionMode) {
       throw new Error(
         `Transition-group inside component is not supported. Please alter tag value or remove transition-group. Current tag value: ${this.getTag()}`
@@ -251,6 +251,11 @@ const draggableComponent = {
   },
 
   methods: {
+    getIsFunctional() {
+      const { fnOptions } = this._vnode;
+      return fnOptions && fnOptions.functional;
+    },
+
     getTag() {
       return this.tag || this.element;
     },
@@ -265,12 +270,6 @@ const draggableComponent = {
     },
 
     getChildrenNodes() {
-      if (!this.init) {
-        this.noneFunctionalComponentMode =
-          this.noneFunctionalComponentMode && this.$children.length === 1;
-        this.init = true;
-      }
-
       if (this.noneFunctionalComponentMode) {
         return this.$children[0].$slots.default;
       }

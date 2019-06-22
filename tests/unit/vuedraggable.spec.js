@@ -10,6 +10,8 @@ Sortable.mockImplementation(() => SortableFake);
 import draggable from "@/vuedraggable";
 import Vue from "vue";
 import Fake from "./helper/FakeComponent.js"
+import FakeFunctional from "./helper/FakeFunctionalComponent.js"
+
 
 let wrapper;
 let vm;
@@ -190,18 +192,28 @@ describe("draggable.vue when initialized with list", () => {
     expect(wrapper.html()).toEqual(initialRender);
   })
 
-  test.each([
+  describe.each([
     "ul",
     "span",
     "div"
   ])(
-    "renders tag %s as root element",
+    "considering a tag %s",
     (tag) => {
-      wrapper = shallowMount(draggable, {
-        propsData: { tag }
+      beforeEach(() => {
+        wrapper = shallowMount(draggable, {
+          propsData: { tag }
+        });
       });
-      const expectedRegex = new RegExp(`^<${tag}>.*<\/${tag}>$`);
-      expect(wrapper.html()).toMatch(expectedRegex);
+
+      it("renders tag as root element", () => {
+        const expectedRegex = new RegExp(`^<${tag}>.*<\/${tag}>$`);
+        expect(wrapper.html()).toMatch(expectedRegex);
+      })
+
+      it("set noneFunctionalComponentMode to false ", () => {
+        const { noneFunctionalComponentMode } = vm;
+        expect(noneFunctionalComponentMode).toBe(false);
+      })
     }
   )
 
@@ -270,6 +282,26 @@ describe("draggable.vue when initialized with list", () => {
       expect(attrValue).toEqual("value1");
     })
   });
+
+  test.each([
+    [Fake, true],
+    [FakeFunctional, false]
+  ])(
+    "when using component as tag",
+    (component, expectedNoneFunctionalComponentMode) => {
+      wrapper = mount(draggable, {
+        propsData: {
+          tag: "child",
+        },
+        stubs: {
+          child: component
+        }
+      });
+      const { vm: { noneFunctionalComponentMode } } = wrapper;
+      expect(noneFunctionalComponentMode).toBe(expectedNoneFunctionalComponentMode);
+    }
+  )
+
 
   it("keeps a reference to Sortable instance", () => {
     expect(vm._sortable).toBe(SortableFake);
