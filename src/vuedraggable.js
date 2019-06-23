@@ -40,6 +40,8 @@ function delegateAndEmit(evtName) {
   };
 }
 
+const isTransitionName = (name) => ["transition-group", "TransitionGroup"].includes(name);
+
 function isTransition(slots) {
   if (!slots || slots.length !== 1) {
     return false;
@@ -48,7 +50,7 @@ function isTransition(slots) {
   if (!componentOptions) {
     return false;
   }
-  return ["transition-group", "TransitionGroup"].includes(componentOptions.tag);
+  return isTransitionName(componentOptions.tag);
 }
 
 function computeChildrenAndOffsets(children, { header, footer }) {
@@ -299,15 +301,18 @@ const draggableComponent = {
       return { index, element };
     },
 
-    getUnderlyingPotencialDraggableComponent({ __vue__ }) {
+    getUnderlyingPotencialDraggableComponent({ __vue__ : vue }) {
       if (
-        !__vue__ ||
-        !__vue__.$options ||
-        __vue__.$options._componentTag !== "transition-group"
+        !vue ||
+        !vue.$options ||
+        !isTransitionName(vue.$options._componentTag)
       ) {
-        return __vue__;
+        if (!("realList" in vue) && (vue.$children.length ===1) && ("realList" in vue.$children[0]))
+          return vue.$children[0];
+
+        return vue;
       }
-      return __vue__.$parent;
+      return vue.$parent;
     },
 
     emitChanges(evt) {
