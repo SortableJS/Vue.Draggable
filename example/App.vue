@@ -148,6 +148,7 @@ if (showAll) {
   requireContextDebug.keys().reduce((acc, key) => {
     const component = requireContextDebug(key).default;
     component.order += order;
+    component.display = `DEBUG: ${component.display}`;
     acc[component.name] = component;
     return acc;
   }, components);

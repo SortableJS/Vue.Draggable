@@ -54,8 +54,8 @@ import draggableList from "./nested/draggable-list";
 
 let id = 1;
 export default {
-  name: "simple-2",
-  display: "Simple 2",
+  name: "future-index",
+  display: "Future index",
   order: 1,
   debug: true,
   components: {
