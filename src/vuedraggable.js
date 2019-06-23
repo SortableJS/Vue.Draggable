@@ -40,7 +40,9 @@ function delegateAndEmit(evtName) {
   };
 }
 
-const isTransitionName = (name) => ["transition-group", "TransitionGroup"].includes(name);
+function isTransitionName(name) {
+  return ["transition-group", "TransitionGroup"].includes(name);
+}
 
 function isTransition(slots) {
   if (!slots || slots.length !== 1) {
@@ -301,13 +303,13 @@ const draggableComponent = {
       return { index, element };
     },
 
-    getUnderlyingPotencialDraggableComponent({ __vue__ : vue }) {
+    getUnderlyingPotencialDraggableComponent({ __vue__: vue }) {
       if (
         !vue ||
         !vue.$options ||
         !isTransitionName(vue.$options._componentTag)
       ) {
-        if (!("realList" in vue) && (vue.$children.length ===1) && ("realList" in vue.$children[0]))
+        if (!("realList" in vue) && (vue.$children.length === 1) && ("realList" in vue.$children[0]))
           return vue.$children[0];
 
         return vue;
