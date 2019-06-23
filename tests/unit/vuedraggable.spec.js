@@ -1152,6 +1152,47 @@ describe("draggable.vue when initialized with a transition group", () => {
       })
     });
 
+    describe("when calling onMove", () => {
+      let originalEvt;
+      let move;
+      let doMove;
+
+      beforeEach(() => {
+        move = jest.fn();
+        wrapper.setProps({ move });
+        evt = {
+          to: element.children[0],
+          related: element.children[0].children[1],
+          willInsertAfter: false
+        };
+        originalEvt = {
+          domInfo: true
+        };
+        doMove = () => getEvent("onMove")(evt, originalEvt);
+      });
+
+      it("calls move with list information", () => {
+        const expectedEvt = {
+          draggedContext: {
+            element: "b",
+            futureIndex: 1,
+            index: 1
+          },
+          relatedContext: {
+            component: vm,
+            element: "b",
+            index: 1,
+            list: ["a", "b", "c"]
+          },
+          to: element.children[0],
+          related: element.children[0].children[1],
+          willInsertAfter: false
+        };
+        doMove();
+        expect(move.mock.calls).toEqual([[expectedEvt, originalEvt]]);
+      });
+    });
+
     describe("when sending DragEnd", () => {
       let endEvt;
       beforeEach(() => {

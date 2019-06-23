@@ -6,7 +6,7 @@
   "main": "dist/vuedraggable.umd.min.js",
   "private": false,
   "scripts": {
-    "serve": "vue-cli-service serve ./example/main.js --open",
+    "serve": "vue-cli-service serve ./example/main.js --open --mode local",
     "build:doc": "vue-cli-service build ./example/main.js --dest docs --mode development",
     "build": "vue-cli-service build --name vuedraggable --entry ./src/vuedraggable.js --target lib",
     "lint": "vue-cli-service lint src example",
