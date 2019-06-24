@@ -55,13 +55,19 @@ function isTransition(slots) {
   return isTransitionName(componentOptions.tag);
 }
 
-function computeChildrenAndOffsets(children, { header, footer }) {
+function getSlot(slot, scopedSlot, key) {
+  return slot[key] || (scopedSlot[key] ? scopedSlot[key]() : undefined);
+}
+
+function computeChildrenAndOffsets(children, slot, scopedSlot) {
   let headerOffset = 0;
   let footerOffset = 0;
+  const header = getSlot(slot, scopedSlot, "header");
   if (header) {
     headerOffset = header.length;
     children = children ? [...header, ...children] : [...header];
   }
+  const footer = getSlot(slot, scopedSlot, "footer");
   if (footer) {
     footerOffset = footer.length;
     children = children ? [...children, ...footer] : [...footer];
@@ -159,7 +165,8 @@ const draggableComponent = {
     this.transitionMode = isTransition(slots);
     const { children, headerOffset, footerOffset } = computeChildrenAndOffsets(
       slots,
-      this.$slots
+      this.$slots,
+      this.$scopedSlots
     );
     this.headerOffset = headerOffset;
     this.footerOffset = footerOffset;

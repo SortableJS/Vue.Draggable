@@ -1209,4 +1209,35 @@ describe("draggable.vue when initialized with a transition group", () => {
       })
     })
   });
+
+  describe("draggable.vue when initialized with header and footer scoped slots", () => {
+    beforeEach(() => {
+      resetMocks();
+      items = ["a", "b", "c"];
+      wrapper = shallowMount(draggable, {
+        attachToDocument: true,
+        propsData: {
+          list: items
+        },
+        attrs: {
+          sortableOption: "value",
+          "to-be-camelized": true
+        },
+        slots: {
+          default: items.map(item => `<div>${item}</div>`),
+        },
+        scopedSlots: {
+          header: "<header/>",
+          footer: "<footer/>"
+        },
+      });
+      vm = wrapper.vm;
+      props = vm.$options.props;
+      element = wrapper.element;
+    });
+
+    it("renders correctly", () => {
+      expect(wrapper.html()).toEqual(initialRender);
+    })
+  });
 });
