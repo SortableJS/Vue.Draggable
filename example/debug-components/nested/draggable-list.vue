@@ -1,5 +1,4 @@
 <template>
-
   <draggable
     :list="list"
     :disabled="!enabled"
@@ -9,11 +8,7 @@
     @start="dragging = true"
     @end="dragging = false"
   >
-    <div
-      class="list-group-item"
-      v-for="element in list"
-      :key="element.name"
-    >
+    <div class="list-group-item" v-for="element in list" :key="element.name">
       {{ element.name }}
     </div>
   </draggable>

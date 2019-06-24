@@ -2624,12 +2624,6 @@ var es6_string_starts_with = __webpack_require__("f559");
 var keys = __webpack_require__("a4bb");
 var keys_default = /*#__PURE__*/__webpack_require__.n(keys);
 
-// EXTERNAL MODULE: ./node_modules/core-js/modules/es7.array.includes.js
-var es7_array_includes = __webpack_require__("6762");
-
-// EXTERNAL MODULE: ./node_modules/core-js/modules/es6.string.includes.js
-var es6_string_includes = __webpack_require__("2fdb");
-
 // EXTERNAL MODULE: ./node_modules/@babel/runtime-corejs2/core-js/array/is-array.js
 var is_array = __webpack_require__("a745");
 var is_array_default = /*#__PURE__*/__webpack_require__.n(is_array);
@@ -2681,6 +2675,12 @@ function _nonIterableRest() {
 function _slicedToArray(arr, i) {
   return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest();
 }
+// EXTERNAL MODULE: ./node_modules/core-js/modules/es7.array.includes.js
+var es7_array_includes = __webpack_require__("6762");
+
+// EXTERNAL MODULE: ./node_modules/core-js/modules/es6.string.includes.js
+var es6_string_includes = __webpack_require__("2fdb");
+
 // CONCATENATED MODULE: ./node_modules/@babel/runtime-corejs2/helpers/esm/arrayWithoutHoles.js
 
 function _arrayWithoutHoles(arr) {
@@ -2790,6 +2790,10 @@ function delegateAndEmit(evtName) {
   };
 }
 
+function isTransitionName(name) {
+  return ["transition-group", "TransitionGroup"].includes(name);
+}
+
 function vuedraggable_isTransition(slots) {
   if (!slots || slots.length !== 1) {
     return false;
@@ -2802,19 +2806,24 @@ function vuedraggable_isTransition(slots) {
     return false;
   }
 
-  return ["transition-group", "TransitionGroup"].includes(componentOptions.tag);
+  return isTransitionName(componentOptions.tag);
 }
 
-function computeChildrenAndOffsets(children, _ref) {
-  var header = _ref.header,
-      footer = _ref.footer;
+function getSlot(slot, scopedSlot, key) {
+  return slot[key] || (scopedSlot[key] ? scopedSlot[key]() : undefined);
+}
+
+function computeChildrenAndOffsets(children, slot, scopedSlot) {
   var headerOffset = 0;
   var footerOffset = 0;
+  var header = getSlot(slot, scopedSlot, "header");
 
   if (header) {
     headerOffset = header.length;
     children = children ? [].concat(_toConsumableArray(header), _toConsumableArray(children)) : _toConsumableArray(header);
   }
+
+  var footer = getSlot(slot, scopedSlot, "footer");
 
   if (footer) {
     footerOffset = footer.length;
@@ -2919,7 +2928,7 @@ var draggableComponent = {
     var slots = this.$slots.default;
     this.transitionMode = vuedraggable_isTransition(slots);
 
-    var _computeChildrenAndOf = computeChildrenAndOffsets(slots, this.$slots),
+    var _computeChildrenAndOf = computeChildrenAndOffsets(slots, this.$slots, this.$scopedSlots),
         children = _computeChildrenAndOf.children,
         headerOffset = _computeChildrenAndOf.headerOffset,
         footerOffset = _computeChildrenAndOf.footerOffset;
@@ -3049,14 +3058,15 @@ var draggableComponent = {
         element: element
       };
     },
-    getUnderlyingPotencialDraggableComponent: function getUnderlyingPotencialDraggableComponent(_ref2) {
-      var __vue__ = _ref2.__vue__;
+    getUnderlyingPotencialDraggableComponent: function getUnderlyingPotencialDraggableComponent(_ref) {
+      var vue = _ref.__vue__;
 
-      if (!__vue__ || !__vue__.$options || __vue__.$options._componentTag !== "transition-group") {
-        return __vue__;
+      if (!vue || !vue.$options || !isTransitionName(vue.$options._componentTag)) {
+        if (!("realList" in vue) && vue.$children.length === 1 && "realList" in vue.$children[0]) return vue.$children[0];
+        return vue;
       }
 
-      return __vue__.$parent;
+      return vue.$parent;
     },
     emitChanges: function emitChanges(evt) {
       var _this5 = this;
@@ -3092,9 +3102,9 @@ var draggableComponent = {
 
       this.alterList(updatePosition);
     },
-    getRelatedContextFromMoveEvent: function getRelatedContextFromMoveEvent(_ref3) {
-      var to = _ref3.to,
-          related = _ref3.related;
+    getRelatedContextFromMoveEvent: function getRelatedContextFromMoveEvent(_ref2) {
+      var to = _ref2.to,
+          related = _ref2.related;
       var component = this.getUnderlyingPotencialDraggableComponent(to);
 
       if (!component) {

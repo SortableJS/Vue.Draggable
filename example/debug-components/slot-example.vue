@@ -7,18 +7,9 @@
           role="group"
           aria-label="Basic example"
         >
-          <button
-            class="btn btn-secondary"
-            @click="add"
-          >Add</button>
-          <button
-            class="btn btn-secondary"
-            @click="remove"
-          >Remove</button>
-          <button
-            class="btn btn-secondary"
-            @click="clear"
-          >Clear</button>
+          <button class="btn btn-secondary" @click="add">Add</button>
+          <button class="btn btn-secondary" @click="remove">Remove</button>
+          <button class="btn btn-secondary" @click="clear">Clear</button>
         </div>
       </div>
     </div>
@@ -46,7 +37,7 @@
           </div>
         </template>
 
-         <template v-slot:footer>
+        <template v-slot:footer>
           <div>
             footer slot
           </div>
@@ -54,11 +45,7 @@
       </draggable>
     </div>
 
-    <rawDisplayer
-      class="col-3"
-      :value="list"
-      title="List"
-    />
+    <rawDisplayer class="col-3" :value="list" title="List" />
   </div>
 </template>
 

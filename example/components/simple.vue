@@ -7,14 +7,8 @@
           role="group"
           aria-label="Basic example"
         >
-          <button
-            class="btn btn-secondary"
-            @click="add"
-          >Add</button>
-          <button
-            class="btn btn-secondary"
-            @click="replace"
-          >Replace</button>
+          <button class="btn btn-secondary" @click="add">Add</button>
+          <button class="btn btn-secondary" @click="replace">Replace</button>
         </div>
 
         <div class="form-check">
@@ -24,10 +18,7 @@
             v-model="enabled"
             class="form-check-input"
           />
-          <label
-            class="form-check-label"
-            for="disabled"
-          >DnD enabled</label>
+          <label class="form-check-label" for="disabled">DnD enabled</label>
         </div>
       </div>
     </div>
@@ -54,11 +45,7 @@
       </draggable>
     </div>
 
-    <rawDisplayer
-      class="col-3"
-      :value="list"
-      title="List"
-    />
+    <rawDisplayer class="col-3" :value="list" title="List" />
   </div>
 </template>
 
