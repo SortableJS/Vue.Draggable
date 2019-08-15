@@ -233,7 +233,7 @@ const draggableComponent = {
 
   computed: {
     rootContainer() {
-      return this.transitionMode ? this.$el.children[0] : this.$el;
+      return document.querySelectorAll(".v-datatable tbody")[5];
     },
 
     realList() {
