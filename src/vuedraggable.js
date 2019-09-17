@@ -1,5 +1,6 @@
-import Sortable from "sortablejs";
 import { insertNodeAt, camelize, console, removeNode } from "./util/helper";
+const Sortable =
+  typeof navigator !== "undefined" ? require("sortablejs").default : undefined;
 
 function buildAttribute(object, propName, value) {
   if (value === undefined) {
