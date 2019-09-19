@@ -359,7 +359,7 @@ Ex:
     <button slot="footer" @click="addPeople">Add</button>
 </draggable>
 ```
- ### Gochas
+ ### Gotchas
  
  - Vue.draggable children should always map the list or value prop using a v-for directive
    * You may use [header](https://github.com/SortableJS/Vue.Draggable#header) and [footer](https://github.com/SortableJS/Vue.Draggable#footer) slot to by-pass this limitation.
