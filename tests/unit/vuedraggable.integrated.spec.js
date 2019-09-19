@@ -1,7 +1,6 @@
 import { mount } from "@vue/test-utils";
 import Sortable from "sortablejs";
-jest.genMockFromModule('sortablejs');
-jest.mock('sortablejs');
+jest.mock('sortablejs', () => ({ __esModule: true, default: jest.genMockFromModule('sortablejs') }));
 const SortableFake = {
   destroy: jest.fn(),
   option: jest.fn()
