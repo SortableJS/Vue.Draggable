@@ -134,7 +134,7 @@ const components = requireContext.keys().reduce((acc, key) => {
 }, {});
 
 const showAll = process.env.VUE_APP_SHOW_ALL_EXAMPLES === "true";
-window.console.log(process.env.VUE_APP_SHOW_ALL_EXAMPLES );
+window.console.log(process.env.VUE_APP_SHOW_ALL_EXAMPLES);
 if (showAll) {
   const order = Object.keys(components);
   const requireContextDebug = require.context(
