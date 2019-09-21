@@ -1,6 +1,4 @@
 import { insertNodeAt, camelize, console, removeNode } from "./util/helper";
-const Sortable =
-  typeof navigator !== "undefined" ? require("sortablejs").default : undefined;
 
 function buildAttribute(object, propName, value) {
   if (value === undefined) {
@@ -224,6 +222,7 @@ const draggableComponent = {
       }
     });
     !("draggable" in options) && (options.draggable = ">*");
+    const Sortable = require("sortablejs").default;
     this._sortable = new Sortable(this.rootContainer, options);
     this.computeIndexes();
   },
