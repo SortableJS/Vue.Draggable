@@ -4,6 +4,10 @@
   "description": "draggable component for vue",
   "license": "MIT",
   "main": "dist/vuedraggable.umd.min.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SortableJS/Vue.Draggable.git"
+  },
   "private": false,
   "scripts": {
     "serve": "vue-cli-service serve ./example/main.js --open --mode local",
