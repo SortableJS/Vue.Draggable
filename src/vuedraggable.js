@@ -1,3 +1,4 @@
+import Sortable from "sortablejs";
 import { insertNodeAt, camelize, console, removeNode } from "./util/helper";
 
 function buildAttribute(object, propName, value) {
@@ -222,7 +223,6 @@ const draggableComponent = {
       }
     });
     !("draggable" in options) && (options.draggable = ">*");
-    const Sortable = require("sortablejs").default;
     this._sortable = new Sortable(this.rootContainer, options);
     this.computeIndexes();
   },

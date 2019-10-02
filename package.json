@@ -1,6 +1,6 @@
 {
   "name": "vuedraggable",
-  "version": "2.23.1",
+  "version": "2.23.2",
   "description": "draggable component for vue",
   "license": "MIT",
   "main": "dist/vuedraggable.umd.min.js",
@@ -26,7 +26,7 @@
     "nested"
   ],
   "dependencies": {
-    "sortablejs": "^1.10.0"
+    "sortablejs": "^1.10.1"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.4.0",
