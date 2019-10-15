@@ -1,5 +1,7 @@
-import Sortable from "sortablejs";
+import Sortable, { MultiDrag } from "sortablejs";
 import { insertNodeAt, camelize, console, removeNode } from "./util/helper";
+
+Sortable.mount(new MultiDrag());
 
 function buildAttribute(object, propName, value) {
   if (value === undefined) {
@@ -143,6 +145,16 @@ const props = {
     type: Object,
     required: false,
     default: null
+  },
+  multiDrag: {
+    type: Boolean,
+    required: false,
+    default: false
+  },
+  selectedClass: {
+    type: String,
+    required: false,
+    default: null
   }
 };
 
@@ -223,6 +235,10 @@ const draggableComponent = {
       }
     });
     !("draggable" in options) && (options.draggable = ">*");
+    if (this.multiDrag) {
+      options.multiDrag = true;
+      options.selectedClass = this.selectedClass;
+    }
     this._sortable = new Sortable(this.rootContainer, options);
     this.computeIndexes();
   },
