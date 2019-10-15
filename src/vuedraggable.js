@@ -1,7 +1,7 @@
 import Sortable, { MultiDrag } from "sortablejs";
 import { insertNodeAt, camelize, console, removeNode } from "./util/helper";
 
-Sortable.mount(new MultiDrag());
+let MULTI_DRAG_PLUGIN = undefined;
 
 function buildAttribute(object, propName, value) {
   if (value === undefined) {
@@ -203,6 +203,17 @@ const draggableComponent = {
       console.warn(
         "Options props is deprecated, add sortable options directly as vue.draggable item, or use v-bind. See https://github.com/SortableJS/Vue.Draggable/blob/master/documentation/migrate.md#options-props"
       );
+    }
+
+    if (this.multiDrag && (this.selectedClass || "") === "") {
+      console.warn(
+        "selected-class must be set when multi-drag mode. See https://github.com/SortableJS/Sortable/wiki/Dragging-Multiple-Items-in-Sortable#enable-multi-drag"
+      );
+    }
+
+    if (MULTI_DRAG_PLUGIN === undefined) {
+      MULTI_DRAG_PLUGIN = new MultiDrag();
+      Sortable.mount(MULTI_DRAG_PLUGIN);
     }
   },
 
