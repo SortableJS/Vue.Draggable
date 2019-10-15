@@ -294,4 +294,9 @@ a {
   opacity: 1;
   transition: opacity 0.15s;
 }
+
+.selected {
+  color: red !important;
+  background-color: rgba(255, 0, 0, 0.2) !important;
+}
 </style>
