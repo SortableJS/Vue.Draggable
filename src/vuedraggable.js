@@ -1,7 +1,10 @@
-import Sortable, { MultiDrag } from "sortablejs";
+import { Sortable, MultiDrag } from "sortablejs";
 import { insertNodeAt, camelize, console, removeNode } from "./util/helper";
 
-let MULTI_DRAG_PLUGIN = undefined;
+if (!MultiDrag.singleton) {
+  MultiDrag.singleton = new MultiDrag();
+  Sortable.mount(MultiDrag.singleton);
+}
 
 function buildAttribute(object, propName, value) {
   if (value === undefined) {
@@ -209,11 +212,6 @@ const draggableComponent = {
       console.warn(
         "selected-class must be set when multi-drag mode. See https://github.com/SortableJS/Sortable/wiki/Dragging-Multiple-Items-in-Sortable#enable-multi-drag"
       );
-    }
-
-    if (MULTI_DRAG_PLUGIN === undefined) {
-      MULTI_DRAG_PLUGIN = new MultiDrag();
-      Sortable.mount(MULTI_DRAG_PLUGIN);
     }
   },
 
