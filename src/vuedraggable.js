@@ -551,7 +551,7 @@ const draggableComponent = {
         removeNode(item);
         insertNodeAt(evt.from, item, c.index);
       });
-      const newIndexFrom = this.getVmIndex(evt.newIndex);
+      const newIndexFrom = this.getVmIndex(evt.newIndex) - evt.items.indexOf(evt.item);
       const moved = this.context.map((item, index) => {
         const oldIndex = item.index;
         const newIndex = newIndexFrom + index;
