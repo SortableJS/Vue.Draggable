@@ -296,6 +296,21 @@ methods: {
   }
 ```
 
+#### multiDrag
+Type: `boolean`<br>
+Required: `false`<br>
+Default: `false`<br>
+
+Set `true` for activate [MultiDrag](https://github.com/SortableJS/Sortable/wiki/Dragging-Multiple-Items-in-Sortable) plugin.
+
+#### selectedClass
+Type: `string`<br>
+Required: `false`<br>
+Default: `undefined`<br>
+
+The selected class is the HTML class that will be applied to the selected elements in the list.<br>
+**Must set this prop for multi drag.** (see MultiDrag plugin doc.)
+
 ### Events
 
 * Support for Sortable events:
