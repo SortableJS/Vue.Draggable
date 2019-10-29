@@ -478,7 +478,7 @@ const draggableComponent = {
   }
 };
 
-if (typeof window !== "undefined" && "Vue" in window) {
+if (typeof window !== "undefined" && "Vue" in window && typeof window.Vue.component === "function") {
   window.Vue.component("draggable", draggableComponent);
 }
 
