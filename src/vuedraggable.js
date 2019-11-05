@@ -478,9 +478,9 @@ const draggableComponent = {
       }
       evt.items.forEach(removeNode);
       const newIndexFrom = this.getVmIndex(evt.newIndex);
+      this.alterList(list => list.splice(newIndexFrom, 0, ...elements));
       const added = elements.map((element, index) => {
         const newIndex = newIndexFrom + index;
-        this.spliceList(newIndex, 0, element);
         return { element, newIndex };
       });
       this.computeIndexes();
@@ -519,10 +519,14 @@ const draggableComponent = {
       const reversed = this.context.sort((a, b) => b.index - a.index);
       const removed = reversed.map(item => {
         const oldIndex = item.index;
-        this.spliceList(oldIndex, 1);
         this.resetTransitionData(oldIndex);
         return { element: item.element, oldIndex };
       });
+      this.alterList(list => {
+        removed.forEach(removedItem => {
+          list.splice(removedItem.oldIndex, 1);
+        })
+      })
       this.computeIndexes();
       this.emitChanges({ removed });
     },
