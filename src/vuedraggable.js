@@ -1,7 +1,7 @@
-import { Sortable, MultiDrag } from "sortablejs";
+import Sortable, { MultiDrag } from "sortablejs";
 import { insertNodeAt, camelize, console, removeNode } from "./util/helper";
 
-if (!MultiDrag.singleton) {
+if (MultiDrag && !MultiDrag.singleton) {
   MultiDrag.singleton = new MultiDrag();
   Sortable.mount(MultiDrag.singleton);
 }
@@ -510,7 +510,7 @@ const draggableComponent = {
 
     doDragRemoveList(evt) {
       evt.items.forEach((item, index) => {
-        insertNodeAt(this.rootContainer, item, evt.oldIndex + index);
+        insertNodeAt(this.rootContainer, item, evt.oldIndicies[index].index);
       });
       if (evt.pullMode === "clone") {
         removeNode(evt.clone);
@@ -525,8 +525,8 @@ const draggableComponent = {
       this.alterList(list => {
         removed.forEach(removedItem => {
           list.splice(removedItem.oldIndex, 1);
-        })
-      })
+        });
+      });
       this.computeIndexes();
       this.emitChanges({ removed });
     },
