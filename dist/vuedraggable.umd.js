@@ -2580,8 +2580,8 @@ module.exports = Object.keys || function keys(O) {
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return removeNode; });
 /* harmony import */ var core_js_modules_es6_regexp_replace__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__("a481");
 /* harmony import */ var core_js_modules_es6_regexp_replace__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es6_regexp_replace__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var C_VueDraggable_node_modules_babel_runtime_corejs2_core_js_object_create__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__("4aa6");
-/* harmony import */ var C_VueDraggable_node_modules_babel_runtime_corejs2_core_js_object_create__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(C_VueDraggable_node_modules_babel_runtime_corejs2_core_js_object_create__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _home_divinespear_Documents_workspace_private_Vue_Draggable_node_modules_babel_runtime_corejs2_core_js_object_create__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__("4aa6");
+/* harmony import */ var _home_divinespear_Documents_workspace_private_Vue_Draggable_node_modules_babel_runtime_corejs2_core_js_object_create__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_home_divinespear_Documents_workspace_private_Vue_Draggable_node_modules_babel_runtime_corejs2_core_js_object_create__WEBPACK_IMPORTED_MODULE_1__);
 
 
 
@@ -2596,7 +2596,7 @@ function getConsole() {
 var console = getConsole();
 
 function cached(fn) {
-  var cache = C_VueDraggable_node_modules_babel_runtime_corejs2_core_js_object_create__WEBPACK_IMPORTED_MODULE_1___default()(null);
+  var cache = _home_divinespear_Documents_workspace_private_Vue_Draggable_node_modules_babel_runtime_corejs2_core_js_object_create__WEBPACK_IMPORTED_MODULE_1___default()(null);
 
   return function cachedFn(str) {
     var hit = cache[str];
@@ -3536,23 +3536,7 @@ var draggableComponent = {
       };
     },
     getUnderlyingVmList: function getUnderlyingVmList(htmlElts) {
-      var _this5 = this;
-
-      var list = htmlElts.map(function (htmlElt) {
-        var index = computeVmIndex(_this5.getChildrenNodes() || [], htmlElt);
-
-        if (index === -1) {
-          //Edge case during move callback: related element might be
-          //an element different from collection
-          return null;
-        }
-
-        var element = _this5.realList[index];
-        return {
-          index: index,
-          element: element
-        };
-      });
+      var list = htmlElts.map(this.getUnderlyingVm);
       return list.filter(function (e) {
         return !!e;
       });
@@ -3568,10 +3552,10 @@ var draggableComponent = {
       return vue.$parent;
     },
     emitChanges: function emitChanges(evt) {
-      var _this6 = this;
+      var _this5 = this;
 
       this.$nextTick(function () {
-        _this6.$emit("change", evt);
+        _this5.$emit("change", evt);
       });
     },
     alterList: function alterList(onList) {
@@ -3741,10 +3725,10 @@ var draggableComponent = {
       });
     },
     doDragRemoveList: function doDragRemoveList(evt) {
-      var _this7 = this;
+      var _this6 = this;
 
       evt.items.forEach(function (item, index) {
-        Object(helper["c" /* insertNodeAt */])(_this7.rootContainer, item, evt.oldIndicies[index].index);
+        Object(helper["c" /* insertNodeAt */])(_this6.rootContainer, item, evt.oldIndicies[index].index);
       });
 
       if (evt.pullMode === "clone") {
@@ -3758,7 +3742,7 @@ var draggableComponent = {
       var removed = reversed.map(function (item) {
         var oldIndex = item.index;
 
-        _this7.resetTransitionData(oldIndex);
+        _this6.resetTransitionData(oldIndex);
 
         return {
           element: item.element,
@@ -3798,13 +3782,14 @@ var draggableComponent = {
       });
     },
     doDragUpdateList: function doDragUpdateList(evt) {
-      var _this8 = this;
+      var _this7 = this;
 
       evt.items.forEach(function (item, index) {
-        var c = _this8.context[index];
+        var c = _this7.context[index];
         Object(helper["d" /* removeNode */])(item);
         Object(helper["c" /* insertNodeAt */])(evt.from, item, c.index);
-      });
+      }); // eslint-disable-next-line prettier/prettier
+
       var newIndexFrom = this.getVmIndex(evt.newIndex) - evt.items.indexOf(evt.item);
       var moved = this.context.map(function (item, index) {
         var oldIndex = item.index;

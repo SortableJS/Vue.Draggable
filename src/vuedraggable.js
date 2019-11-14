@@ -336,16 +336,7 @@ const draggableComponent = {
     },
 
     getUnderlyingVmList(htmlElts) {
-      const list = htmlElts.map(htmlElt => {
-        const index = computeVmIndex(this.getChildrenNodes() || [], htmlElt);
-        if (index === -1) {
-          //Edge case during move callback: related element might be
-          //an element different from collection
-          return null;
-        }
-        const element = this.realList[index];
-        return { index, element };
-      });
+      const list = htmlElts.map(this.getUnderlyingVm);
       return list.filter(e => !!e);
     },
 
@@ -555,6 +546,7 @@ const draggableComponent = {
         removeNode(item);
         insertNodeAt(evt.from, item, c.index);
       });
+      // eslint-disable-next-line prettier/prettier
       const newIndexFrom = this.getVmIndex(evt.newIndex) - evt.items.indexOf(evt.item);
       const moved = this.context.map((item, index) => {
         const oldIndex = item.index;
