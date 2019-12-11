@@ -242,7 +242,7 @@ evt object has same property as [Sortable onMove event](https://github.com/RubaX
 
 HTML:
 ```HTML
-<draggable :list="list" :move="checkMove">
+<draggable :list="list" @move="checkMove">
 ```
 javascript:
 ```javascript
