@@ -1,4 +1,7 @@
 import Sortable from "sortablejs";
+import { Swap } from "sortablejs/modular/sortable.core.esm";
+Sortable.mount(new Swap());
+
 import { insertNodeAt, camelize, console, removeNode } from "./util/helper";
 
 function buildAttribute(object, propName, value) {
