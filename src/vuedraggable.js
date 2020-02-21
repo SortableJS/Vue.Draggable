@@ -367,6 +367,11 @@ const draggableComponent = {
       this.alterList(updatePosition);
     },
 
+    swapPosition(oldIndex, newIndex) {
+      const swapPosition = list =>
+        (list[oldIndex] = list.splice(newIndex, 1, list[oldIndex])[0]);
+      this.alterList(swapPosition);
+    },
     getRelatedContextFromMoveEvent({ to, related }) {
       const component = this.getUnderlyingPotencialDraggableComponent(to);
       if (!component) {
@@ -437,13 +442,31 @@ const draggableComponent = {
     },
 
     onDragUpdate(evt) {
-      removeNode(evt.item);
-      insertNodeAt(evt.from, evt.item, evt.oldIndex);
-      const oldIndex = this.context.index;
-      const newIndex = this.getVmIndex(evt.newIndex);
-      this.updatePosition(oldIndex, newIndex);
-      const moved = { element: this.context.element, oldIndex, newIndex };
-      this.emitChanges({ moved });
+      if (this.swap) {
+        const { oldIndex, newIndex, from, to } = evt;
+        const swapContext = this.getUnderlyingVm(evt.swapItem);
+        const swapElement = this.clone(swapContext.element);
+        from.replaceChild(evt.swapItem, evt.item);
+        insertNodeAt(from, evt.item, oldIndex);
+        this.swapPosition(oldIndex, newIndex);
+        const swapped = {
+          element: this.context.element,
+          swapElement,
+          fromIndex: oldIndex,
+          toIndex: newIndex,
+          to,
+          from
+        };
+        this.emitChanges({ swapped });
+      } else {
+        removeNode(evt.item);
+        insertNodeAt(evt.from, evt.item, evt.oldIndex);
+        const oldIndex = this.context.index;
+        const newIndex = this.getVmIndex(evt.newIndex);
+        this.updatePosition(oldIndex, newIndex);
+        const moved = { element: this.context.element, oldIndex, newIndex };
+        this.emitChanges({ moved });
+      }
     },
 
     updateProperty(evt, propertyName) {
