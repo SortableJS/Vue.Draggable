@@ -146,6 +146,13 @@ const props = {
     type: Object,
     required: false,
     default: null
+  },
+  swap: {
+    type: Boolean,
+    default: false
+  },
+  swapClass: {
+    type: String
   }
 };
 
@@ -223,7 +230,9 @@ const draggableComponent = {
     const options = Object.assign({}, this.options, attributes, optionsAdded, {
       onMove: (evt, originalEvent) => {
         return this.onDragMove(evt, originalEvent);
-      }
+      },
+      swap: this.swap,
+      swapClass: this.swapClass
     });
     !("draggable" in options) && (options.draggable = ">*");
     this._sortable = new Sortable(this.rootContainer, options);
