@@ -4,6 +4,8 @@
       <h3>Draggable 1</h3>
       <draggable class="list-group" :list="list1" group="people" @change="log">
         <div
+          @start="drag=true" 
+          @end="drag=false"
           class="list-group-item"
           v-for="(element, index) in list1"
           :key="element.name"
@@ -17,6 +19,8 @@
       <h3>Draggable 2</h3>
       <draggable class="list-group" :list="list2" group="people" @change="log">
         <div
+          @start="drag=true" 
+          @end="drag=false"
           class="list-group-item"
           v-for="(element, index) in list2"
           :key="element.name"
