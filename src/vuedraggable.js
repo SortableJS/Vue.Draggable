@@ -478,8 +478,4 @@ const draggableComponent = {
   }
 };
 
-if (typeof window !== "undefined" && "Vue" in window) {
-  window.Vue.component("draggable", draggableComponent);
-}
-
 export default draggableComponent;
