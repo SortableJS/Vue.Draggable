@@ -504,7 +504,11 @@ const draggableComponent = {
         insertNodeAt(this.rootContainer, item, evt.oldIndicies[index].index);
       });
       if (evt.pullMode === "clone") {
-        removeNode(evt.clone);
+        if (evt.nodes) {
+          evt.nodes.forEach(removeNode);
+        } else {
+          removeNode(evt.clone);
+        }
         return;
       }
       const reversed = this.context.sort((a, b) => b.index - a.index);

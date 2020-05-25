@@ -3732,7 +3732,12 @@ var draggableComponent = {
       });
 
       if (evt.pullMode === "clone") {
-        Object(helper["d" /* removeNode */])(evt.clone);
+        if (evt.nodes) {
+          evt.nodes.forEach(helper["d" /* removeNode */]);
+        } else {
+          Object(helper["d" /* removeNode */])(evt.clone);
+        }
+
         return;
       }
 
