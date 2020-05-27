@@ -315,9 +315,9 @@ The selected class is the HTML class that will be applied to the selected elemen
 
 * Support for Sortable events:
 
-  `start`, `add`, `remove`, `update`, `end`, `choose`, `unchoose`, `sort`, `filter`, `clone`<br>
-  Events are called whenever onStart, onAdd, onRemove, onUpdate, onEnd, onChoose, onUnchoose, onSort, onClone are fired by Sortable.js with the same argument.<br>
-  [See here for reference](https://github.com/RubaXa/Sortable#event-object-demo)
+  `start`, `add`, `remove`, `update`, `end`, `choose`, `unchoose`, `sort`, `filter`, `clone`, `select`, `deselect`<br>
+  Events are called whenever onStart, onAdd, onRemove, onUpdate, onEnd, onChoose, onUnchoose, onSort, onClone, onSelect, onDeselect are fired by Sortable.js with the same argument.<br>
+  [See here for reference](https://github.com/RubaXa/Sortable#event-object-demo) and [see here for MultiDrag reference](https://github.com/SortableJS/Sortable/tree/master/plugins/MultiDrag#options)
 
   Note that SortableJS OnMove callback is mapped with the [move prop](https://github.com/SortableJS/Vue.Draggable/blob/master/README.md#move)
 
