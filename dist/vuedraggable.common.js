@@ -3450,8 +3450,11 @@ var draggableComponent = {
 
     if (this.multiDrag) {
       options.multiDrag = true;
-      options.multiDragKey = this.multiDragKey;
       options.selectedClass = this.selectedClass;
+
+      if (this.multiDragKey) {
+        options.multiDragKey = this.multiDragKey;
+      }
     }
 
     this._sortable = new external_commonjs_sortablejs_commonjs2_sortablejs_amd_sortablejs_root_Sortable_default.a(this.rootContainer, options);

@@ -259,8 +259,10 @@ const draggableComponent = {
     !("draggable" in options) && (options.draggable = ">*");
     if (this.multiDrag) {
       options.multiDrag = true;
-      options.multiDragKey = this.multiDragKey;
       options.selectedClass = this.selectedClass;
+      if (this.multiDragKey) {
+        options.multiDragKey = this.multiDragKey;
+      }
     }
     this._sortable = new Sortable(this.rootContainer, options);
     this.computeIndexes();
