@@ -162,6 +162,11 @@ const props = {
     required: false,
     default: false
   },
+  multiDragKey: {
+    type: String,
+    required: false,
+    default: null
+  },
   selectedClass: {
     type: String,
     required: false,
@@ -254,6 +259,7 @@ const draggableComponent = {
     !("draggable" in options) && (options.draggable = ">*");
     if (this.multiDrag) {
       options.multiDrag = true;
+      options.multiDragKey = this.multiDragKey;
       options.selectedClass = this.selectedClass;
     }
     this._sortable = new Sortable(this.rootContainer, options);

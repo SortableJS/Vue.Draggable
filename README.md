@@ -303,6 +303,13 @@ Default: `false`<br>
 
 Set `true` for activate [MultiDrag](https://github.com/SortableJS/Sortable/wiki/Dragging-Multiple-Items-in-Sortable) plugin.
 
+#### multiDragKey
+Type: `string`<br>
+Required: `false`<br>
+Default: `undefined`<br>
+
+See "Selection key" part of [MultiDrag](https://github.com/SortableJS/Sortable/wiki/Dragging-Multiple-Items-in-Sortable) plugin.
+
 #### selectedClass
 Type: `string`<br>
 Required: `false`<br>
