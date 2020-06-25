@@ -310,7 +310,7 @@ const draggableComponent = {
       return { index, element };
     },
 
-    getUnderlyingPotencialDraggableComponent({ __vue__: vue }) {
+    getUnderlyingPotentialDraggableComponent({ __vue__: vue }) {
       if (
         !vue ||
         !vue.$options ||
@@ -356,7 +356,7 @@ const draggableComponent = {
     },
 
     getRelatedContextFromMoveEvent({ to, related }) {
-      const component = this.getUnderlyingPotencialDraggableComponent(to);
+      const component = this.getUnderlyingPotentialDraggableComponent(to);
       if (!component) {
         return { component };
       }
