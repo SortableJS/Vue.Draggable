@@ -98,7 +98,7 @@ function getComponentAttributes($attrs, componentData) {
   return attributes;
 }
 
-const eventsListened = ["Start", "Add", "Remove", "Update", "End"];
+const eventsListened = ["Start", "Add", "Remove", "Update", "End", "Spill"];
 const eventsToEmit = ["Choose", "Unchoose", "Sort", "Filter", "Clone"];
 const readonlyProperties = ["Move", ...eventsListened, ...eventsToEmit].map(
   evt => "on" + evt
@@ -474,6 +474,13 @@ const draggableComponent = {
     onDragEnd() {
       this.computeIndexes();
       draggingElement = null;
+    },
+
+    onDragSpill(evt) {
+      // Only removeOnSpill needs additional handling, revertOnSpill works out-of-the-box.
+      if (this._sortable.options.removeOnSpill === true) {
+        this.onDragRemove(evt);
+      }
     }
   }
 };
