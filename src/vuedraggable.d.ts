@@ -22,5 +22,5 @@ declare module 'vuedraggable' {
     value: any[];
   }
 
-  export = Draggable;
+  export default Draggable;
 }
