@@ -2,7 +2,16 @@
   <div class="row">
     <div class="col-3">
       <h3>Draggable 1</h3>
-      <draggable class="list-group" :list="list1" group="people" multi-drag selected-class="selected" @change="log" @select="log" @deselect="log">
+      <draggable
+        class="list-group"
+        :list="list1"
+        group="people"
+        multi-drag
+        selected-class="selected"
+        @change="log"
+        @select="log"
+        @deselect="log"
+      >
         <div
           class="list-group-item"
           v-for="(element, index) in list1"
@@ -15,7 +24,16 @@
 
     <div class="col-3">
       <h3>Draggable 2</h3>
-      <draggable class="list-group" :list="list2" group="people" multi-drag selected-class="selected" @change="log" @select="log" @deselect="log">
+      <draggable
+        class="list-group"
+        :list="list2"
+        group="people"
+        multi-drag
+        selected-class="selected"
+        @change="log"
+        @select="log"
+        @deselect="log"
+      >
         <div
           class="list-group-item"
           v-for="(element, index) in list2"
