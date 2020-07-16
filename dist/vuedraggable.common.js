@@ -2609,8 +2609,12 @@ function removeNode(node) {
 }
 
 function insertNodeAt(fatherNode, node, position) {
-  var refNode = position === 0 ? fatherNode.children[0] : fatherNode.children[position - 1].nextSibling;
-  fatherNode.insertBefore(node, refNode);
+  if (fatherNode.children.length && (position === 0 || fatherNode.children[position - 1])) {
+    var refNode = position === 0 ? fatherNode.children[0] : fatherNode.children[position - 1].nextSibling;
+    fatherNode.insertBefore(node, refNode);
+  } else {
+    fatherNode.append(node);
+  }
 }
 
 

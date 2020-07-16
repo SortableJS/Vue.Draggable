@@ -26,11 +26,18 @@ function removeNode(node) {
 }
 
 function insertNodeAt(fatherNode, node, position) {
-  const refNode =
-    position === 0
-      ? fatherNode.children[0]
-      : fatherNode.children[position - 1].nextSibling;
-  fatherNode.insertBefore(node, refNode);
+  if (
+    fatherNode.children.length &&
+    (position === 0 || fatherNode.children[position - 1])
+  ) {
+    const refNode =
+      position === 0
+        ? fatherNode.children[0]
+        : fatherNode.children[position - 1].nextSibling;
+    fatherNode.insertBefore(node, refNode);
+  } else {
+    fatherNode.append(node);
+  }
 }
 
 export { insertNodeAt, camelize, console, removeNode };
