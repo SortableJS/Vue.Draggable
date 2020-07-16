@@ -103,9 +103,7 @@
                 class="icon github"
                 target="_blank"
                 :href="
-                  `https://github.com/SortableJS/Vue.Draggable/blob/master/example/components/${
-                    component.name
-                  }.vue`
+                  `https://github.com/SortableJS/Vue.Draggable/blob/master/example/components/${component.name}.vue`
                 "
               >
                 <button class="btn btn-secondary">
