@@ -12,7 +12,6 @@ import Vue from "vue";
 import Fake from "./helper/FakeComponent.js"
 import FakeFunctional from "./helper/FakeFunctionalComponent.js"
 
-
 let wrapper;
 let vm;
 let props;
@@ -22,7 +21,16 @@ let element;
 let input;
 const initialRender = "<div><header></header><div>a</div><div>b</div><div>c</div><footer></footer></div>";
 const initialRenderRaw = "<div><div>a</div><div>b</div><div>c</div></div>";
-const initialRenderTransition = "<div><span><div>a</div><div>b</div><div>c</div></span></div>";
+const initialRenderTransition = "<div><transition-group-stub><div>a</div><div>b</div><div>c</div></transition-group-stub></div>";
+
+function normalizeHTML(wrapper) {
+  return wrapper.html().replace(/(\r\n\t|\n|\r\t| )/gm,"");
+}
+
+function expectHTML(wrapper, expected) {
+  const htmlStripped = normalizeHTML(wrapper);
+  expect(htmlStripped).toEqual(expected);
+}
 
 function getEvent(name) {
   return Sortable.mock.calls[0][1][name];
@@ -39,7 +47,6 @@ describe("draggable.vue when initialized with list", () => {
     resetMocks();
     items = ["a", "b", "c"];
     wrapper = shallowMount(draggable, {
-      attachToDocument: true,
       propsData: {
         list: items
       },
@@ -74,7 +81,6 @@ describe("draggable.vue when initialized with list", () => {
 
     it("log an error when list and value are both not null", () => {
       wrapper = shallowMount(draggable, {
-        attachToDocument: true,
         propsData: {
           list: [],
           value: []
@@ -88,7 +94,6 @@ describe("draggable.vue when initialized with list", () => {
 
     it("warns when options is used", () => {
       wrapper = shallowMount(draggable, {
-        attachToDocument: true,
         propsData: {
           options: {
             group: "led zeppelin"
@@ -103,7 +108,6 @@ describe("draggable.vue when initialized with list", () => {
 
     it("warns when element is used", () => {
       wrapper = shallowMount(draggable, {
-        attachToDocument: true,
         propsData: {
           element: "li"
         },
@@ -173,23 +177,23 @@ describe("draggable.vue when initialized with list", () => {
   })
 
   it("renders root element correctly", () => {
-    expect(wrapper.html()).toMatch(/^<div>.*<\/div>$/);
+    expect(normalizeHTML(wrapper)).toMatch(/^<div>.*<\/div>$/);
   })
 
   it("renders footer slot element correctly", () => {
-    expect(wrapper.html()).toMatch(/<footer><\/footer><\/div>$/);
+    expect(normalizeHTML(wrapper)).toMatch(/<footer><\/footer><\/div>$/);
   })
 
   it("renders header slot element correctly", () => {
-    expect(wrapper.html()).toMatch(/^<div><header><\/header>/);
+    expect(normalizeHTML(wrapper)).toMatch(/^<div><header><\/header>/);
   })
 
   it("renders default slot element correctly", () => {
-    expect(wrapper.html()).toContain("<div>a</div><div>b</div><div>c</div>");
+    expect(normalizeHTML(wrapper)).toContain("<div>a</div><div>b</div><div>c</div>");
   })
 
   it("renders correctly", () => {
-    expect(wrapper.html()).toEqual(initialRender);
+    expectHTML(wrapper, initialRender);
   })
 
   describe.each([
@@ -227,6 +231,7 @@ describe("draggable.vue when initialized with list", () => {
     const computeIndexes = jest.fn();
     wrapper.setMethods({ computeIndexes })
     wrapper.setProps({ list: ["c", "d", "e", "f", "g"] });
+    await Vue.nextTick();
     expect(computeIndexes).toHaveBeenCalled()
   });
 
@@ -371,7 +376,7 @@ describe("draggable.vue when initialized with list", () => {
 
     it("DOM changes should be reverted", async () => {
       await Vue.nextTick();
-      expect(wrapper.html()).toEqual(initialRender);
+      expectHTML(wrapper, initialRender);
     })
 
     it("list should be updated", async () => {
@@ -537,7 +542,7 @@ describe("draggable.vue when initialized with list", () => {
 
       it("DOM changes should be reverted", async () => {
         await Vue.nextTick();
-        expect(wrapper.html()).toEqual(initialRender);
+        expectHTML(wrapper, initialRender);
       })
 
       it("list should be updated", async () => {
@@ -579,7 +584,7 @@ describe("draggable.vue when initialized with list", () => {
 
           it("DOM changes should be reverted", async () => {
             await Vue.nextTick();
-            expect(wrapper.html()).toEqual(initialRender);
+            expectHTML(wrapper, initialRender);
           })
 
           it("list should be updated", async () => {
@@ -627,7 +632,6 @@ describe("draggable.vue when initialized with list", () => {
     beforeEach(() => {
       resetMocks();
       wrapper = shallowMount(draggable, {
-        attachToDocument: true,
         propsData: {
           list: items
         },
@@ -659,7 +663,7 @@ describe("draggable.vue when initialized with list", () => {
 
       it("DOM changes should be reverted", async () => {
         await Vue.nextTick();
-        expect(wrapper.html()).toEqual(initialRenderRaw);
+        expectHTML(wrapper, initialRenderRaw);
       })
 
       it("list should be not updated", async () => {
@@ -689,7 +693,6 @@ describe("draggable.vue when initialized with list", () => {
     beforeEach(() => {
       resetMocks();
       wrapper = shallowMount(draggable, {
-        attachToDocument: true,
         propsData: {
           list: items
         },
@@ -724,7 +727,7 @@ describe("draggable.vue when initialized with list", () => {
 
       it("DOM changes should be reverted", async () => {
         await Vue.nextTick();
-        expect(wrapper.html()).toEqual(initialRenderRaw);
+        expectHTML(wrapper, initialRenderRaw);
       })
 
       it("list should be not updated", async () => {
@@ -763,8 +766,9 @@ describe("draggable.vue when initialized with list", () => {
       ["to-be-camelized", 1, "toBeCamelized"]
     ])(
       "attribute %s change for value %o, calls sortable option with %s attribute",
-      (attribute, value, sortableAttribute) => {
+      async (attribute, value, sortableAttribute) => {
         vm.$attrs = { [attribute]: value };
+        await Vue.nextTick();
         expect(SortableFake.option).toHaveBeenCalledWith(sortableAttribute, value);
       }
     );
@@ -782,8 +786,9 @@ describe("draggable.vue when initialized with list", () => {
     ["to-be-camelized", 1, "toBeCamelized"]
   ])(
     "when option %s change for value %o, calls sortable option with %s attribute",
-    (attribute, value, sortableAttribute) => {
+    async (attribute, value, sortableAttribute) => {
       wrapper.setProps({ options: { [attribute]: value } });
+      await Vue.nextTick();
       expect(SortableFake.option).toHaveBeenCalledWith(sortableAttribute, value);
     }
   );
@@ -850,7 +855,6 @@ describe("draggable.vue when initialized with value", () => {
     Sortable.mockClear();
     items = ["a", "b", "c"];
     wrapper = shallowMount(draggable, {
-      attachToDocument: true,
       propsData: {
         value: items
       },
@@ -869,7 +873,7 @@ describe("draggable.vue when initialized with value", () => {
   });
 
   it("renders correctly", () => {
-    expect(wrapper.html()).toEqual(initialRenderRaw);
+    expectHTML(wrapper, initialRenderRaw);
   })
 
   it("update indexes", async () => {
@@ -877,6 +881,7 @@ describe("draggable.vue when initialized with value", () => {
     const computeIndexes = jest.fn();
     wrapper.setMethods({ computeIndexes })
     wrapper.setProps({ value: ["c", "d", "e", "f", "g"] });
+    await Vue.nextTick();
     expect(computeIndexes).toHaveBeenCalled()
   });
 
@@ -924,7 +929,7 @@ describe("draggable.vue when initialized with value", () => {
 
       it("DOM changes should be reverted", async () => {
         await Vue.nextTick();
-        expect(wrapper.html()).toEqual(initialRenderRaw);
+        expectHTML(wrapper, initialRenderRaw);
       })
 
       it("input should with updated value", async () => {
@@ -962,7 +967,7 @@ describe("draggable.vue when initialized with value", () => {
 
       it("DOM changes should be reverted", async () => {
         await Vue.nextTick();
-        expect(wrapper.html()).toEqual(initialRenderRaw);
+        expectHTML(wrapper, initialRenderRaw);
       })
 
       it("send an input event", async () => {
@@ -1014,7 +1019,6 @@ describe("draggable.vue when initialized with a transition group", () => {
     const inside = items.map(item => `<div>${item}</div>`).join("");
     const template = `<transition-group>${inside}</transition-group>`
     wrapper = shallowMount(draggable, {
-      attachToDocument: true,
       propsData: {
         value: items
       },
@@ -1041,7 +1045,7 @@ describe("draggable.vue when initialized with a transition group", () => {
   });
 
   it("enders correctly", () => {
-    expect(wrapper.html()).toEqual(initialRenderTransition);
+    expectHTML(wrapper, initialRenderTransition);
   })
 
   it("creates sortable instance with options on transition root", () => {
@@ -1086,7 +1090,7 @@ describe("draggable.vue when initialized with a transition group", () => {
 
       it("DOM changes should be reverted", async () => {
         await Vue.nextTick();
-        expect(wrapper.html()).toEqual(initialRenderTransition);
+        expectHTML(wrapper, initialRenderTransition);
       })
 
       it("input should with updated value", async () => {
@@ -1125,7 +1129,7 @@ describe("draggable.vue when initialized with a transition group", () => {
 
       it("DOM changes should be reverted", async () => {
         await Vue.nextTick();
-        expect(wrapper.html()).toEqual(initialRenderTransition);
+        expectHTML(wrapper, initialRenderTransition);
       })
 
       it("send an input event", async () => {
@@ -1215,7 +1219,6 @@ describe("draggable.vue when initialized with a transition group", () => {
       resetMocks();
       items = ["a", "b", "c"];
       wrapper = shallowMount(draggable, {
-        attachToDocument: true,
         propsData: {
           list: items
         },
@@ -1237,7 +1240,7 @@ describe("draggable.vue when initialized with a transition group", () => {
     });
 
     it("renders correctly", () => {
-      expect(wrapper.html()).toEqual(initialRender);
+      expectHTML(wrapper, initialRender);
     })
   });
 });

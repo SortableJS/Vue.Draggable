@@ -24,27 +24,36 @@ function getEvent(name) {
 }
 
 const expectedArray = [0, 1, 3, 4, 5, 6, 7, 2, 8, 9];
-const expectedDomNoTransition = `<span>${expectedArray.map(nu => `<div>${nu}</div>`).join('')}</span>`;
-const expectedDomTransition = `<div>${expectedDomNoTransition}</div>`;
+const expectedDomWithWrapper = wrapper => `<${wrapper}>${expectedArray.map(nu => `<div>${nu}</div>`).join('')}</${wrapper}>`;
+
+const expectedDomNoTransition = expectedDomWithWrapper('span');
+const expectedDomTransition = `<div>${expectedDomWithWrapper('transition-group-stub')}</div>`;
+
+function normalizeHTML(wrapper) {
+  return wrapper.html().replace(/(\r\n\t|\n|\r\t| )/gm,"");
+}
+
+function expectHTML(wrapper, expected) {
+  const htmlStripped = normalizeHTML(wrapper);
+  expect(htmlStripped).toEqual(expected);
+}
 
 describe.each([
-  [DraggableWithList, "draggable with list", expectedDomNoTransition],
-  [DraggableWithModel, "draggable with model", expectedDomNoTransition],
-  [DraggableWithTransition, "draggable with transition", expectedDomTransition]
+  [DraggableWithList, "draggable with list", expectedDomNoTransition, "span"],
+  [DraggableWithModel, "draggable with model", expectedDomNoTransition, "span"],
+  [DraggableWithTransition, "draggable with transition", expectedDomTransition, "transition-group-stub"]
 ])
   (
     "should update list and DOM with component: %s %s",
-    (component, _, expectedDom) => {
+    (component, _, expectedDom, expectWrapper) => {
 
       describe("when handling sort", () => {
 
         beforeEach(async () => {
           jest.resetAllMocks();
-          wrapper = mount(component, {
-            attachToDocument: true
-          });
+          wrapper = mount(component);
           vm = wrapper.vm;
-          element = wrapper.find('span').element;
+          element = wrapper.find(expectWrapper).element;
 
           const item = element.children[2];
           const startEvt = { item };
@@ -74,7 +83,7 @@ describe.each([
         });
 
         it("updates DOM", async () => {
-          expect(wrapper.html()).toEqual(expectedDom);
+          expectHTML(wrapper, expectedDom);
         });
       });
     }
