@@ -1,10 +1,7 @@
 import { nested } from "./components/nested/nested-store";
-import Vuex from "vuex";
-import Vue from "vue";
+import { createStore } from "vuex";
 
-Vue.use(Vuex);
-
-export default new Vuex.Store({
+export default createStore({
   namespaced: true,
   modules: {
     nested

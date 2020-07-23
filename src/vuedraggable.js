@@ -1,3 +1,4 @@
+import { defineComponent, h } from "vue";
 import Sortable from "sortablejs";
 import { insertNodeAt, camelize, console, removeNode } from "./util/helper";
 
@@ -48,26 +49,26 @@ function isTransition(slots) {
   if (!slots || slots.length !== 1) {
     return false;
   }
-  const [{ componentOptions }] = slots;
-  if (!componentOptions) {
+  const [{ type }] = slots;
+  if (!type) {
     return false;
   }
-  return isTransitionName(componentOptions.tag);
+  return isTransitionName(type.name);
 }
 
-function getSlot(slot, scopedSlot, key) {
-  return slot[key] || (scopedSlot[key] ? scopedSlot[key]() : undefined);
+function getSlot(slot, key) {
+  return (slot[key] ?? (() => undefined))();
 }
 
-function computeChildrenAndOffsets(children, slot, scopedSlot) {
+function computeChildrenAndOffsets(children, slot) {
   let headerOffset = 0;
   let footerOffset = 0;
-  const header = getSlot(slot, scopedSlot, "header");
+  const header = getSlot(slot, "header");
   if (header) {
     headerOffset = header.length;
     children = children ? [...header, ...children] : [...header];
   }
-  const footer = getSlot(slot, scopedSlot, "footer");
+  const footer = getSlot(slot, "footer");
   if (footer) {
     footerOffset = footer.length;
     children = children ? [...children, ...footer] : [...footer];
@@ -81,7 +82,7 @@ function getComponentAttributes($attrs, componentData) {
     attributes = buildAttribute(attributes, name, value);
   };
   const attrs = Object.keys($attrs)
-    .filter(key => key === "id" || key.startsWith("data-"))
+    .filter(key => key === "id" || key === "class" || key.startsWith("data-"))
     .reduce((res, key) => {
       res[key] = $attrs[key];
       return res;
@@ -146,7 +147,7 @@ const props = {
   }
 };
 
-const draggableComponent = {
+const draggableComponent = defineComponent({
   name: "draggable",
 
   inheritAttrs: false,
@@ -160,18 +161,17 @@ const draggableComponent = {
     };
   },
 
-  render(h) {
-    const slots = this.$slots.default;
+  render() {
+    const slots = this.$slots.default();
     this.transitionMode = isTransition(slots);
     const { children, headerOffset, footerOffset } = computeChildrenAndOffsets(
       slots,
-      this.$slots,
-      this.$scopedSlots
+      this.$slots
     );
     this.headerOffset = headerOffset;
     this.footerOffset = footerOffset;
     const attributes = getComponentAttributes(this.$attrs, this.componentData);
-    return h(this.getTag(), attributes, children);
+    return h(this.getTag(), attributes.attrs, children);
   },
 
   created() {
@@ -282,10 +282,10 @@ const draggableComponent = {
 
     getChildrenNodes() {
       if (this.noneFunctionalComponentMode) {
-        return this.$children[0].$slots.default;
+        return this.$children[0].$slots.default();
       }
-      const rawNodes = this.$slots.default;
-      return this.transitionMode ? rawNodes[0].child.$slots.default : rawNodes;
+      const rawNodes = this.$slots.default();
+      return this.transitionMode ? rawNodes[0].children.default() : rawNodes;
     },
 
     computeIndexes() {
@@ -378,7 +378,7 @@ const draggableComponent = {
     },
 
     getComponent() {
-      return this.$slots.default[0].componentInstance;
+      return this.$slots.default()[0].componentInstance;
     },
 
     resetTransitionData(index) {
@@ -476,7 +476,7 @@ const draggableComponent = {
       draggingElement = null;
     }
   }
-};
+});
 
 if (typeof window !== "undefined" && "Vue" in window) {
   window.Vue.component("draggable", draggableComponent);
