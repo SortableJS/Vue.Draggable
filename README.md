@@ -126,7 +126,7 @@ Draggable component should directly wrap the draggable elements, or a `transitio
 ```
 ### With header slot:
 ``` html
-<draggable v-model="myArray" draggable=".item'">
+<draggable v-model="myArray" draggable=".item">
     <div v-for="element in myArray" :key="element.id" class="item">
         {{element.name}}
     </div>
