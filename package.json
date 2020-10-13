@@ -89,5 +89,5 @@
     "dist/*.js",
     "src/*"
   ],
-  "module": "dist/vuedraggable.common.js"
+  "module": "dist/vuedraggable.umd.js"
 }
