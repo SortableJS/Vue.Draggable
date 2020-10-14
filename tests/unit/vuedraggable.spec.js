@@ -95,36 +95,6 @@ describe("draggable.vue when initialized with list", () => {
         "Value and list props are mutually exclusive! Please set one or another."
       );
     });
-
-    it("warns when options is used", () => {
-      wrapper = shallowMount(draggable, {
-        propsData: {
-          options: {
-            group: "led zeppelin",
-          },
-        },
-        slots: {
-          default: "",
-        },
-      });
-      expect(console.warn).toBeCalledWith(
-        "Options props is deprecated, add sortable options directly as vue.draggable item, or use v-bind. See https://github.com/SortableJS/Vue.Draggable/blob/master/documentation/migrate.md#options-props"
-      );
-    });
-
-    it("warns when element is used", () => {
-      wrapper = shallowMount(draggable, {
-        propsData: {
-          element: "li",
-        },
-        slots: {
-          default: "",
-        },
-      });
-      expect(console.warn).toBeCalledWith(
-        "Element props is deprecated please use tag props instead. See https://github.com/SortableJS/Vue.Draggable/blob/master/documentation/migrate.md#element-props"
-      );
-    });
   });
 
   it("instantiate without error", () => {
@@ -136,7 +106,6 @@ describe("draggable.vue when initialized with list", () => {
   });
 
   test.each([
-    ["options", { type: Object }],
     [
       "list",
       {
@@ -161,17 +130,10 @@ describe("draggable.vue when initialized with list", () => {
       },
     ],
     [
-      "element",
-      {
-        type: String,
-        default: "div",
-      },
-    ],
-    [
       "tag",
       {
         type: String,
-        default: null,
+        default: "div",
       },
     ],
     [
@@ -809,21 +771,6 @@ describe("draggable.vue when initialized with list", () => {
       expect(SortableFake.option).not.toHaveBeenCalled();
     });
   });
-
-  test.each([
-    ["sortableOption", "newValue", "sortableOption"],
-    ["to-be-camelized", 1, "toBeCamelized"],
-  ])(
-    "when option %s change for value %o, calls sortable option with %s attribute",
-    async (attribute, value, sortableAttribute) => {
-      wrapper.setProps({ options: { [attribute]: value } });
-      await Vue.nextTick();
-      expect(SortableFake.option).toHaveBeenCalledWith(
-        sortableAttribute,
-        value
-      );
-    }
-  );
 
   it("does calls Sortable destroy when mounted", () => {
     expect(SortableFake.destroy.mock.calls.length).toBe(0);

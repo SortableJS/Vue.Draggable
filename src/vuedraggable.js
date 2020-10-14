@@ -106,7 +106,6 @@ const readonlyProperties = ["Move", ...eventsListened, ...eventsToEmit].map(
 var draggingElement = null;
 
 const props = {
-  options: Object,
   list: {
     type: Array,
     required: false,
@@ -127,13 +126,9 @@ const props = {
       return original;
     }
   },
-  element: {
-    type: String,
-    default: "div"
-  },
   tag: {
     type: String,
-    default: null
+    default: "div"
   },
   move: {
     type: Function,
@@ -171,7 +166,7 @@ const draggableComponent = {
     this.headerOffset = headerOffset;
     this.footerOffset = footerOffset;
     const attributes = getComponentAttributes(this.$attrs, this.componentData);
-    return h(this.getTag(), attributes, children);
+    return h(this.tag, attributes, children);
   },
 
   created() {
@@ -180,27 +175,16 @@ const draggableComponent = {
         "Value and list props are mutually exclusive! Please set one or another."
       );
     }
-
-    if (this.element !== "div") {
-      console.warn(
-        "Element props is deprecated please use tag props instead. See https://github.com/SortableJS/Vue.Draggable/blob/master/documentation/migrate.md#element-props"
-      );
-    }
-
-    if (this.options !== undefined) {
-      console.warn(
-        "Options props is deprecated, add sortable options directly as vue.draggable item, or use v-bind. See https://github.com/SortableJS/Vue.Draggable/blob/master/documentation/migrate.md#options-props"
-      );
-    }
   },
 
   mounted() {
+    const { tag } = this;
     this.noneFunctionalComponentMode =
-      this.getTag().toLowerCase() !== this.$el.nodeName.toLowerCase() &&
+      tag.toLowerCase() !== this.$el.nodeName.toLowerCase() &&
       !this.getIsFunctional();
     if (this.noneFunctionalComponentMode && this.transitionMode) {
       throw new Error(
-        `Transition-group inside component is not supported. Please alter tag value or remove transition-group. Current tag value: ${this.getTag()}`
+        `Transition-group inside component is not supported. Please alter tag value or remove transition-group. Current tag value: ${tag}`
       );
     }
     const optionsAdded = {};
@@ -217,7 +201,7 @@ const draggableComponent = {
       return res;
     }, {});
 
-    const options = Object.assign({}, this.options, attributes, optionsAdded, {
+    const options = Object.assign({}, attributes, optionsAdded, {
       onMove: (evt, originalEvent) => {
         return this.onDragMove(evt, originalEvent);
       }
@@ -242,13 +226,6 @@ const draggableComponent = {
   },
 
   watch: {
-    options: {
-      handler(newOptionValue) {
-        this.updateOptions(newOptionValue);
-      },
-      deep: true
-    },
-
     $attrs: {
       handler(newOptionValue) {
         this.updateOptions(newOptionValue);
@@ -265,10 +242,6 @@ const draggableComponent = {
     getIsFunctional() {
       const { fnOptions } = this._vnode;
       return fnOptions && fnOptions.functional;
-    },
-
-    getTag() {
-      return this.tag || this.element;
     },
 
     updateOptions(newOptionValue) {
@@ -477,9 +450,5 @@ const draggableComponent = {
     }
   }
 };
-
-if (typeof window !== "undefined" && "Vue" in window) {
-  window.Vue.component("draggable", draggableComponent);
-}
 
 export default draggableComponent;
