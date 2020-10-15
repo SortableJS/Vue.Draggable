@@ -281,14 +281,16 @@ const draggableComponent = {
     },
 
     getChildrenNodes() {
-      let nodes = []
+      let nodes = [];
       if (this.noneFunctionalComponentMode) {
-        nodes = this.$children[0].$slots.default
+        nodes = this.$children[0].$slots.default;
       } else {
         const rawNodes = this.$slots.default;
-        nodes = this.transitionMode ? rawNodes[0].child.$slots.default : rawNodes;
+        nodes = this.transitionMode
+          ? rawNodes[0].child.$slots.default
+          : rawNodes;
       }
-      return nodes.filter(f => f.tag);
+      return (nodes || []).filter(f => f.tag);
     },
 
     computeIndexes() {
