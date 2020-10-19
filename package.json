@@ -1,6 +1,6 @@
 {
   "name": "vuedraggable",
-  "version": "2.24.2",
+  "version": "3.0.0",
   "description": "draggable component for vue",
   "license": "MIT",
   "main": "dist/vuedraggable.umd.min.js",
@@ -31,33 +31,35 @@
     "nested"
   ],
   "dependencies": {
-    "sortablejs": "^1.10.1"
+    "sortablejs": "1.10.1"
+  },
+  "peerDependencies": {
+    "vue": "^3.0.0"
   },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "^3.11.0",
-    "@vue/cli-plugin-eslint": "^3.11.0",
-    "@vue/cli-plugin-unit-jest": "^3.11.0",
-    "@vue/cli-service": "^3.11.0",
-    "@vue/eslint-config-prettier": "^4.0.1",
-    "@vue/test-utils": "^1.1.0",
+    "@vue/cli-plugin-babel": "~4.5.0",
+    "@vue/cli-plugin-eslint": "~4.5.0",
+    "@vue/cli-plugin-unit-jest": "^4.5.4",
+    "@vue/cli-service": "~4.5.0",
+    "@vue/compiler-sfc": "^3.0.0",
+    "@vue/eslint-config-prettier": "6.0.0",
+    "@vue/server-renderer": "^3.0.0",
+    "@vue/test-utils": "^2.0.0-beta.6",
     "babel-core": "7.0.0-bridge.0",
     "babel-eslint": "^10.0.1",
-    "babel-jest": "^23.6.0",
+    "babel-jest": "^24.6.0",
     "bootstrap": "^4.3.1",
     "codecov": "^3.2.0",
-    "component-fixture": "^0.4.1",
-    "element-ui": "^2.5.4",
-    "eslint": "^5.8.0",
-    "eslint-plugin-vue": "^5.0.0",
+    "eslint": "^6.7.2",
+    "eslint-plugin-prettier": "^3.1.0",
+    "eslint-plugin-vue": "^7.0.0-0",
     "font-awesome": "^4.7.0",
     "jquery": "^3.5.1",
-    "vue": "^2.6.12",
-    "vue-cli-plugin-component": "^1.10.5",
-    "vue-router": "^3.0.2",
-    "vue-server-renderer": "^2.6.12",
-    "vue-template-compiler": "^2.6.12",
-    "vuetify": "^1.5.16",
-    "vuex": "^3.1.1"
+    "typescript": "^4.0.3",
+    "vue": "^3.0.1",
+    "vue-jest": "^5.0.0-alpha.5",
+    "vue-router": "^4.0.0-beta.13",
+    "vuex": "4.0.0-beta.4"
   },
   "eslintConfig": {
     "root": true,

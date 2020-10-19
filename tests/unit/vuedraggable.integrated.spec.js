@@ -8,7 +8,7 @@ const SortableFake = {
 };
 Sortable.mockImplementation(() => SortableFake);
 
-import Vue from "vue";
+import { nextTick } from "vue";
 import DraggableWithList from "./helper/DraggableWithList";
 import DraggableWithModel from "./helper/DraggableWithList";
 import DraggableWithTransition from "./helper/DraggableWithTransition";
@@ -24,9 +24,9 @@ function getEvent(name) {
 }
 
 const expectedArray = [0, 1, 3, 4, 5, 6, 7, 2, 8, 9];
-const expectedDomWithWrapper = (wrapper) =>
+const expectedDomWithWrapper = wrapper =>
   `<${wrapper}>${expectedArray
-    .map((nu) => `<div>${nu}</div>`)
+    .map(nu => `<div>${nu}</div>`)
     .join("")}</${wrapper}>`;
 
 const expectedDomNoTransition = expectedDomWithWrapper("span");
@@ -44,17 +44,17 @@ function expectHTML(wrapper, expected) {
 }
 
 describe.each([
-  [DraggableWithList, "draggable with list", expectedDomNoTransition, "span"],
-  [DraggableWithModel, "draggable with model", expectedDomNoTransition, "span"],
+  ["draggable with list", DraggableWithList, expectedDomNoTransition, "span"],
+  ["draggable with model", DraggableWithModel, expectedDomNoTransition, "span"],
   [
-    DraggableWithTransition,
     "draggable with transition",
+    DraggableWithTransition,
     expectedDomTransition,
-    "transition-group-stub",
-  ],
+    "transition-group-stub"
+  ]
 ])(
-  "should update list and DOM with component: %s %s",
-  (component, _, expectedDom, expectWrapper) => {
+  "should update list and DOM with component: %s",
+  (_, component, expectedDom, expectWrapper) => {
     describe("when handling sort", () => {
       beforeEach(async () => {
         jest.resetAllMocks();
@@ -65,7 +65,7 @@ describe.each([
         const item = element.children[2];
         const startEvt = { item };
         getEvent("onStart")(startEvt);
-        await Vue.nextTick();
+        await nextTick();
 
         const firstDraggable = element.children[1];
         element.removeChild(item);
@@ -76,7 +76,7 @@ describe.each([
           newIndex: 7,
           from: element,
         });
-        await Vue.nextTick();
+        await nextTick();
       });
 
       it("sends a change event", async () => {

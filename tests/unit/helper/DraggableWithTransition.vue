@@ -1,10 +1,7 @@
 <template>
   <draggable v-model="array">
     <transition-group>
-      <div
-        v-for="item in array"
-        :key="item"
-      >{{item}}</div>
+      <div v-for="item in array" :key="item">{{ item }}</div>
     </transition-group>
   </draggable>
 </template>

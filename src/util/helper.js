@@ -19,6 +19,8 @@ const camelize = cached(str =>
   str.replace(regex, (_, c) => (c ? c.toUpperCase() : ""))
 );
 
+const capitalize = str => str.replace(/^\w/, c => c.toUpperCase());
+
 function removeNode(node) {
   if (node.parentElement !== null) {
     node.parentElement.removeChild(node);
@@ -33,4 +35,4 @@ function insertNodeAt(fatherNode, node, position) {
   fatherNode.insertBefore(node, refNode);
 }
 
-export { insertNodeAt, camelize, console, removeNode };
+export { insertNodeAt, camelize, capitalize, console, removeNode };

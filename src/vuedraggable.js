@@ -1,5 +1,7 @@
 import Sortable from "sortablejs";
-import { insertNodeAt, camelize, console, removeNode } from "./util/helper";
+import { insertNodeAt, camelize, capitalize, console, removeNode } from "./util/helper";
+import { isHtmlTag } from "./util/tags";
+import { h, defineComponent, nextTick, resolveComponent } from "vue";
 
 function buildAttribute(object, propName, value) {
   if (value === undefined) {
@@ -10,8 +12,17 @@ function buildAttribute(object, propName, value) {
   return object;
 }
 
-function computeVmIndex(vnodes, element) {
-  return vnodes.map(elt => elt.elm).indexOf(element);
+function computeVmIndex(vnodes, element, mainNode) {
+  const index = vnodes.map((elt) => elt.el).indexOf(element);
+  if (index === -1) {
+    throw new Error("node not found", {
+      nodes: vnodes.map((elt) => elt.el),
+      element,
+      index,
+      mainNode,
+    });
+  }
+  return index;
 }
 
 function computeIndexes(slots, children, isTransition, footerOffset) {
@@ -19,16 +30,16 @@ function computeIndexes(slots, children, isTransition, footerOffset) {
     return [];
   }
 
-  const elmFromNodes = slots.map(elt => elt.elm);
+  const elmFromNodes = slots.map((elt) => elt.el);
   const footerIndex = children.length - footerOffset;
   const rawIndexes = [...children].map((elt, idx) =>
     idx >= footerIndex ? elmFromNodes.length : elmFromNodes.indexOf(elt)
   );
-  return isTransition ? rawIndexes.filter(ind => ind !== -1) : rawIndexes;
+  return isTransition ? rawIndexes.filter((ind) => ind !== -1) : rawIndexes;
 }
 
 function emit(evtName, evtData) {
-  this.$nextTick(() => this.$emit(evtName.toLowerCase(), evtData));
+  nextTick(() => this.$emit(evtName.toLowerCase(), evtData));
 }
 
 function delegateAndEmit(evtName) {
@@ -40,6 +51,7 @@ function delegateAndEmit(evtName) {
   };
 }
 
+
 function isTransitionName(name) {
   return ["transition-group", "TransitionGroup"].includes(name);
 }
@@ -48,26 +60,27 @@ function isTransition(slots) {
   if (!slots || slots.length !== 1) {
     return false;
   }
-  const [{ componentOptions }] = slots;
-  if (!componentOptions) {
+  const [{ type }] = slots;
+  if (!type) {
     return false;
   }
-  return isTransitionName(componentOptions.tag);
+  return isTransitionName(type.name);
 }
 
-function getSlot(slot, scopedSlot, key) {
-  return slot[key] || (scopedSlot[key] ? scopedSlot[key]() : undefined);
+function getSlot(slot, key) {
+  const slotValue = slot[key];
+  return slotValue ? slotValue() : undefined;
 }
 
-function computeChildrenAndOffsets(children, slot, scopedSlot) {
+function computeChildrenAndOffsets(children, slot) {
   let headerOffset = 0;
   let footerOffset = 0;
-  const header = getSlot(slot, scopedSlot, "header");
+  const header = getSlot(slot, "header");
   if (header) {
     headerOffset = header.length;
     children = children ? [...header, ...children] : [...header];
   }
-  const footer = getSlot(slot, scopedSlot, "footer");
+  const footer = getSlot(slot, "footer");
   if (footer) {
     footerOffset = footer.length;
     children = children ? [...children, ...footer] : [...footer];
@@ -76,26 +89,22 @@ function computeChildrenAndOffsets(children, slot, scopedSlot) {
 }
 
 function getComponentAttributes($attrs, componentData) {
-  let attributes = null;
-  const update = (name, value) => {
-    attributes = buildAttribute(attributes, name, value);
-  };
-  const attrs = Object.keys($attrs)
-    .filter(key => key === "id" || key.startsWith("data-"))
-    .reduce((res, key) => {
-      res[key] = $attrs[key];
+  const attrs = Object.entries($attrs)
+    .filter(([key, _]) => key === "id" || key.startsWith("data-"))
+    .reduce((res, [key, value]) => {
+      res[key] = value;
       return res;
     }, {});
-  update("attrs", attrs);
 
   if (!componentData) {
-    return attributes;
+    return attrs;
   }
-  const { on, props, attrs: componentDataAttrs } = componentData;
-  update("on", on);
-  update("props", props);
-  Object.assign(attributes.attrs, componentDataAttrs);
-  return attributes;
+  const { on: rawOn, props, attrs: componentDataAttrs } = componentData;
+  const on = Object.entries(rawOn).reduce((res, [key, value]) => {
+    res[`on${capitalize(key)}`] = value;
+    return res;
+  }, {});
+  return { ...attrs, ...componentDataAttrs, ...on, ...props };
 }
 
 const eventsListened = ["Start", "Add", "Remove", "Update", "End"];
@@ -109,39 +118,39 @@ const props = {
   list: {
     type: Array,
     required: false,
-    default: null
+    default: null,
   },
-  value: {
+  modelValue: {
     type: Array,
     required: false,
-    default: null
+    default: null,
   },
   noTransitionOnDrag: {
     type: Boolean,
-    default: false
+    default: false,
   },
   clone: {
     type: Function,
     default: original => {
       return original;
-    }
+    },
   },
   tag: {
     type: String,
-    default: "div"
+    default: "div",
   },
   move: {
     type: Function,
-    default: null
+    default: null,
   },
   componentData: {
     type: Object,
     required: false,
-    default: null
-  }
+    default: null,
+  },
 };
 
-const draggableComponent = {
+const draggableComponent = defineComponent({
   name: "draggable",
 
   inheritAttrs: false,
@@ -151,28 +160,32 @@ const draggableComponent = {
   data() {
     return {
       transitionMode: false,
-      noneFunctionalComponentMode: false
+      noneFunctionalComponentMode: false,
     };
   },
 
-  render(h) {
-    const slots = this.$slots.default;
-    this.transitionMode = isTransition(slots);
+  render() {
+    const { $slots, $attrs, tag } = this;
+    const defaultSlots = getSlot($slots, "default") || [];
+    this.transitionMode = isTransition(defaultSlots);
     const { children, headerOffset, footerOffset } = computeChildrenAndOffsets(
-      slots,
-      this.$slots,
-      this.$scopedSlots
+      defaultSlots,
+      $slots
     );
     this.headerOffset = headerOffset;
     this.footerOffset = footerOffset;
-    const attributes = getComponentAttributes(this.$attrs, this.componentData);
-    return h(this.tag, attributes, children);
+    const attributes = getComponentAttributes($attrs, this.componentData);
+    this.defaultSlots = defaultSlots;
+    const realRoot = isHtmlTag(tag) ? tag : resolveComponent(tag);
+    const mainNode = h(realRoot, attributes, children);
+    this.mainNode = mainNode;
+    return mainNode;
   },
 
   created() {
-    if (this.list !== null && this.value !== null) {
+    if (this.list !== null && this.modelValue !== null) {
       console.error(
-        "Value and list props are mutually exclusive! Please set one or another."
+        "modelValue and list props are mutually exclusive! Please set one or another."
       );
     }
   },
@@ -188,30 +201,39 @@ const draggableComponent = {
       );
     }
     const optionsAdded = {};
-    eventsListened.forEach(elt => {
+    eventsListened.forEach((elt) => {
       optionsAdded["on" + elt] = delegateAndEmit.call(this, elt);
     });
 
-    eventsToEmit.forEach(elt => {
+    eventsToEmit.forEach((elt) => {
       optionsAdded["on" + elt] = emit.bind(this, elt);
     });
 
-    const attributes = Object.keys(this.$attrs).reduce((res, key) => {
-      res[camelize(key)] = this.$attrs[key];
-      return res;
-    }, {});
+    const attributes = Object.entries(this.$attrs).reduce(
+      (res, [key, value]) => {
+        res[camelize(key)] = value;
+        return res;
+      },
+      {}
+    );
 
-    const options = Object.assign({}, attributes, optionsAdded, {
-      onMove: (evt, originalEvent) => {
-        return this.onDragMove(evt, originalEvent);
-      }
-    });
-    !("draggable" in options) && (options.draggable = ">*");
-    this._sortable = new Sortable(this.rootContainer, options);
+    const options = {
+      draggable: ">*",
+      ...attributes,
+      ...optionsAdded,
+      ...{
+        onMove: (evt, originalEvent) => {
+          return this.onDragMove(evt, originalEvent);
+        },
+      },
+    };
+    const { rootContainer } = this;
+    this._sortable = new Sortable(rootContainer, options);
+    rootContainer.__draggable_component__ = this;
     this.computeIndexes();
   },
 
-  beforeDestroy() {
+  beforeUnmount() {
     if (this._sortable !== undefined) this._sortable.destroy();
   },
 
@@ -221,8 +243,8 @@ const draggableComponent = {
     },
 
     realList() {
-      return this.list ? this.list : this.value;
-    }
+      return this.list ? this.list : this.modelValue;
+    },
   },
 
   watch: {
@@ -230,17 +252,18 @@ const draggableComponent = {
       handler(newOptionValue) {
         this.updateOptions(newOptionValue);
       },
-      deep: true
+      deep: true,
     },
 
     realList() {
       this.computeIndexes();
-    }
+    },
   },
 
   methods: {
     getIsFunctional() {
-      const { fnOptions } = this._vnode;
+      //TODO check this logic
+      const { fnOptions } = this.mainNode;
       return fnOptions && fnOptions.functional;
     },
 
@@ -254,15 +277,29 @@ const draggableComponent = {
     },
 
     getChildrenNodes() {
-      if (this.noneFunctionalComponentMode) {
-        return this.$children[0].$slots.default;
+      const {
+        noneFunctionalComponentMode,
+        transitionMode,
+        defaultSlots,
+      } = this;
+      if (noneFunctionalComponentMode) {
+        //TODO check
+        return this.defaultSlots[0].children;
+        //return this.$children[0].$slots.default();
       }
-      const rawNodes = this.$slots.default;
-      return this.transitionMode ? rawNodes[0].child.$slots.default : rawNodes;
+      //const rawNodes = this.defaultSlots;
+      if (transitionMode) {
+        //TODO check
+        //rawNodes[0].child.$slots.default()
+        return defaultSlots[0].children;
+      }
+      return defaultSlots.length === 1 && defaultSlots[0].el.nodeType === 3
+        ? defaultSlots[0].children
+        : defaultSlots;
     },
 
     computeIndexes() {
-      this.$nextTick(() => {
+      nextTick(() => {
         this.visibleIndexes = computeIndexes(
           this.getChildrenNodes(),
           this.rootContainer.children,
@@ -273,7 +310,11 @@ const draggableComponent = {
     },
 
     getUnderlyingVm(htmlElt) {
-      const index = computeVmIndex(this.getChildrenNodes() || [], htmlElt);
+      const index = computeVmIndex(
+        this.getChildrenNodes() || [],
+        htmlElt,
+        this.mainNode
+      );
       if (index === -1) {
         //Edge case during move callback: related element might be
         //an element different from collection
@@ -283,26 +324,13 @@ const draggableComponent = {
       return { index, element };
     },
 
-    getUnderlyingPotencialDraggableComponent({ __vue__: vue }) {
-      if (
-        !vue ||
-        !vue.$options ||
-        !isTransitionName(vue.$options._componentTag)
-      ) {
-        if (
-          !("realList" in vue) &&
-          vue.$children.length === 1 &&
-          "realList" in vue.$children[0]
-        )
-          return vue.$children[0];
-
-        return vue;
-      }
-      return vue.$parent;
+    getUnderlyingPotencialDraggableComponent(htmElement) {
+      //TODO check case where you need to see component children
+      return htmElement.__draggable_component__;
     },
 
     emitChanges(evt) {
-      this.$nextTick(() => {
+      nextTick(() => {
         this.$emit("change", evt);
       });
     },
@@ -312,18 +340,18 @@ const draggableComponent = {
         onList(this.list);
         return;
       }
-      const newList = [...this.value];
+      const newList = [...this.modelValue];
       onList(newList);
-      this.$emit("input", newList);
+      this.$emit("update:modelValue", newList);
     },
 
     spliceList() {
-      const spliceList = list => list.splice(...arguments);
+      const spliceList = (list) => list.splice(...arguments);
       this.alterList(spliceList);
     },
 
     updatePosition(oldIndex, newIndex) {
-      const updatePosition = list =>
+      const updatePosition = (list) =>
         list.splice(newIndex, 0, list.splice(oldIndex, 1)[0]);
       this.alterList(updatePosition);
     },
@@ -351,7 +379,7 @@ const draggableComponent = {
     },
 
     getComponent() {
-      return this.$slots.default[0].componentInstance;
+      return this.$slots.default()[0].componentInstance;
     },
 
     resetTransitionData(index) {
@@ -417,7 +445,7 @@ const draggableComponent = {
         return 0;
       }
       const domChildren = [...evt.to.children].filter(
-        el => el.style["display"] !== "none"
+        (el) => el.style["display"] !== "none"
       );
       const currentDOMIndex = domChildren.indexOf(evt.related);
       const currentIndex = relatedContext.component.getVmIndex(currentDOMIndex);
@@ -439,7 +467,7 @@ const draggableComponent = {
       Object.assign(draggedContext, { futureIndex });
       const sendEvt = Object.assign({}, evt, {
         relatedContext,
-        draggedContext
+        draggedContext,
       });
       return onMove(sendEvt, originalEvent);
     },
@@ -447,8 +475,8 @@ const draggableComponent = {
     onDragEnd() {
       this.computeIndexes();
       draggingElement = null;
-    }
-  }
-};
+    },
+  },
+});
 
 export default draggableComponent;

@@ -26,6 +26,6 @@ module.exports = {
   ],
  // testEnvironment: "node",
   transformIgnorePatterns: [
-    "node_modules/(?!(babel-jest|jest-vue-preprocessor)/)"
+    "node_modules/(?!(babel-jest|jest-vue-preprocessor|vue)/)"
   ],
 };
