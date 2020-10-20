@@ -62,7 +62,7 @@ describe("draggable.vue when initialized with list", () => {
         "to-be-camelized": true,
       },
       slots: {
-        default: () => items.map((item) => h("div", null, item)),
+        default: () => items.map((item) => h("div", {key: item}, item)),
         header: () => h("header"),
         footer: () => h("footer"),
       },
@@ -93,7 +93,7 @@ describe("draggable.vue when initialized with list", () => {
           modelValue: [],
         },
         slots: {
-          default: () => "",
+          default: () => [],
         },
       });
       expect(console.error).toBeCalledWith(
@@ -627,7 +627,7 @@ describe("draggable.vue when initialized with list", () => {
           list: items,
         },
         slots: {
-          default: () => items.map((item) => h("div", null, item)),
+          default: () => items.map((item) => h("div", {key: item}, item)),
         },
       });
       vm = wrapper.vm;
@@ -695,7 +695,7 @@ describe("draggable.vue when initialized with list", () => {
           group: { pull: () => "clone" },
         },
         slots: {
-          default: () => items.map((item) => h("div", null, item)),
+          default: () => items.map((item) => h("div", {key: item}, item)),
         },
       });
       vm = wrapper.vm;
@@ -864,7 +864,7 @@ describe("draggable.vue when initialized with modelValue", () => {
         modelValue: items,
       },
       slots: {
-        default: () => items.map(item => h("div", null, item))
+        default: () => items.map(item => h("div", {key: item}, item))
       },
     });
     vm = wrapper.vm;
@@ -1030,7 +1030,7 @@ describe("draggable.vue when initialized with a transition group", () => {
       slots: {
         default() {
           return h("transition-group", {}, [
-            ...items.map(item => h("div", {}, item))
+            ...items.map(item => h("div", {key: item}, item))
           ]);
         },
       },
@@ -1238,7 +1238,7 @@ describe("draggable.vue when initialized with a transition group", () => {
           "to-be-camelized": true,
         },
         slots: {
-          default: () => items.map((item) => h("div", null, item)),
+          default: () => items.map((item) => h("div", {key: item}, item)),
           header: () => h("header"),
           footer: () => h("footer"),
         },
