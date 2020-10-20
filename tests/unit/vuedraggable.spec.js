@@ -627,7 +627,7 @@ describe("draggable.vue when initialized with list", () => {
           list: items,
         },
         slots: {
-          default: () => items.map(item => h("div", null, item))
+          default: () => items.map((item) => h("div", null, item)),
         },
       });
       vm = wrapper.vm;
@@ -787,7 +787,7 @@ describe("draggable.vue when initialized with list", () => {
       "Filter",
       "Clone",
       "Move",
-    ])("do not call option when updating option on%s", callBack => {
+    ])("do not call option when updating option on%s", (callBack) => {
       vm.$attrs[`on${callBack}`] = jest.fn();
       expect(SortableFake.option).not.toHaveBeenCalled();
     });
@@ -864,7 +864,7 @@ describe("draggable.vue when initialized with modelValue", () => {
         modelValue: items,
       },
       slots: {
-        default: () => items.map((item) => h("div", null, item)),
+        default: () => items.map(item => h("div", null, item))
       },
     });
     vm = wrapper.vm;
@@ -1023,14 +1023,16 @@ describe("draggable.vue when initialized with a transition group", () => {
   beforeEach(() => {
     Sortable.mockClear();
     items = ["a", "b", "c"];
-    const inside = items.map(item => `<div>${item}</div>`).join("");
-    const template = `<transition-group>${inside}</transition-group>`;
     wrapper = mount(draggable, {
       propsData: {
         modelValue: items,
       },
       slots: {
-        default: template,
+        default() {
+          return h("transition-group", {}, [
+            ...items.map(item => h("div", {}, item))
+          ]);
+        },
       },
     });
     vm = wrapper.vm;
@@ -1048,7 +1050,6 @@ describe("draggable.vue when initialized with a transition group", () => {
   });
 
   it("transition mode should be true", () => {
-    console.log(wrapper.html());
     expect(vm.transitionMode).toBe(true);
   });
 
@@ -1237,7 +1238,7 @@ describe("draggable.vue when initialized with a transition group", () => {
           "to-be-camelized": true,
         },
         slots: {
-          default: () => items.map(item => h("div", null, item)),
+          default: () => items.map((item) => h("div", null, item)),
           header: () => h("header"),
           footer: () => h("footer"),
         },

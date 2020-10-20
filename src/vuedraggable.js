@@ -30,12 +30,12 @@ function computeIndexes(slots, children, isTransition, footerOffset) {
     return [];
   }
 
-  const elmFromNodes = slots.map((elt) => elt.el);
+  const elmFromNodes = slots.map(({ el }) => el);
   const footerIndex = children.length - footerOffset;
   const rawIndexes = [...children].map((elt, idx) =>
     idx >= footerIndex ? elmFromNodes.length : elmFromNodes.indexOf(elt)
   );
-  return isTransition ? rawIndexes.filter((ind) => ind !== -1) : rawIndexes;
+  return isTransition ? rawIndexes.filter(ind => ind !== -1) : rawIndexes;
 }
 
 function emit(evtName, evtData) {
@@ -64,7 +64,7 @@ function isTransition(slots) {
   if (!type) {
     return false;
   }
-  return isTransitionName(type.name);
+  return isTransitionName(type);
 }
 
 function getSlot(slot, key) {
