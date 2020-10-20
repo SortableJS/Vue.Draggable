@@ -25,7 +25,7 @@ const initialRender =
   "<div><header></header><div>a</div><div>b</div><div>c</div><footer></footer></div>";
 const initialRenderRaw = "<div><div>a</div><div>b</div><div>c</div></div>";
 const initialRenderTransition =
-  "<div><transition-group-stub><div>a</div><div>b</div><div>c</div></transition-group-stub></div>";
+  "<div><transition-group><div>a</div><div>b</div><div>c</div></transition-group></div>";
 
 function normalizeHTML(wrapper) {
   return wrapper.html().replace(/(\r\n\t|\n|\r\t| )/gm, "");
