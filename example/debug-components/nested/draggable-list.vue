@@ -4,7 +4,6 @@
     :disabled="!enabled"
     class="list-group"
     ghost-class="ghost"
-    :move="checkMove"
     @start="dragging = true"
     @end="dragging = false"
   >
