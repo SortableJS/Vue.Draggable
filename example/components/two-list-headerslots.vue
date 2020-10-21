@@ -19,15 +19,16 @@
           {{ element.name }}
         </div>
 
-        <div
-          slot="footer"
-          class="btn-group list-group-item"
-          role="group"
-          aria-label="Basic example"
-        >
-          <button class="btn btn-secondary" @click="add">Add</button>
-          <button class="btn btn-secondary" @click="replace">Replace</button>
-        </div>
+        <template v-slot:footer>
+          <div
+            class="btn-group list-group-item"
+            role="group"
+            aria-label="Basic example"
+          >
+            <button class="btn btn-secondary" @click="add">Add</button>
+            <button class="btn btn-secondary" @click="replace">Replace</button>
+          </div>
+        </template>
       </draggable>
     </div>
 
@@ -43,15 +44,16 @@
           {{ element.name }}
         </div>
 
-        <div
-          slot="footer"
-          class="btn-group list-group-item"
-          role="group"
-          aria-label="Basic example"
-        >
-          <button class="btn btn-secondary" @click="add2">Add</button>
-          <button class="btn btn-secondary" @click="replace2">Replace</button>
-        </div>
+        <template v-slot:footer>
+          <div
+            class="btn-group list-group-item"
+            role="group"
+            aria-label="Basic example"
+          >
+            <button class="btn btn-secondary" @click="add2">Add</button>
+            <button class="btn btn-secondary" @click="replace2">Replace</button>
+          </div>
+        </template>
       </draggable>
     </div>
 
@@ -78,7 +80,10 @@ export default {
         { name: "Joao 2", id: 1 },
         { name: "Jean 3", id: 2 }
       ],
-      list2: [{ name: "Jonny 4", id: 3 }, { name: "Guisepe 5", id: 4 }]
+      list2: [
+        { name: "Jonny 4", id: 3 },
+        { name: "Guisepe 5", id: 4 }
+      ]
     };
   },
   methods: {

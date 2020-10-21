@@ -1,11 +1,27 @@
-const ctx = require.context("./components/", false, /\.vue$/);
+function getRouteFromDirectory(ctx) {
+  return ctx.keys().map(key => ({
+    path: key.substring(1).replace(".vue", ""),
+    component: ctx(key).default,
+  }));
+}
 
-const routes = ctx.keys().map(key => ({
-  path: key.substring(1).replace(".vue", "")
-}));
+const showAll = process.env.VUE_APP_SHOW_ALL_EXAMPLES === "true";
+window.console.log(process.env.VUE_APP_SHOW_ALL_EXAMPLES);
 
-routes.push({
-  path: "/",
-  redirect: "/simple"
-});
+const routes = [
+  ...getRouteFromDirectory(require.context("./components/", false, /\.vue$/)),
+  ...(!showAll
+    ? []
+    : getRouteFromDirectory(
+        require.context("./debug-components/", false, /\.vue$/)
+      )),
+  {
+    path: "/",
+    redirect: "/simple",
+  },
+];
+
+window.console.log(routes);
+
+
 export default routes;
