@@ -21,16 +21,17 @@
           {{ element.name }}
         </div>
 
-        <div
-          slot="footer"
-          class="btn-group list-group-item"
-          role="group"
-          aria-label="Basic example"
-          key="footer"
-        >
-          <button class="btn btn-secondary" @click="add">Add</button>
-          <button class="btn btn-secondary" @click="replace">Replace</button>
-        </div>
+        <template v-slot:header>
+          <div
+            class="btn-group list-group-item"
+            role="group"
+            aria-label="Basic example"
+            key="footer"
+          >
+            <button class="btn btn-secondary" @click="add">Add</button>
+            <button class="btn btn-secondary" @click="replace">Replace</button>
+          </div>
+        </template>
       </draggable>
     </div>
 

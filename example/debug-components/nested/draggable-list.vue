@@ -41,17 +41,6 @@ export default {
     draggingInfo() {
       return this.dragging ? "under drag" : "";
     }
-  },
-  methods: {
-    add: function() {
-      this.list.push({ name: "Juan " + id, id: id++ });
-    },
-    replace: function() {
-      this.list = [{ name: "Edgard", id: id++ }];
-    },
-    checkMove: function(e) {
-      window.console.log("Future index: " + e.draggedContext.futureIndex);
-    }
   }
 };
 </script>
