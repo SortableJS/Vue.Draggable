@@ -280,6 +280,50 @@ describe("draggable.vue when initialized with list", () => {
     });
   });
 
+  describe("when using component as tag without event listener", () => {
+    beforeEach(() => {
+      input = jest.fn();
+      wrapper = mount(draggable, {
+        slots: {
+          default: () => [],
+        },
+        propsData: {
+          tag: "component-tag",
+          componentData: {
+            attrs: {
+              attribute1: "value1",
+            },
+            props: {
+              prop1: "info",
+              prop2: true,
+            },
+          },
+        },
+        global: {
+          components: {
+            "component-tag": Fake,
+          },
+        },
+      });
+    });
+
+    it("instantiate child component", async () => {
+      const child = wrapper.findComponent(Fake);
+      expect(child).not.toBeNull();
+    });
+
+    it("pass data to tag child", async () => {
+      const fakeChild = wrapper.findComponent(Fake);
+      expect(fakeChild.props("prop1")).toEqual("info");
+    });
+
+    it("pass attributes to tag child", async () => {
+      const child = wrapper.findComponent(Fake);
+      const attrValue = child.attributes("attribute1");
+      expect(attrValue).toEqual("value1");
+    });
+  });
+
   test.each([
     [true, Fake],
     [false, FakeFunctional],

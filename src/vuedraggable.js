@@ -100,7 +100,7 @@ function getComponentAttributes($attrs, componentData) {
     return attrs;
   }
   const { on: rawOn, props, attrs: componentDataAttrs } = componentData;
-  const on = Object.entries(rawOn).reduce((res, [key, value]) => {
+  const on = Object.entries(rawOn || {}).reduce((res, [key, value]) => {
     res[`on${capitalize(key)}`] = value;
     return res;
   }, {});
