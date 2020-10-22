@@ -152,8 +152,8 @@ export default {
   name: "app",
   components,
   data() {
-    const componentList = Object.keys(components)
-      .map(key => components[key])
+    const componentList = Object.values(components)
+      .filter(component => component.show)
       .sort((a, b) => a.order - b.order);
     return {
       componentList

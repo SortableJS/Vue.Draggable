@@ -115,7 +115,7 @@ const tags = [
   "ul",
   "var",
   "video",
-  "wbr",
+  "wbr"
 ];
 
 function isHtmlTag(name) {

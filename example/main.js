@@ -1,6 +1,6 @@
 import { createApp } from "vue";
 import App from "./App.vue";
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHistory } from "vue-router";
 
 import routes from "./route";
 import rawDisplayer from "./components/infra/raw-displayer";
@@ -19,4 +19,4 @@ const app = createApp(App);
 app.use(store);
 app.use(router);
 app.component("rawDisplayer", rawDisplayer);
-router.isReady().then(() => app.mount('#app'));
+router.isReady().then(() => app.mount("#app"));

@@ -10,3 +10,5 @@ test/tmp
 /examples/src
 /examples/libs/
 /coverage
+
+.env.local

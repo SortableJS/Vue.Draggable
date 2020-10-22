@@ -4,8 +4,8 @@ import { createStore } from "vuex";
 const store = createStore({
   namespaced: true,
   modules: {
-    nested,
-  },
+    nested
+  }
 });
 
 export default store;
