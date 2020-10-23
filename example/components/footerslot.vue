@@ -21,7 +21,7 @@
           {{ element.name }}
         </div>
 
-        <template v-slot:header>
+        <template v-slot:footer>
           <div
             class="btn-group list-group-item"
             role="group"

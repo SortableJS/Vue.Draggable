@@ -1,7 +1,7 @@
 <template>
   <div class="row">
     <div class="col-4">
-      <h3>First draggable with header</h3>
+      <h3>First draggable with footer</h3>
 
       <draggable
         id="first"
@@ -44,7 +44,7 @@
           {{ element.name }}
         </div>
 
-        <template v-slot:footer>
+        <template v-slot:header>
           <div
             class="btn-group list-group-item"
             role="group"
