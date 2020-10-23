@@ -12,7 +12,7 @@ function getRouteFilterFromConfiguration(configuration) {
   const routeFromConfiguration = configuration
     .split(",")
     .filter(value => value !== "");
-  if (routeFromConfiguration == []) {
+  if (routeFromConfiguration.length === 0) {
     return () => true;
   }
 
