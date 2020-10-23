@@ -1,5 +1,11 @@
 import Sortable from "sortablejs";
-import { insertNodeAt, camelize, capitalize, console, removeNode } from "./util/helper";
+import {
+  insertNodeAt,
+  camelize,
+  capitalize,
+  console,
+  removeNode
+} from "./util/helper";
 import { isHtmlTag } from "./util/tags";
 import { h, defineComponent, nextTick, resolveComponent } from "vue";
 
@@ -13,13 +19,13 @@ function buildAttribute(object, propName, value) {
 }
 
 function computeVmIndex(vnodes, element, mainNode) {
-  const index = vnodes.map((elt) => elt.el).indexOf(element);
+  const index = vnodes.map(({ el }) => el).indexOf(element);
   if (index === -1) {
     throw new Error("node not found", {
-      nodes: vnodes.map((elt) => elt.el),
+      nodes: vnodes.map(({ el }) => el),
       element,
       index,
-      mainNode,
+      mainNode
     });
   }
   return index;
@@ -51,7 +57,6 @@ function delegateAndEmit(evtName) {
   };
 }
 
-
 function isTransitionName(name) {
   return ["transition-group", "TransitionGroup"].includes(name);
 }
@@ -64,7 +69,7 @@ function isTransition(slots) {
   if (!type) {
     return false;
   }
-  return isTransitionName(type);
+  return !!type && (isTransitionName(type) || isTransitionName(type.name));
 }
 
 function getSlot(slot, key) {
@@ -118,36 +123,36 @@ const props = {
   list: {
     type: Array,
     required: false,
-    default: null,
+    default: null
   },
   modelValue: {
     type: Array,
     required: false,
-    default: null,
+    default: null
   },
   noTransitionOnDrag: {
     type: Boolean,
-    default: false,
+    default: false
   },
   clone: {
     type: Function,
     default: original => {
       return original;
-    },
+    }
   },
   tag: {
     type: String,
-    default: "div",
+    default: "div"
   },
   move: {
     type: Function,
-    default: null,
+    default: null
   },
   componentData: {
     type: Object,
     required: false,
-    default: null,
-  },
+    default: null
+  }
 };
 
 const draggableComponent = defineComponent({
@@ -160,7 +165,7 @@ const draggableComponent = defineComponent({
   data() {
     return {
       transitionMode: false,
-      noneFunctionalComponentMode: false,
+      noneFunctionalComponentMode: false
     };
   },
 
@@ -201,11 +206,11 @@ const draggableComponent = defineComponent({
       );
     }
     const optionsAdded = {};
-    eventsListened.forEach((elt) => {
+    eventsListened.forEach(elt => {
       optionsAdded["on" + elt] = delegateAndEmit.call(this, elt);
     });
 
-    eventsToEmit.forEach((elt) => {
+    eventsToEmit.forEach(elt => {
       optionsAdded["on" + elt] = emit.bind(this, elt);
     });
 
@@ -224,8 +229,8 @@ const draggableComponent = defineComponent({
       ...{
         onMove: (evt, originalEvent) => {
           return this.onDragMove(evt, originalEvent);
-        },
-      },
+        }
+      }
     };
     const { rootContainer } = this;
     this._sortable = new Sortable(rootContainer, options);
@@ -239,12 +244,12 @@ const draggableComponent = defineComponent({
 
   computed: {
     rootContainer() {
-      return this.transitionMode ? this.$el.children[0] : this.$el;
+      return this.$el;
     },
 
     realList() {
       return this.list ? this.list : this.modelValue;
-    },
+    }
   },
 
   watch: {
@@ -252,12 +257,12 @@ const draggableComponent = defineComponent({
       handler(newOptionValue) {
         this.updateOptions(newOptionValue);
       },
-      deep: true,
+      deep: true
     },
 
     realList() {
       this.computeIndexes();
-    },
+    }
   },
 
   methods: {
@@ -280,7 +285,7 @@ const draggableComponent = defineComponent({
       const {
         noneFunctionalComponentMode,
         transitionMode,
-        defaultSlots,
+        defaultSlots
       } = this;
       if (noneFunctionalComponentMode) {
         //TODO check
@@ -289,9 +294,10 @@ const draggableComponent = defineComponent({
       }
       //const rawNodes = this.defaultSlots;
       if (transitionMode) {
-        //TODO check
-        //rawNodes[0].child.$slots.default()
-        return defaultSlots[0].children;
+        //TODO check transition with tag
+        return [...this.$el.children]
+          .map(c => c.__vnode)
+          .filter(node => !!node.transition);
       }
       return defaultSlots.length === 1 && defaultSlots[0].el.nodeType === 3
         ? defaultSlots[0].children
@@ -346,12 +352,12 @@ const draggableComponent = defineComponent({
     },
 
     spliceList() {
-      const spliceList = (list) => list.splice(...arguments);
+      const spliceList = list => list.splice(...arguments);
       this.alterList(spliceList);
     },
 
     updatePosition(oldIndex, newIndex) {
-      const updatePosition = (list) =>
+      const updatePosition = list =>
         list.splice(newIndex, 0, list.splice(oldIndex, 1)[0]);
       this.alterList(updatePosition);
     },
@@ -445,7 +451,7 @@ const draggableComponent = defineComponent({
         return 0;
       }
       const domChildren = [...evt.to.children].filter(
-        (el) => el.style["display"] !== "none"
+        el => el.style["display"] !== "none"
       );
       const currentDOMIndex = domChildren.indexOf(evt.related);
       const currentIndex = relatedContext.component.getVmIndex(currentDOMIndex);
@@ -467,7 +473,7 @@ const draggableComponent = defineComponent({
       Object.assign(draggedContext, { futureIndex });
       const sendEvt = Object.assign({}, evt, {
         relatedContext,
-        draggedContext,
+        draggedContext
       });
       return onMove(sendEvt, originalEvent);
     },
@@ -475,8 +481,8 @@ const draggableComponent = defineComponent({
     onDragEnd() {
       this.computeIndexes();
       draggingElement = null;
-    },
-  },
+    }
+  }
 });
 
 export default draggableComponent;
