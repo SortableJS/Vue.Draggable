@@ -9,15 +9,6 @@ import {
 import { isHtmlTag } from "./util/tags";
 import { h, defineComponent, nextTick, resolveComponent } from "vue";
 
-function buildAttribute(object, propName, value) {
-  if (value === undefined) {
-    return object;
-  }
-  object = object || {};
-  object[propName] = value;
-  return object;
-}
-
 function computeVmIndex(vnodes, element, mainNode) {
   const index = vnodes.map(({ el }) => el).indexOf(element);
   if (index === -1) {
@@ -95,7 +86,9 @@ function computeChildrenAndOffsets(children, slot) {
 
 function getComponentAttributes($attrs, componentData) {
   const attrs = Object.entries($attrs)
-    .filter(([key, _]) => key === "id" || key.startsWith("data-"))
+    .filter(
+      ([key, _]) => ["id", "class"].includes(key) || key.startsWith("data-")
+    )
     .reduce((res, [key, value]) => {
       res[key] = value;
       return res;

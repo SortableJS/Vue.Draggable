@@ -1,5 +1,5 @@
-import { mount } from "@vue/test-utils";
-
+import { mount, config } from "@vue/test-utils";
+//config.global.stubs["transition-group"] = false;
 import Sortable from "sortablejs";
 jest.genMockFromModule("sortablejs");
 jest.mock("sortablejs");
@@ -868,6 +868,24 @@ describe("draggable.vue when initialized with list", () => {
     const wrapperElement = wrapper.find("#my-id");
     expect(wrapperElement.element.tagName.toLowerCase()).toBe("div");
     expect(wrapperElement.html()).toEqual(wrapper.html());
+  });
+
+  it("renders class as html attribute", () => {
+    wrapper = mount(draggable, {
+      propsData: {
+        list: [],
+      },
+      attrs: {
+        id: "my-id",
+        class: "my-class"
+      },
+      slots: {
+        default: () => [],
+      },
+    });
+
+    const wrapperElement = wrapper.find("#my-id");
+    expect(wrapperElement.element.className).toBe("my-class");
   });
 
   test.each([
