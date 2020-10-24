@@ -1,11 +1,6 @@
 import Sortable from "sortablejs";
-import {
-  insertNodeAt,
-  camelize,
-  capitalize,
-  console,
-  removeNode
-} from "./util/helper";
+import { insertNodeAt, console, removeNode } from "./util/helper";
+import { camelize, capitalize } from "./util/string";
 import { isHtmlTag } from "./util/tags";
 import { h, defineComponent, nextTick, resolveComponent } from "vue";
 
