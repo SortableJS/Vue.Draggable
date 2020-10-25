@@ -21,6 +21,8 @@ describe("capitalize", () => {
   test.each([
     ["myProp", "MyProp"],
     ["abcdde", "Abcdde"],
+    ["Zab", "Zab"],
+    ["zab", "Zab"],
     ["123456", "123456"]
   ])(
     "transform %s into %s",
