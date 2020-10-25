@@ -1,8 +1,9 @@
 import Sortable from "sortablejs";
 import { insertNodeAt, removeNode } from "./util/htmlHelper";
 import { console } from "./util/console";
-import { camelize, capitalize } from "./util/string";
+import { camelize } from "./util/string";
 import { isHtmlTag, isTransition as isTransitionName } from "./util/tags";
+import { getComponentAttributes } from "./core/componentBuilderHelper"
 import { h, defineComponent, nextTick, resolveComponent } from "vue";
 
 function computeVmIndex(vnodes, element, mainNode) {
@@ -60,41 +61,21 @@ function getSlot(slot, key) {
   return slotValue ? slotValue() : undefined;
 }
 
-function computeChildrenAndOffsets(children, slot) {
+function computeChildrenAndOffsets(defaultNodes, slot) {
+  let children = [...defaultNodes];
   let headerOffset = 0;
   let footerOffset = 0;
   const header = getSlot(slot, "header");
   if (header) {
     headerOffset = header.length;
-    children = children ? [...header, ...children] : [...header];
+    children = [...header, ...children];
   }
   const footer = getSlot(slot, "footer");
   if (footer) {
     footerOffset = footer.length;
-    children = children ? [...children, ...footer] : [...footer];
+    children = [...children, ...footer];
   }
   return { children, headerOffset, footerOffset };
-}
-
-function getComponentAttributes($attrs, componentData) {
-  const attrs = Object.entries($attrs)
-    .filter(
-      ([key, _]) => ["id", "class"].includes(key) || key.startsWith("data-")
-    )
-    .reduce((res, [key, value]) => {
-      res[key] = value;
-      return res;
-    }, {});
-
-  if (!componentData) {
-    return attrs;
-  }
-  const { on: rawOn, props, attrs: componentDataAttrs } = componentData;
-  const on = Object.entries(rawOn || {}).reduce((res, [key, value]) => {
-    res[`on${capitalize(key)}`] = value;
-    return res;
-  }, {});
-  return { ...attrs, ...componentDataAttrs, ...on, ...props };
 }
 
 const eventsListened = ["Start", "Add", "Remove", "Update", "End"];
@@ -425,11 +406,6 @@ const draggableComponent = defineComponent({
       this.updatePosition(oldIndex, newIndex);
       const moved = { element: this.context.element, oldIndex, newIndex };
       this.emitChanges({ moved });
-    },
-
-    updateProperty(evt, propertyName) {
-      evt.hasOwnProperty(propertyName) &&
-        (evt[propertyName] += this.headerOffset);
     },
 
     computeFutureIndex(relatedContext, evt) {
