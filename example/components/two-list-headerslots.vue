@@ -20,7 +20,7 @@
         </div>
 
         <div
-          slot="footer"
+          slot="header"
           class="btn-group list-group-item"
           role="group"
           aria-label="Basic example"
@@ -44,7 +44,7 @@
         </div>
 
         <div
-          slot="footer"
+          slot="header"
           class="btn-group list-group-item"
           role="group"
           aria-label="Basic example"
