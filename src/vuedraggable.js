@@ -165,7 +165,7 @@ const draggableComponent = defineComponent({
     this.footerOffset = footerOffset;
     const attributes = getComponentAttributes($attrs, this.componentData);
     this.defaultSlots = defaultSlots;
-    const realRoot = isHtmlTag(tag) ? tag : resolveComponent(tag);
+    const realRoot = isHtmlTag(tag) || isTransitionName(tag) ? tag : resolveComponent(tag);
     const mainNode = h(realRoot, attributes, children);
     this.mainNode = mainNode;
     return mainNode;
