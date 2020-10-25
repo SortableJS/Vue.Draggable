@@ -1,5 +1,6 @@
 import { capitalize } from "../util/string";
-
+import { camelize } from "../util/string";
+import { events } from "./sortableEvents";
 
 function getComponentAttributes($attrs, componentData) {
   const attributes = Object.entries($attrs)
@@ -21,4 +22,27 @@ function getComponentAttributes($attrs, componentData) {
   return { ...attributes, ...attrs, ...props };
 }
 
-export { getComponentAttributes }
+function getDraggableOption({
+  $attrs,
+  callBackBuilder: { manageAndEmit, emit, manage }
+}) {
+  const options = {
+    draggable: ">*"
+  };
+  Object.entries($attrs).forEach(([key, value]) => {
+    options[camelize(key)] = value;
+  });
+  const builders = {
+    emit,
+    manageAndEmit,
+    manage
+  };
+  Object.entries(builders).forEach(([eventType, eventBuilder]) => {
+    events[eventType].forEach(event => {
+      options[`on${event}`] = eventBuilder(event);
+    });
+  });
+  return options;
+}
+
+export { getComponentAttributes, getDraggableOption };

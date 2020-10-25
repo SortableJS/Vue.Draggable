@@ -3,7 +3,12 @@ import { insertNodeAt, removeNode } from "./util/htmlHelper";
 import { console } from "./util/console";
 import { camelize } from "./util/string";
 import { isHtmlTag, isTransition as isTransitionName } from "./util/tags";
-import { getComponentAttributes } from "./core/componentBuilderHelper"
+import {
+  getComponentAttributes,
+  getDraggableOption
+} from "./core/componentBuilderHelper";
+import { isReadOnlyEvent } from "./core/sortableEvents";
+
 import { h, defineComponent, nextTick, resolveComponent } from "vue";
 
 function computeVmIndex(vnodes, element, mainNode) {
@@ -36,11 +41,18 @@ function emit(evtName, evtData) {
   nextTick(() => this.$emit(evtName.toLowerCase(), evtData));
 }
 
-function delegateAndEmit(evtName) {
-  return evtData => {
+function manage(evtName) {
+  return (evtData, originalElement) => {
     if (this.realList !== null) {
-      this["onDrag" + evtName](evtData);
+      return this[`onDrag${evtName}`](evtData, originalElement);
     }
+  };
+}
+
+function manageAndEmit(evtName) {
+  const delegateCallBack = manage.call(this, evtName);
+  return (evtData, originalElement) => {
+    delegateCallBack.call(this, evtData, originalElement);
     emit.call(this, evtName, evtData);
   };
 }
@@ -78,11 +90,6 @@ function computeChildrenAndOffsets(defaultNodes, slot) {
   return { children, headerOffset, footerOffset };
 }
 
-const eventsListened = ["Start", "Add", "Remove", "Update", "End"];
-const eventsToEmit = ["Choose", "Unchoose", "Sort", "Filter", "Clone"];
-const readonlyProperties = ["Move", ...eventsListened, ...eventsToEmit].map(
-  evt => "on" + evt
-);
 var draggingElement = null;
 
 const props = {
@@ -163,7 +170,7 @@ const draggableComponent = defineComponent({
   },
 
   mounted() {
-    const { tag } = this;
+    const { tag, $attrs, rootContainer } = this;
     this.noneFunctionalComponentMode =
       tag.toLowerCase() !== this.$el.nodeName.toLowerCase() &&
       !this.getIsFunctional();
@@ -172,35 +179,16 @@ const draggableComponent = defineComponent({
         `Transition-group inside component is not supported. Please alter tag value or remove transition-group. Current tag value: ${tag}`
       );
     }
-    const optionsAdded = {};
-    eventsListened.forEach(elt => {
-      optionsAdded["on" + elt] = delegateAndEmit.call(this, elt);
-    });
-
-    eventsToEmit.forEach(elt => {
-      optionsAdded["on" + elt] = emit.bind(this, elt);
-    });
-
-    const attributes = Object.entries(this.$attrs).reduce(
-      (res, [key, value]) => {
-        res[camelize(key)] = value;
-        return res;
-      },
-      {}
-    );
-
-    const options = {
-      draggable: ">*",
-      ...attributes,
-      ...optionsAdded,
-      ...{
-        onMove: (evt, originalEvent) => {
-          return this.onDragMove(evt, originalEvent);
-        }
+    const sortableOptions = getDraggableOption({
+      $attrs,
+      callBackBuilder: {
+        manageAndEmit: event => manageAndEmit.call(this, event),
+        emit: event => emit.bind(this, event),
+        manage: event => manage.call(this, event)
       }
-    };
-    const { rootContainer } = this;
-    this._sortable = new Sortable(rootContainer, options);
+    });
+
+    this._sortable = new Sortable(rootContainer, sortableOptions);
     rootContainer.__draggable_component__ = this;
     this.computeIndexes();
   },
@@ -240,12 +228,13 @@ const draggableComponent = defineComponent({
     },
 
     updateOptions(newOptionValue) {
-      for (var property in newOptionValue) {
-        const value = camelize(property);
-        if (readonlyProperties.indexOf(value) === -1) {
-          this._sortable.option(value, newOptionValue[property]);
+      const { _sortable } = this;
+      Object.entries(newOptionValue).forEach(([key, value]) => {
+        const normalizedKey = camelize(key);
+        if (!isReadOnlyEvent(normalizedKey)) {
+          _sortable.option(normalizedKey, value);
         }
-      }
+      });
     },
 
     getChildrenNodes() {
