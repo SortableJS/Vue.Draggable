@@ -6,7 +6,7 @@ function getRouteFromDirectory(ctx) {
 }
 
 const showDebug = process.env.VUE_APP_SHOW_ALL_EXAMPLES === "true";
-window.console.log(showDebug);
+window.console.log(showDebug, process.env.VUE_APP_FILTER_ROUTE);
 
 function getRouteFilterFromConfiguration(configuration) {
   const routeFromConfiguration = configuration
