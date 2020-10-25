@@ -1,12 +1,14 @@
 import { capitalize } from "../util/string";
 import { camelize } from "../util/string";
-import { events } from "./sortableEvents";
+import { events, isReadOnlyEvent } from "./sortableEvents";
+
+function isHtmlAttribute(value) {
+  return ["id", "class"].includes(value) || value.startsWith("data-");
+}
 
 function getComponentAttributes($attrs, componentData) {
   const attributes = Object.entries($attrs)
-    .filter(
-      ([key, _]) => ["id", "class"].includes(key) || key.startsWith("data-")
-    )
+    .filter(([key, _]) => isHtmlAttribute(key))
     .reduce((res, [key, value]) => {
       res[key] = value;
       return res;
@@ -22,22 +24,17 @@ function getComponentAttributes($attrs, componentData) {
   return { ...attributes, ...attrs, ...props };
 }
 
-function getDraggableOption({
-  $attrs,
-  callBackBuilder: { manageAndEmit, emit, manage }
-}) {
+function getSortableOption({ $attrs, callBackBuilder }) {
   const options = {
     draggable: ">*"
   };
-  Object.entries($attrs).forEach(([key, value]) => {
-    options[camelize(key)] = value;
-  });
-  const builders = {
-    emit,
-    manageAndEmit,
-    manage
-  };
-  Object.entries(builders).forEach(([eventType, eventBuilder]) => {
+  Object.entries($attrs)
+    .map(([key, value]) => [camelize(key), value])
+    .filter(([key, _]) => !isHtmlAttribute(key) && !isReadOnlyEvent(key))
+    .forEach(([key, value]) => {
+      options[key] = value;
+    });
+  Object.entries(callBackBuilder).forEach(([eventType, eventBuilder]) => {
     events[eventType].forEach(event => {
       options[`on${event}`] = eventBuilder(event);
     });
@@ -45,4 +42,4 @@ function getDraggableOption({
   return options;
 }
 
-export { getComponentAttributes, getDraggableOption };
+export { getComponentAttributes, getSortableOption };

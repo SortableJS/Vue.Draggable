@@ -5,7 +5,7 @@ import { camelize } from "./util/string";
 import { isHtmlTag, isTransition as isTransitionName } from "./util/tags";
 import {
   getComponentAttributes,
-  getDraggableOption
+  getSortableOption
 } from "./core/componentBuilderHelper";
 import { isReadOnlyEvent } from "./core/sortableEvents";
 
@@ -179,7 +179,7 @@ const draggableComponent = defineComponent({
         `Transition-group inside component is not supported. Please alter tag value or remove transition-group. Current tag value: ${tag}`
       );
     }
-    const sortableOptions = getDraggableOption({
+    const sortableOptions = getSortableOption({
       $attrs,
       callBackBuilder: {
         manageAndEmit: event => manageAndEmit.call(this, event),
