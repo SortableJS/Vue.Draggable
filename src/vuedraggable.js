@@ -1,5 +1,6 @@
 import Sortable from "sortablejs";
-import { insertNodeAt, console, removeNode } from "./util/helper";
+import { insertNodeAt, removeNode } from "./util/htmlHelper";
+import { console } from "./util/console";
 import { camelize, capitalize } from "./util/string";
 import { isHtmlTag, isTransition as isTransitionName } from "./util/tags";
 import { h, defineComponent, nextTick, resolveComponent } from "vue";
@@ -165,7 +166,8 @@ const draggableComponent = defineComponent({
     this.footerOffset = footerOffset;
     const attributes = getComponentAttributes($attrs, this.componentData);
     this.defaultSlots = defaultSlots;
-    const realRoot = isHtmlTag(tag) || isTransitionName(tag) ? tag : resolveComponent(tag);
+    const realRoot =
+      isHtmlTag(tag) || isTransitionName(tag) ? tag : resolveComponent(tag);
     const mainNode = h(realRoot, attributes, children);
     this.mainNode = mainNode;
     return mainNode;

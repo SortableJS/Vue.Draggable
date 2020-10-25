@@ -1,11 +1,3 @@
-function getConsole() {
-  if (typeof window !== "undefined") {
-    return window.console;
-  }
-  return global.console;
-}
-const console = getConsole();
-
 function removeNode(node) {
   if (node.parentElement !== null) {
     node.parentElement.removeChild(node);
@@ -20,4 +12,4 @@ function insertNodeAt(fatherNode, node, position) {
   fatherNode.insertBefore(node, refNode);
 }
 
-export { insertNodeAt, console, removeNode };
+export { insertNodeAt, removeNode };

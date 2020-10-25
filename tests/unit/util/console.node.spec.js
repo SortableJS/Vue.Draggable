@@ -2,7 +2,7 @@
  * @jest-environment node
  */
 
-import { console } from "@/util/helper";
+import { console } from "@/util/console";
 
 describe("console", () => {
   test.each([

@@ -13,5 +13,4 @@ const camelize = cached(str =>
 
 const capitalize = str => str.replace(/^\w/, c => c.toUpperCase());
 
-
 export { camelize, capitalize };
