@@ -1,7 +1,7 @@
 import Sortable from "sortablejs";
 import { insertNodeAt, console, removeNode } from "./util/helper";
 import { camelize, capitalize } from "./util/string";
-import { isHtmlTag } from "./util/tags";
+import { isHtmlTag, isTransition as isTransitionName } from "./util/tags";
 import { h, defineComponent, nextTick, resolveComponent } from "vue";
 
 function computeVmIndex(vnodes, element, mainNode) {
@@ -41,10 +41,6 @@ function delegateAndEmit(evtName) {
     }
     emit.call(this, evtName, evtData);
   };
-}
-
-function isTransitionName(name) {
-  return ["transition-group", "TransitionGroup"].includes(name);
 }
 
 function isTransition(slots) {

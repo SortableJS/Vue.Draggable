@@ -122,4 +122,8 @@ function isHtmlTag(name) {
   return tags.includes(name);
 }
 
-export { isHtmlTag };
+function isTransition(name) {
+  return ["transition-group", "TransitionGroup"].includes(name);
+}
+
+export { isHtmlTag, isTransition };
