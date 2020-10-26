@@ -23,8 +23,8 @@ describe("getComponentAttributes", () => {
       {
         $attrs: {},
         componentData: {
-          props:{
-            prop1: "value"
+          props: {
+            prop1: "value",
           },
           attrs: {
             value: 89,
@@ -33,7 +33,7 @@ describe("getComponentAttributes", () => {
       },
       {
         value: 89,
-        prop1: "value"
+        prop1: "value",
       },
     ],
     [
@@ -43,7 +43,7 @@ describe("getComponentAttributes", () => {
           id: 68,
           "data-application": "app",
           class: "my-class",
-          other: "will be filtered"
+          other: "will be filtered",
         },
         componentData: {
           attrs: {
@@ -96,6 +96,53 @@ describe("getSortableOption", () => {
         value: "43",
         ghostClass: "phantom",
         draggable: ".draggable",
+      },
+    ],
+    [
+      {
+        $attrs: {
+          value: "7",
+          draggable: ".draggable",
+        },
+        callBackBuilder: {
+          emit: eventName => eventName
+        },
+      },
+      {
+        value: "7",
+        draggable: ".draggable",
+        onChoose: "Choose",
+        onClone: "Clone",
+        onFilter: "Filter",
+        onSort: "Sort",
+        onUnchoose: "Unchoose",
+      },
+    ],
+    [
+      {
+        $attrs: {
+          property: "property",
+        },
+        callBackBuilder: {
+          emit: eventName => `emit-${eventName}`,
+          manage: eventName => `manage-${eventName}`,
+          manageAndEmit: eventName => `manageAndEmit-${eventName}`
+        },
+      },
+      {
+        property: "property",
+        draggable: ">*",
+        onChoose: "emit-Choose",
+        onClone: "emit-Clone",
+        onFilter: "emit-Filter",
+        onSort: "emit-Sort",
+        onUnchoose: "emit-Unchoose",
+        onMove: "manage-Move",
+        onAdd: "manageAndEmit-Add",
+        onEnd: "manageAndEmit-End",
+        onStart: "manageAndEmit-Start",
+        onRemove: "manageAndEmit-Remove",
+        onUpdate: "manageAndEmit-Update",
       },
     ],
   ])("for %o returns %o", (value, expected) => {
