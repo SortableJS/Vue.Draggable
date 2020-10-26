@@ -6,7 +6,7 @@ function isHtmlAttribute(value) {
   return ["id", "class"].includes(value) || value.startsWith("data-");
 }
 
-function getComponentAttributes($attrs, componentData) {
+function getComponentAttributes({ $attrs, componentData }) {
   const attributes = Object.entries($attrs)
     .filter(([key, _]) => isHtmlAttribute(key))
     .reduce((res, [key, value]) => {
@@ -29,8 +29,9 @@ function getSortableOption({ $attrs, callBackBuilder }) {
     draggable: ">*"
   };
   Object.entries($attrs)
+    .filter(([key, _]) => !isHtmlAttribute(key))
     .map(([key, value]) => [camelize(key), value])
-    .filter(([key, _]) => !isHtmlAttribute(key) && !isReadOnlyEvent(key))
+    .filter(([key, _]) => !isReadOnlyEvent(key))
     .forEach(([key, value]) => {
       options[key] = value;
     });

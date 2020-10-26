@@ -143,7 +143,7 @@ const draggableComponent = defineComponent({
   },
 
   render() {
-    const { $slots, $attrs, tag } = this;
+    const { $slots, $attrs, tag, componentData } = this;
     const defaultSlots = getSlot($slots, "default") || [];
     this.transitionMode = isTransition(defaultSlots);
     const { children, headerOffset, footerOffset } = computeChildrenAndOffsets(
@@ -152,7 +152,7 @@ const draggableComponent = defineComponent({
     );
     this.headerOffset = headerOffset;
     this.footerOffset = footerOffset;
-    const attributes = getComponentAttributes($attrs, this.componentData);
+    const attributes = getComponentAttributes({ $attrs, componentData });
     this.defaultSlots = defaultSlots;
     const realRoot =
       isHtmlTag(tag) || isTransitionName(tag) ? tag : resolveComponent(tag);
