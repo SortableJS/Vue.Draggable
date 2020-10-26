@@ -1,4 +1,5 @@
-import { mount } from "@vue/test-utils";
+import { mount, config } from "@vue/test-utils";
+config.global.stubs["transition-group"] = false;
 import Sortable from "sortablejs";
 jest.genMockFromModule("sortablejs");
 jest.mock("sortablejs");
@@ -30,9 +31,7 @@ const expectedDomWithWrapper = wrapper =>
     .join("")}</${wrapper}>`;
 
 const expectedDomNoTransition = expectedDomWithWrapper("span");
-const expectedDomTransition = `<div>${expectedDomWithWrapper(
-  "transition-group-stub"
-)}</div>`;
+const expectedDomTransition = expectedDomWithWrapper("div");
 
 function normalizeHTML(wrapper) {
   return wrapper.html().replace(/(\r\n\t|\n|\r\t| )/gm, "");
@@ -50,7 +49,7 @@ describe.each([
     "draggable with transition",
     DraggableWithTransition,
     expectedDomTransition,
-    "transition-group-stub"
+    "div"
   ]
 ])(
   "should update list and DOM with component: %s",
