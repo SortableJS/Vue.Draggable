@@ -199,7 +199,16 @@ const draggableComponent = defineComponent({
 
   computed: {
     rootContainer() {
-      return this.$el;
+      const { $el, transitionMode } = this;
+      if (!transitionMode) {
+        return $el;
+      }
+      const {children} = $el;
+      if (children.length !== 1) {
+        return $el;
+      }
+      const firstChild = children.item(0);
+      return firstChild.tagName !== "text" ? firstChild : $el;
     },
 
     realList() {
@@ -250,8 +259,12 @@ const draggableComponent = defineComponent({
       }
       //const rawNodes = this.defaultSlots;
       if (transitionMode) {
+        const [{ children }] = defaultSlots;
+        if (Array.isArray(children)) {
+          return children;
+        }
         //TODO check transition with tag
-        return [...this.$el.children]
+        return [...this.rootContainer.children]
           .map(c => c.__vnode)
           .filter(node => !!node.transition);
       }
