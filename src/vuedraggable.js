@@ -203,12 +203,12 @@ const draggableComponent = defineComponent({
       if (!transitionMode) {
         return $el;
       }
-      const {children} = $el;
+      const { children } = $el;
       if (children.length !== 1) {
         return $el;
       }
       const firstChild = children.item(0);
-      return firstChild.tagName !== "text" ? firstChild : $el;
+      return !!firstChild.__vnode.transition ? $el : firstChild;
     },
 
     realList() {
