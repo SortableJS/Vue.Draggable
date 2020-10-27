@@ -11,28 +11,25 @@ import { isReadOnlyEvent } from "./core/sortableEvents";
 
 import { h, defineComponent, nextTick, resolveComponent } from "vue";
 
-function computeVmIndex(vnodes, element, mainNode) {
-  const index = vnodes.map(({ el }) => el).indexOf(element);
+function computeVmIndex(vNodes, element) {
+  const domElements = vNodes.map(({ el }) => el);
+  const index = domElements.indexOf(element);
   if (index === -1) {
     throw new Error("node not found", {
-      nodes: vnodes.map(({ el }) => el),
+      nodes: domElements,
       element,
-      index,
-      mainNode
     });
   }
   return index;
 }
 
-function computeIndexes(slots, children, isTransition, footerOffset) {
-  if (!slots) {
-    return [];
-  }
-
-  const elmFromNodes = slots.map(({ el }) => el);
-  const footerIndex = children.length - footerOffset;
-  const rawIndexes = [...children].map((elt, idx) =>
-    idx >= footerIndex ? elmFromNodes.length : elmFromNodes.indexOf(elt)
+function computeIndexes(vNodes, domChildren, isTransition, footerOffset) {
+  const domChildrenFromNodes = vNodes.map(({ el }) => el);
+  const footerIndex = domChildren.length - footerOffset;
+  const rawIndexes = [...domChildren].map((elt, idx) =>
+    idx >= footerIndex
+      ? domChildrenFromNodes.length
+      : domChildrenFromNodes.indexOf(elt)
   );
   return isTransition ? rawIndexes.filter(ind => ind !== -1) : rawIndexes;
 }
@@ -281,11 +278,7 @@ const draggableComponent = defineComponent({
     },
 
     getUnderlyingVm(htmlElt) {
-      const index = computeVmIndex(
-        this.getChildrenNodes() || [],
-        htmlElt,
-        this.mainNode
-      );
+      const index = computeVmIndex(this.getChildrenNodes() || [], htmlElt);
       if (index === -1) {
         //Edge case during move callback: related element might be
         //an element different from collection
@@ -343,7 +336,7 @@ const draggableComponent = defineComponent({
       return context;
     },
 
-    getVmIndex(domIndex) {
+    getVmIndexFromDomIndex(domIndex) {
       const indexes = this.visibleIndexes;
       const numberIndexes = indexes.length;
       return domIndex > numberIndexes - 1 ? numberIndexes : indexes[domIndex];
@@ -365,7 +358,7 @@ const draggableComponent = defineComponent({
         return;
       }
       removeNode(evt.item);
-      const newIndex = this.getVmIndex(evt.newIndex);
+      const newIndex = this.getVmIndexFromDomIndex(evt.newIndex);
       this.spliceList(newIndex, 0, element);
       this.computeIndexes();
       const added = { element, newIndex };
@@ -388,7 +381,7 @@ const draggableComponent = defineComponent({
       removeNode(evt.item);
       insertNodeAt(evt.from, evt.item, evt.oldIndex);
       const oldIndex = this.context.index;
-      const newIndex = this.getVmIndex(evt.newIndex);
+      const newIndex = this.getVmIndexFromDomIndex(evt.newIndex);
       this.updatePosition(oldIndex, newIndex);
       const moved = { element: this.context.element, oldIndex, newIndex };
       this.emitChanges({ moved });
@@ -401,8 +394,10 @@ const draggableComponent = defineComponent({
       const domChildren = [...evt.to.children].filter(
         el => el.style["display"] !== "none"
       );
-      const currentDOMIndex = domChildren.indexOf(evt.related);
-      const currentIndex = relatedContext.component.getVmIndex(currentDOMIndex);
+      const currentDomIndex = domChildren.indexOf(evt.related);
+      const currentIndex = relatedContext.component.getVmIndexFromDomIndex(
+        currentDomIndex
+      );
       const draggedInList = domChildren.indexOf(draggingElement) !== -1;
       return draggedInList || !evt.willInsertAfter
         ? currentIndex
