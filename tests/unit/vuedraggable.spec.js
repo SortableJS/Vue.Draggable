@@ -129,13 +129,6 @@ describe("draggable.vue when initialized with list", () => {
       }
     ],
     [
-      "noTransitionOnDrag",
-      {
-        type: Boolean,
-        default: false
-      }
-    ],
-    [
       "tag",
       {
         type: String,
