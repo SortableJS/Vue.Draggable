@@ -1,14 +1,12 @@
 import Sortable from "sortablejs";
 import { insertNodeAt, removeNode } from "./util/htmlHelper";
 import { console } from "./util/console";
-import { camelize } from "./util/string";
 import { isHtmlTag, isTransition as isTransitionName } from "./util/tags";
 import {
   getComponentAttributes,
-  getSortableOption
+  createSortableOption,
+  getValidSortableEntries
 } from "./core/componentBuilderHelper";
-import { isReadOnlyEvent } from "./core/sortableEvents";
-
 import { h, defineComponent, nextTick, resolveComponent } from "vue";
 
 function computeVmIndex(vNodes, element) {
@@ -172,7 +170,7 @@ const draggableComponent = defineComponent({
         `Transition-group inside component is not supported. Please alter tag value or remove transition-group. Current tag value: ${tag}`
       );
     }
-    const sortableOptions = getSortableOption({
+    const sortableOptions = createSortableOption({
       $attrs,
       callBackBuilder: {
         manageAndEmit: event => manageAndEmit.call(this, event),
@@ -231,11 +229,8 @@ const draggableComponent = defineComponent({
 
     updateOptions(newOptionValue) {
       const { _sortable } = this;
-      Object.entries(newOptionValue).forEach(([key, value]) => {
-        const normalizedKey = camelize(key);
-        if (!isReadOnlyEvent(normalizedKey)) {
-          _sortable.option(normalizedKey, value);
-        }
+      getValidSortableEntries(newOptionValue).forEach(([key, value]) => {
+        _sortable.option(key, value);
       });
     },
 

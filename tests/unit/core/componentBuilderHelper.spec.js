@@ -1,6 +1,6 @@
 import {
   getComponentAttributes,
-  getSortableOption,
+  createSortableOption,
 } from "@/core/componentBuilderHelper";
 
 describe("getComponentAttributes", () => {
@@ -64,7 +64,7 @@ describe("getComponentAttributes", () => {
   });
 });
 
-describe("getSortableOption", () => {
+describe("createSortableOption", () => {
   test.each([
     [{ $attrs: {}, callBackBuilder: {} }, { draggable: ">*" }],
     [{ $attrs: { onStart: 23 }, callBackBuilder: {} }, { draggable: ">*" }],
@@ -146,7 +146,7 @@ describe("getSortableOption", () => {
       },
     ],
   ])("for %o returns %o", (value, expected) => {
-    const actual = getSortableOption(value);
+    const actual = createSortableOption(value);
     expect(actual).toEqual(expected);
   });
 });

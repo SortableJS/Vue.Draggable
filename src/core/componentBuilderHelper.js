@@ -24,7 +24,7 @@ function getComponentAttributes({ $attrs, componentData }) {
   return { ...attributes, ...attrs, ...props };
 }
 
-function getSortableOption({ $attrs, callBackBuilder }) {
+function createSortableOption({ $attrs, callBackBuilder }) {
   const options = {
     draggable: ">*"
   };
@@ -43,4 +43,14 @@ function getSortableOption({ $attrs, callBackBuilder }) {
   return options;
 }
 
-export { getComponentAttributes, getSortableOption };
+function getValidSortableEntries(value) {
+  return Object.entries(value)
+    .map(([key, value]) => [camelize(key), value])
+    .filter(([key, _]) => !isReadOnlyEvent(key));
+}
+
+export {
+  getComponentAttributes,
+  createSortableOption,
+  getValidSortableEntries
+};
