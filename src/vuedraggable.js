@@ -143,8 +143,8 @@ const draggableComponent = defineComponent({
     );
     this.headerOffset = headerOffset;
     this.footerOffset = footerOffset;
-    const attributes = getComponentAttributes({ $attrs, componentData });
     this.defaultSlots = defaultSlots;
+    const attributes = getComponentAttributes({ $attrs, componentData });
     const realRoot =
       isHtmlTag(tag) || isTransitionName(tag) ? tag : resolveComponent(tag);
     const mainNode = h(realRoot, attributes, children);
@@ -323,10 +323,8 @@ const draggableComponent = defineComponent({
       const list = component.realList;
       const context = { list, component };
       if (to !== related && list) {
-        const destination = component.getUnderlyingVm(related);
-        if (destination) {
-          return Object.assign(destination, context);
-        }
+        const destination = component.getUnderlyingVm(related) || {};
+        return { ...destination, ...context };
       }
       return context;
     },
@@ -335,10 +333,6 @@ const draggableComponent = defineComponent({
       const indexes = this.visibleIndexes;
       const numberIndexes = indexes.length;
       return domIndex > numberIndexes - 1 ? numberIndexes : indexes[domIndex];
-    },
-
-    getComponent() {
-      return this.$slots.default()[0].componentInstance;
     },
 
     onDragStart(evt) {
@@ -366,9 +360,9 @@ const draggableComponent = defineComponent({
         removeNode(evt.clone);
         return;
       }
-      const oldIndex = this.context.index;
+      const { index: oldIndex, element } = this.context;
       this.spliceList(oldIndex, 1);
-      const removed = { element: this.context.element, oldIndex };
+      const removed = { element, oldIndex };
       this.emitChanges({ removed });
     },
 
@@ -411,12 +405,12 @@ const draggableComponent = defineComponent({
         ...this.context,
         futureIndex
       };
-      const sendEvt = {
+      const sendEvent = {
         ...evt,
         ...{ relatedContext },
         ...{ draggedContext }
       };
-      return move(sendEvt, originalEvent);
+      return move(sendEvent, originalEvent);
     },
 
     onDragEnd() {
