@@ -57,9 +57,6 @@ function isTransition(slots) {
     return false;
   }
   const [{ type }] = slots;
-  if (!type) {
-    return false;
-  }
   return !!type && (isTransitionName(type) || isTransitionName(type.name));
 }
 
