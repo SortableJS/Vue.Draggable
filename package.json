@@ -34,7 +34,7 @@
     "sortablejs": "1.10.2"
   },
   "peerDependencies": {
-    "vue": "^3.0.0"
+    "vue": "^3.0.1"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.0",
