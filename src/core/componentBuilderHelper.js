@@ -1,9 +1,6 @@
 import { capitalize, camelize } from "../util/string";
 import { events, isReadOnlyEvent } from "./sortableEvents";
-
-function isHtmlAttribute(value) {
-  return ["id", "class"].includes(value) || value.startsWith("data-");
-}
+import { isHtmlAttribute } from "../util/tags";
 
 function project(entries) {
   return entries.reduce((res, [key, value]) => {
