@@ -1,12 +1,13 @@
 import Sortable from "sortablejs";
 import { insertNodeAt, removeNode } from "./util/htmlHelper";
 import { console } from "./util/console";
-import { isHtmlTag, isTransition as isTransitionName } from "./util/tags";
+import { isTransition as isTransitionName } from "./util/tags";
 import {
   getComponentAttributes,
   createSortableOption,
   getValidSortableEntries
 } from "./core/componentBuilderHelper";
+import { computeRenderContext } from "./core/renderHelper";
 import { h, defineComponent, nextTick, resolveComponent } from "vue";
 
 function computeVmIndex(vNodes, element) {
@@ -60,29 +61,7 @@ function isTransition(slots) {
   return !!type && (isTransitionName(type) || isTransitionName(type.name));
 }
 
-function getSlot(slot, key) {
-  const slotValue = slot[key];
-  return slotValue ? slotValue() : undefined;
-}
-
-function computeChildrenAndOffsets(defaultNodes, slot) {
-  let children = [...defaultNodes];
-  let headerOffset = 0;
-  let footerOffset = 0;
-  const header = getSlot(slot, "header");
-  if (header) {
-    headerOffset = header.length;
-    children = [...header, ...children];
-  }
-  const footer = getSlot(slot, "footer");
-  if (footer) {
-    footerOffset = footer.length;
-    children = [...children, ...footer];
-  }
-  return { children, headerOffset, footerOffset };
-}
-
-var draggingElement = null;
+let draggingElement = null;
 
 const props = {
   list: {
@@ -132,19 +111,14 @@ const draggableComponent = defineComponent({
 
   render() {
     const { $slots, $attrs, tag, componentData } = this;
-    const defaultSlots = getSlot($slots, "default") || [];
-    this.transitionMode = isTransition(defaultSlots);
-    const { children, headerOffset, footerOffset } = computeChildrenAndOffsets(
-      defaultSlots,
-      $slots
-    );
-    this.headerOffset = headerOffset;
-    this.footerOffset = footerOffset;
-    this.defaultSlots = defaultSlots;
+    const renderContext = computeRenderContext({ $slots, tag });
+    this.transitionMode = isTransition(renderContext.nodes.default);
+    this.headerOffset = renderContext.offsets.header;
+    this.footerOffset = renderContext.offsets.footer;
+    this.defaultSlots = renderContext.nodes.default;
     const attributes = getComponentAttributes({ $attrs, componentData });
-    const realRoot =
-      isHtmlTag(tag) || isTransitionName(tag) ? tag : resolveComponent(tag);
-    const mainNode = h(realRoot, attributes, children);
+
+    const mainNode = h(renderContext.tag, attributes, renderContext.children);
     this.mainNode = mainNode;
     return mainNode;
   },
@@ -269,8 +243,8 @@ const draggableComponent = defineComponent({
       });
     },
 
-    getUnderlyingVm(htmlElt) {
-      const index = computeVmIndex(this.getChildrenNodes() || [], htmlElt);
+    getUnderlyingVm(htmlElement) {
+      const index = computeVmIndex(this.getChildrenNodes(), htmlElement);
       if (index === -1) {
         //Edge case during move callback: related element might be
         //an element different from collection
