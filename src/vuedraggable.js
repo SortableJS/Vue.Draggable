@@ -15,7 +15,7 @@ function computeVmIndex(vNodes, element) {
   if (index === -1) {
     throw new Error("node not found", {
       nodes: domElements,
-      element,
+      element
     });
   }
   return index;
@@ -322,7 +322,7 @@ const draggableComponent = defineComponent({
       }
       const list = component.realList;
       const context = { list, component };
-      if (to !== related && list && component.getUnderlyingVm) {
+      if (to !== related && list) {
         const destination = component.getUnderlyingVm(related);
         if (destination) {
           return Object.assign(destination, context);
@@ -400,20 +400,23 @@ const draggableComponent = defineComponent({
     },
 
     onDragMove(evt, originalEvent) {
-      const onMove = this.move;
-      if (!onMove || !this.realList) {
+      const { move, realList } = this;
+      if (!move || !realList) {
         return true;
       }
 
       const relatedContext = this.getRelatedContextFromMoveEvent(evt);
-      const draggedContext = this.context;
       const futureIndex = this.computeFutureIndex(relatedContext, evt);
-      Object.assign(draggedContext, { futureIndex });
-      const sendEvt = Object.assign({}, evt, {
-        relatedContext,
-        draggedContext
-      });
-      return onMove(sendEvt, originalEvent);
+      const draggedContext = {
+        ...this.context,
+        futureIndex
+      };
+      const sendEvt = {
+        ...evt,
+        ...{ relatedContext },
+        ...{ draggedContext }
+      };
+      return move(sendEvt, originalEvent);
     },
 
     onDragEnd() {
