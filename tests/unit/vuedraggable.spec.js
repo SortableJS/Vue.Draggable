@@ -150,7 +150,7 @@ describe("draggable.vue when initialized with list", () => {
         default: null
       }
     ]
-  ])("should have props %s equal to expected", (name, expectedValue) => {
+  ])("should have props %s equal to %j", (name, expectedValue) => {
     const { type, required, default: _default } = props[name];
     expect({ type, required, default: _default }).toEqual(expectedValue);
   });
