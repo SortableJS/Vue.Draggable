@@ -7,9 +7,11 @@ function getSlot(slots, key) {
 }
 
 function computeChildren(slots) {
-  const defaultNodes = getSlot(slots, "default");
-  const header = getSlot(slots, "header");
-  const footer = getSlot(slots, "footer");
+  const [header, defaultNodes, footer] = [
+    "header",
+    "default",
+    "footer"
+  ].map(name => getSlot(slots, name));
   return {
     children: [...header, ...defaultNodes, ...footer],
     nodes: {
