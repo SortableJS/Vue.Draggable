@@ -1,7 +1,6 @@
 import Sortable from "sortablejs";
 import { insertNodeAt, removeNode } from "./util/htmlHelper";
 import { console } from "./util/console";
-import { isTransition as isTransitionName } from "./util/tags";
 import {
   getComponentAttributes,
   createSortableOption,
