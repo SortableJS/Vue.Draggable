@@ -41,7 +41,8 @@ function solveTag(tag) {
   const realRoot = externalComponent ? resolveComponent(tag) : tag;
   return {
     tag: realRoot,
-    externalComponent
+    externalComponent,
+    noneFunctional: externalComponent && typeof realRoot !== "function"
   };
 }
 

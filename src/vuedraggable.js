@@ -102,14 +102,17 @@ const draggableComponent = defineComponent({
   render() {
     const { $slots, $attrs, tag, componentData } = this;
     const renderContext = computeRenderContext({ $slots, tag });
+    this.renderContext = renderContext;
+    this.noneFunctionalComponentMode = renderContext.noneFunctional;
     const attributes = getComponentAttributes({ $attrs, componentData });
 
-    const mainNode = h(renderContext.tag, attributes, renderContext.children);
+    if (renderContext.noneFunctional && renderContext.transitionMode) {
+      throw new Error(
+        `Transition-group inside component is not supported. Please alter tag value or remove transition-group. Current tag value: ${tag}`
+      );
+    }
 
-    this.renderContext = renderContext;
-    this.noneFunctionalComponentMode =
-      renderContext.externalComponent && typeof mainNode.type !== "function";
-    return mainNode;
+    return h(renderContext.tag, attributes, renderContext.children);
   },
 
   created() {
@@ -121,18 +124,8 @@ const draggableComponent = defineComponent({
   },
 
   mounted() {
-    const {
-      tag,
-      $attrs,
-      rootContainer,
-      noneFunctionalComponentMode,
-      renderContext: { transitionMode }
-    } = this;
-    if (noneFunctionalComponentMode && transitionMode) {
-      throw new Error(
-        `Transition-group inside component is not supported. Please alter tag value or remove transition-group. Current tag value: ${tag}`
-      );
-    }
+    const { $attrs, rootContainer } = this;
+
     const sortableOptions = createSortableOption({
       $attrs,
       callBackBuilder: {
