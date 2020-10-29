@@ -112,14 +112,14 @@ const draggableComponent = defineComponent({
   render() {
     const { $slots, $attrs, tag, componentData } = this;
     const renderContext = computeRenderContext({ $slots, tag });
-    this.transitionMode = isTransition(renderContext.nodes.default);
-    this.headerOffset = renderContext.offsets.header;
-    this.footerOffset = renderContext.offsets.footer;
-    this.defaultSlots = renderContext.nodes.default;
     const attributes = getComponentAttributes({ $attrs, componentData });
 
     const mainNode = h(renderContext.tag, attributes, renderContext.children);
-    this.mainNode = mainNode;
+
+    this.renderContext = renderContext;
+    this.transitionMode = isTransition(renderContext.nodes.default);
+    this.noneFunctionalComponentMode =
+      renderContext.externalComponent && typeof mainNode.type !== "function";
     return mainNode;
   },
 
@@ -132,11 +132,14 @@ const draggableComponent = defineComponent({
   },
 
   mounted() {
-    const { tag, $attrs, rootContainer } = this;
-    this.noneFunctionalComponentMode =
-      tag.toLowerCase() !== this.$el.nodeName.toLowerCase() &&
-      !this.getIsFunctional();
-    if (this.noneFunctionalComponentMode && this.transitionMode) {
+    const {
+      tag,
+      $attrs,
+      rootContainer,
+      noneFunctionalComponentMode,
+      transitionMode
+    } = this;
+    if (noneFunctionalComponentMode && transitionMode) {
       throw new Error(
         `Transition-group inside component is not supported. Please alter tag value or remove transition-group. Current tag value: ${tag}`
       );
@@ -207,16 +210,18 @@ const draggableComponent = defineComponent({
       const {
         noneFunctionalComponentMode,
         transitionMode,
-        defaultSlots
+        renderContext: {
+          nodes: { default: defaultNodes }
+        }
       } = this;
       if (noneFunctionalComponentMode) {
         //TODO check
-        return defaultSlots[0].children;
+        return defaultNodes[0].children;
         //return this.$children[0].$slots.default();
       }
 
       if (transitionMode) {
-        const [{ children }] = defaultSlots;
+        const [{ children }] = defaultNodes;
         if (Array.isArray(children)) {
           return children;
         }
@@ -225,9 +230,9 @@ const draggableComponent = defineComponent({
           .filter(node => !!node.transition);
       }
 
-      return defaultSlots.length === 1 && defaultSlots[0].el.nodeType === 3
-        ? defaultSlots[0].children
-        : defaultSlots;
+      return defaultNodes.length === 1 && defaultNodes[0].el.nodeType === 3
+        ? defaultNodes[0].children
+        : defaultNodes;
     },
 
     computeIndexes() {
@@ -236,7 +241,7 @@ const draggableComponent = defineComponent({
           this.getChildrenNodes(),
           this.rootContainer.children,
           this.transitionMode,
-          this.footerOffset
+          this.renderContext.offsets.footer
         );
       });
     },
