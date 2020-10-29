@@ -6,18 +6,32 @@ function getSlot(slots, key) {
   return slotValue ? slotValue() : [];
 }
 
+function isTransition(nodes) {
+  if (nodes.length !== 1) {
+    return false;
+  }
+  const [{ type }] = nodes;
+  return !!type && (isTransitionName(type) || isTransitionName(type.name));
+}
+
 function computeChildrenAndNodes(slots) {
   const [header, defaultNodes, footer] = [
     "header",
     "default",
     "footer"
   ].map(name => getSlot(slots, name));
+  const transitionMode = isTransition(defaultNodes);
   return {
     children: [...header, ...defaultNodes, ...footer],
+    transitionMode,
     nodes: {
       header,
       footer,
       default: defaultNodes
+    },
+    offsets: {
+      header: header.length,
+      footer: footer.length
     }
   };
 }
@@ -33,18 +47,11 @@ function solveTag(tag) {
 
 function computeRenderContext({ $slots, tag }) {
   const childrenAndNodes = computeChildrenAndNodes($slots);
-  const {
-    nodes: { header, footer }
-  } = childrenAndNodes;
   const tagInformation = solveTag(tag);
 
   return {
     ...tagInformation,
-    ...childrenAndNodes,
-    offsets: {
-      header: header.length,
-      footer: footer.length
-    }
+    ...childrenAndNodes
   };
 }
 

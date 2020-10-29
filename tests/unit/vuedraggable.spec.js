@@ -969,7 +969,7 @@ describe("draggable.vue when initialized with modelValue", () => {
   });
 
   it("transition mode should be false", () => {
-    expect(vm.transitionMode).toBe(false);
+    expect(vm.renderContext.transitionMode).toBe(false);
   });
 
   describe("when initiating a drag operation", () => {
@@ -1124,7 +1124,7 @@ describe("draggable.vue when initialized with a transition group", () => {
   });
 
   it("transition mode should be true", () => {
-    expect(vm.transitionMode).toBe(true);
+    expect(vm.renderContext.transitionMode).toBe(true);
   });
 
   it("renders correctly", () => {

@@ -8,7 +8,7 @@ import {
   getValidSortableEntries
 } from "./core/componentBuilderHelper";
 import { computeRenderContext } from "./core/renderHelper";
-import { h, defineComponent, nextTick, resolveComponent } from "vue";
+import { h, defineComponent, nextTick } from "vue";
 
 function computeVmIndex(vNodes, element) {
   const domElements = vNodes.map(({ el }) => el);
@@ -51,14 +51,6 @@ function manageAndEmit(evtName) {
     delegateCallBack.call(this, evtData, originalElement);
     emit.call(this, evtName, evtData);
   };
-}
-
-function isTransition(slots) {
-  if (!slots || slots.length !== 1) {
-    return false;
-  }
-  const [{ type }] = slots;
-  return !!type && (isTransitionName(type) || isTransitionName(type.name));
 }
 
 let draggingElement = null;
@@ -104,7 +96,6 @@ const draggableComponent = defineComponent({
 
   data() {
     return {
-      transitionMode: false,
       noneFunctionalComponentMode: false
     };
   },
@@ -117,7 +108,6 @@ const draggableComponent = defineComponent({
     const mainNode = h(renderContext.tag, attributes, renderContext.children);
 
     this.renderContext = renderContext;
-    this.transitionMode = isTransition(renderContext.nodes.default);
     this.noneFunctionalComponentMode =
       renderContext.externalComponent && typeof mainNode.type !== "function";
     return mainNode;
@@ -137,7 +127,7 @@ const draggableComponent = defineComponent({
       $attrs,
       rootContainer,
       noneFunctionalComponentMode,
-      transitionMode
+      renderContext: { transitionMode }
     } = this;
     if (noneFunctionalComponentMode && transitionMode) {
       throw new Error(
@@ -164,7 +154,10 @@ const draggableComponent = defineComponent({
 
   computed: {
     rootContainer() {
-      const { $el, transitionMode } = this;
+      const {
+        $el,
+        renderContext: { transitionMode }
+      } = this;
       if (!transitionMode) {
         return $el;
       }
@@ -209,8 +202,8 @@ const draggableComponent = defineComponent({
     getChildrenNodes() {
       const {
         noneFunctionalComponentMode,
-        transitionMode,
         renderContext: {
+          transitionMode,
           nodes: { default: defaultNodes }
         }
       } = this;
@@ -240,7 +233,7 @@ const draggableComponent = defineComponent({
         this.visibleIndexes = computeIndexes(
           this.getChildrenNodes(),
           this.rootContainer.children,
-          this.transitionMode,
+          this.renderContext.transitionMode,
           this.renderContext.offsets.footer
         );
       });
