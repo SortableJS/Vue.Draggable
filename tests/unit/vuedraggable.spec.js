@@ -318,34 +318,35 @@ describe("draggable.vue when initialized with list", () => {
     });
   });
 
-  // TODO check
-  // test.each([
-  //   [true, Fake],
-  //   [false, FakeFunctional],
-  // ])(
-  //   "compute noneFunctionalComponentMode as %p when using component as tag",
-  //   (expectedNoneFunctionalComponentMode, component) => {
-  //     wrapper = mount(draggable, {
-  //       propsData: {
-  //         tag: "child",
-  //       },
-  //       slots: {
-  //         default: () => [],
-  //       },
-  //       global: {
-  //         components: {
-  //           child: component,
-  //         },
-  //       },
-  //     });
-  //     const {
-  //       vm: { noneFunctionalComponentMode },
-  //     } = wrapper;
-  //     expect(noneFunctionalComponentMode).toBe(
-  //       expectedNoneFunctionalComponentMode
-  //     );
-  //   }
-  // );
+  describe("when creating a component", () => {
+    test.each([
+      ["Fake", true, Fake],
+      ["FakeFunctional", false, FakeFunctional]
+    ])(
+      "when using component with tag %p compute noneFunctionalComponentMode as %p ",
+      (_, expectedNoneFunctionalComponentMode, component) => {
+        wrapper = mount(draggable, {
+          propsData: {
+            tag: "child"
+          },
+          slots: {
+            default: () => []
+          },
+          global: {
+            components: {
+              child: component
+            }
+          }
+        });
+        const {
+          vm: { noneFunctionalComponentMode }
+        } = wrapper;
+        expect(noneFunctionalComponentMode).toBe(
+          expectedNoneFunctionalComponentMode
+        );
+      }
+    );
+  });
 
   it("keeps a reference to Sortable instance", () => {
     expect(vm._sortable).toBe(SortableFake);
@@ -1098,15 +1099,15 @@ describe("draggable.vue when initialized with a transition group", () => {
     items = ["a", "b", "c"];
     wrapper = mount(draggable, {
       props: {
-        modelValue: items,
+        modelValue: items
       },
       slots: {
         default() {
           return h("transition-group", {}, [
-            ...items.map(item => h("div", {key: item}, item))
+            ...items.map(item => h("div", { key: item }, item))
           ]);
-        },
-      },
+        }
+      }
     });
     vm = wrapper.vm;
     props = vm.$options.props;
@@ -1148,7 +1149,7 @@ describe("draggable.vue when initialized with a transition group", () => {
     it("sends a start event", async () => {
       await nextTick();
       expect(wrapper.emitted()).toEqual({
-        start: [[evt]],
+        start: [[evt]]
       });
     });
 
@@ -1156,7 +1157,7 @@ describe("draggable.vue when initialized with a transition group", () => {
       await nextTick();
       expect(vm.context).toEqual({
         element: "b",
-        index: 1,
+        index: 1
       });
     });
 
@@ -1166,7 +1167,7 @@ describe("draggable.vue when initialized with a transition group", () => {
         const remove = getEvent("onRemove");
         remove({
           item,
-          oldIndex: 1,
+          oldIndex: 1
         });
       });
 
@@ -1205,7 +1206,7 @@ describe("draggable.vue when initialized with a transition group", () => {
           item,
           oldIndex: 1,
           newIndex: 0,
-          from: transitionRoot,
+          from: transitionRoot
         });
       });
 
@@ -1226,7 +1227,7 @@ describe("draggable.vue when initialized with a transition group", () => {
           item,
           oldIndex: 1,
           newIndex: 0,
-          from: element.children[0],
+          from: element.children[0]
         };
         expect(wrapper.emitted().update).toEqual([[expectedEvt]]);
       });
@@ -1234,7 +1235,7 @@ describe("draggable.vue when initialized with a transition group", () => {
       it("sends a change event", async () => {
         await nextTick();
         const expectedEvt = {
-          moved: { element: "b", oldIndex: 1, newIndex: 0 },
+          moved: { element: "b", oldIndex: 1, newIndex: 0 }
         };
         expect(wrapper.emitted().change).toEqual([[expectedEvt]]);
       });
@@ -1251,10 +1252,10 @@ describe("draggable.vue when initialized with a transition group", () => {
         evt = {
           to: element.children[0],
           related: element.children[0].children[1],
-          willInsertAfter: false,
+          willInsertAfter: false
         };
         originalEvt = {
-          domInfo: true,
+          domInfo: true
         };
         doMove = () => getEvent("onMove")(evt, originalEvt);
       });
@@ -1264,17 +1265,17 @@ describe("draggable.vue when initialized with a transition group", () => {
           draggedContext: {
             element: "b",
             futureIndex: 1,
-            index: 1,
+            index: 1
           },
           relatedContext: {
             component: vm,
             element: "b",
             index: 1,
-            list: ["a", "b", "c"],
+            list: ["a", "b", "c"]
           },
           to: element.children[0],
           related: element.children[0].children[1],
-          willInsertAfter: false,
+          willInsertAfter: false
         };
         doMove();
         expect(move.mock.calls).toEqual([[expectedEvt, originalEvt]]);
@@ -1285,7 +1286,7 @@ describe("draggable.vue when initialized with a transition group", () => {
       let endEvt;
       beforeEach(() => {
         endEvt = {
-          data: "data",
+          data: "data"
         };
         const onEnd = getEvent("onEnd");
         onEnd(endEvt);
@@ -1304,17 +1305,17 @@ describe("draggable.vue when initialized with a transition group", () => {
       items = ["a", "b", "c"];
       wrapper = mount(draggable, {
         props: {
-          list: items,
+          list: items
         },
         attrs: {
           sortableOption: "value",
-          "to-be-camelized": true,
+          "to-be-camelized": true
         },
         slots: {
-          default: () => items.map((item) => h("div", {key: item}, item)),
+          default: () => items.map(item => h("div", { key: item }, item)),
           header: () => h("header"),
-          footer: () => h("footer"),
-        },
+          footer: () => h("footer")
+        }
       });
       vm = wrapper.vm;
       props = vm.$options.props;

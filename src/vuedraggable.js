@@ -193,9 +193,7 @@ const draggableComponent = defineComponent({
 
   methods: {
     getIsFunctional() {
-      //TODO check this logic
-      const { fnOptions } = this.mainNode;
-      return fnOptions && fnOptions.functional;
+      return typeof this.mainNode.type === "function";
     },
 
     updateOptions(newOptionValue) {
@@ -213,20 +211,20 @@ const draggableComponent = defineComponent({
       } = this;
       if (noneFunctionalComponentMode) {
         //TODO check
-        return this.defaultSlots[0].children;
+        return defaultSlots[0].children;
         //return this.$children[0].$slots.default();
       }
-      //const rawNodes = this.defaultSlots;
+
       if (transitionMode) {
         const [{ children }] = defaultSlots;
         if (Array.isArray(children)) {
           return children;
         }
-        //TODO check transition with tag
         return [...this.rootContainer.children]
           .map(c => c.__vnode)
           .filter(node => !!node.transition);
       }
+
       return defaultSlots.length === 1 && defaultSlots[0].el.nodeType === 3
         ? defaultSlots[0].children
         : defaultSlots;
