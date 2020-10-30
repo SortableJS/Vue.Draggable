@@ -198,7 +198,7 @@ describe("draggable.vue when initialized with list", () => {
 
     it("set noneFunctional to false ", () => {
       const {
-        renderContext: { noneFunctional }
+        componentStructure: { noneFunctional }
       } = vm;
       expect(noneFunctional).toBe(false);
     });
@@ -342,7 +342,7 @@ describe("draggable.vue when initialized with list", () => {
         });
         const {
           vm: {
-            renderContext: { noneFunctional }
+            componentStructure: { noneFunctional }
           }
         } = wrapper;
         expect(noneFunctional).toBe(expectedNoneFunctionalComponentMode);
@@ -971,7 +971,7 @@ describe("draggable.vue when initialized with modelValue", () => {
   });
 
   it("transition mode should be false", () => {
-    expect(vm.renderContext.transitionMode).toBe(false);
+    expect(vm.componentStructure.transitionMode).toBe(false);
   });
 
   describe("when initiating a drag operation", () => {
@@ -1126,7 +1126,7 @@ describe("draggable.vue when initialized with a transition group", () => {
   });
 
   it("transition mode should be true", () => {
-    expect(vm.renderContext.transitionMode).toBe(true);
+    expect(vm.componentStructure.transitionMode).toBe(true);
   });
 
   it("renders correctly", () => {

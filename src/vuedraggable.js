@@ -6,7 +6,7 @@ import {
   createSortableOption,
   getValidSortableEntries
 } from "./core/componentBuilderHelper";
-import { computeRenderContext } from "./core/renderHelper";
+import { computeComponentStructure } from "./core/renderHelper";
 import { h, defineComponent, nextTick } from "vue";
 
 function computeVmIndex(vNodes, htmlElement) {
@@ -99,17 +99,14 @@ const draggableComponent = defineComponent({
 
   render() {
     const { $slots, $attrs, tag, componentData } = this;
-    const renderContext = computeRenderContext({ $slots, tag });
+    const componentStructure = computeComponentStructure({
+      $slots,
+      tag
+    }).checkCoherence();
+    this.componentStructure = componentStructure;
     const attributes = getComponentAttributes({ $attrs, componentData });
 
-    if (renderContext.noneFunctional && renderContext.transitionMode) {
-      throw new Error(
-        `Transition-group inside component is not supported. Please alter tag value or remove transition-group. Current tag value: ${tag}`
-      );
-    }
-
-    this.renderContext = renderContext;
-    return h(renderContext.tag, attributes, renderContext.children);
+    return h(componentStructure.tag, attributes, componentStructure.children);
   },
 
   created() {
@@ -145,7 +142,7 @@ const draggableComponent = defineComponent({
     rootContainer() {
       const {
         $el,
-        renderContext: { transitionMode }
+        componentStructure: { transitionMode }
       } = this;
       if (!transitionMode) {
         return $el;
@@ -190,7 +187,7 @@ const draggableComponent = defineComponent({
 
     getChildrenNodes() {
       const {
-        renderContext: {
+        componentStructure: {
           noneFunctional,
           transitionMode,
           nodes: { default: defaultNodes }
@@ -222,7 +219,7 @@ const draggableComponent = defineComponent({
         this.visibleIndexes = computeIndexes(
           this.getChildrenNodes(),
           this.rootContainer.children,
-          this.renderContext
+          this.componentStructure
         );
       });
     },

@@ -1,4 +1,5 @@
-import { isHtmlTag, isTransition as isTransitionName } from "../util/tags";
+import { ComponentStructure } from "./componentStructure";
+import { isHtmlTag, isTransition } from "../util/tags";
 import { resolveComponent } from "vue";
 
 function getSlot(slots, key) {
@@ -6,54 +7,31 @@ function getSlot(slots, key) {
   return slotValue ? slotValue() : [];
 }
 
-function isTransition(nodes) {
-  if (nodes.length !== 1) {
-    return false;
-  }
-  const [{ type }] = nodes;
-  return !!type && (isTransitionName(type) || isTransitionName(type.name));
-}
-
-function computeChildrenAndNodes(slots) {
+function computeNodes(slots) {
   const [header, defaultNodes, footer] = [
     "header",
     "default",
-    "footer"
-  ].map(name => getSlot(slots, name));
-  const transitionMode = isTransition(defaultNodes);
+    "footer",
+  ].map((name) => getSlot(slots, name));
   return {
-    children: [...header, ...defaultNodes, ...footer],
-    transitionMode,
-    nodes: {
-      header,
-      footer,
-      default: defaultNodes
-    },
-    offsets: {
-      header: header.length,
-      footer: footer.length
-    }
+    header,
+    footer,
+    default: defaultNodes,
   };
 }
 
-function resolveTag(tag) {
-  const externalComponent = !isHtmlTag(tag) && !isTransitionName(tag);
-  const realRoot = externalComponent ? resolveComponent(tag) : tag;
+function getRootInformation(tag) {
+  const externalComponent = !isHtmlTag(tag) && !isTransition(tag);
   return {
-    tag: realRoot,
     externalComponent,
-    noneFunctional: externalComponent && typeof realRoot !== "function"
+    tag: externalComponent ? resolveComponent(tag) : tag
   };
 }
 
-function computeRenderContext({ $slots, tag }) {
-  const childrenAndNodes = computeChildrenAndNodes($slots);
-  const tagInformation = resolveTag(tag);
-
-  return {
-    ...tagInformation,
-    ...childrenAndNodes
-  };
+function computeComponentStructure({ $slots, tag }) {
+  const nodes = computeNodes($slots);
+  const root = getRootInformation(tag);
+  return new ComponentStructure({ nodes, root });
 }
 
-export { computeRenderContext };
+export { computeComponentStructure };
