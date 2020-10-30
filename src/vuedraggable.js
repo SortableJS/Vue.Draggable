@@ -9,19 +9,23 @@ import {
 import { computeRenderContext } from "./core/renderHelper";
 import { h, defineComponent, nextTick } from "vue";
 
-function computeVmIndex(vNodes, element) {
+function computeVmIndex(vNodes, htmlElement) {
   const domElements = vNodes.map(({ el }) => el);
-  const index = domElements.indexOf(element);
+  const index = domElements.indexOf(htmlElement);
   if (index === -1) {
     throw new Error("node not found", {
       nodes: domElements,
-      element
+      htmlElement
     });
   }
   return index;
 }
 
-function computeIndexes(vNodes, domChildren, isTransition, footerOffset) {
+function computeIndexes(
+  vNodes,
+  domChildren,
+  { transitionMode, offsets: { footer: footerOffset } }
+) {
   const domChildrenFromNodes = vNodes.map(({ el }) => el);
   const footerIndex = domChildren.length - footerOffset;
   const rawIndexes = [...domChildren].map((elt, idx) =>
@@ -29,7 +33,7 @@ function computeIndexes(vNodes, domChildren, isTransition, footerOffset) {
       ? domChildrenFromNodes.length
       : domChildrenFromNodes.indexOf(elt)
   );
-  return isTransition ? rawIndexes.filter(ind => ind !== -1) : rawIndexes;
+  return transitionMode ? rawIndexes.filter(ind => ind !== -1) : rawIndexes;
 }
 
 function emit(evtName, evtData) {
@@ -93,17 +97,9 @@ const draggableComponent = defineComponent({
 
   props,
 
-  data() {
-    return {
-      noneFunctionalComponentMode: false
-    };
-  },
-
   render() {
     const { $slots, $attrs, tag, componentData } = this;
     const renderContext = computeRenderContext({ $slots, tag });
-    this.renderContext = renderContext;
-    this.noneFunctionalComponentMode = renderContext.noneFunctional;
     const attributes = getComponentAttributes({ $attrs, componentData });
 
     if (renderContext.noneFunctional && renderContext.transitionMode) {
@@ -112,6 +108,7 @@ const draggableComponent = defineComponent({
       );
     }
 
+    this.renderContext = renderContext;
     return h(renderContext.tag, attributes, renderContext.children);
   },
 
@@ -193,13 +190,13 @@ const draggableComponent = defineComponent({
 
     getChildrenNodes() {
       const {
-        noneFunctionalComponentMode,
         renderContext: {
+          noneFunctional,
           transitionMode,
           nodes: { default: defaultNodes }
         }
       } = this;
-      if (noneFunctionalComponentMode) {
+      if (noneFunctional) {
         //TODO check
         return defaultNodes[0].children;
         //return this.$children[0].$slots.default();
@@ -225,8 +222,7 @@ const draggableComponent = defineComponent({
         this.visibleIndexes = computeIndexes(
           this.getChildrenNodes(),
           this.rootContainer.children,
-          this.renderContext.transitionMode,
-          this.renderContext.offsets.footer
+          this.renderContext
         );
       });
     },
@@ -366,8 +362,8 @@ const draggableComponent = defineComponent({
       };
       const sendEvent = {
         ...evt,
-        ...{ relatedContext },
-        ...{ draggedContext }
+        relatedContext,
+        draggedContext
       };
       return move(sendEvent, originalEvent);
     },

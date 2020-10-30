@@ -196,9 +196,11 @@ describe("draggable.vue when initialized with list", () => {
       expect(wrapper.html()).toMatch(expectedRegex);
     });
 
-    it("set noneFunctionalComponentMode to false ", () => {
-      const { noneFunctionalComponentMode } = vm;
-      expect(noneFunctionalComponentMode).toBe(false);
+    it("set noneFunctional to false ", () => {
+      const {
+        renderContext: { noneFunctional }
+      } = vm;
+      expect(noneFunctional).toBe(false);
     });
   });
 
@@ -339,11 +341,11 @@ describe("draggable.vue when initialized with list", () => {
           }
         });
         const {
-          vm: { noneFunctionalComponentMode }
+          vm: {
+            renderContext: { noneFunctional }
+          }
         } = wrapper;
-        expect(noneFunctionalComponentMode).toBe(
-          expectedNoneFunctionalComponentMode
-        );
+        expect(noneFunctional).toBe(expectedNoneFunctionalComponentMode);
       }
     );
   });

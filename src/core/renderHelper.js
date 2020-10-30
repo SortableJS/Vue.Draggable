@@ -36,7 +36,7 @@ function computeChildrenAndNodes(slots) {
   };
 }
 
-function solveTag(tag) {
+function resolveTag(tag) {
   const externalComponent = !isHtmlTag(tag) && !isTransitionName(tag);
   const realRoot = externalComponent ? resolveComponent(tag) : tag;
   return {
@@ -48,7 +48,7 @@ function solveTag(tag) {
 
 function computeRenderContext({ $slots, tag }) {
   const childrenAndNodes = computeChildrenAndNodes($slots);
-  const tagInformation = solveTag(tag);
+  const tagInformation = resolveTag(tag);
 
   return {
     ...tagInformation,
