@@ -658,6 +658,26 @@ describe("draggable.vue when initialized with list", () => {
         expect(wrapper.emitted().end).toEqual([[endEvt]]);
       });
     });
+
+    describe("when re-rendering", () => {
+      const updatedRender= "<div><header></header><div>a</div><div>b</div><div>c</div><div>d</div><footer></footer></div>";
+      beforeEach(async () => {
+        items.push("d");
+        wrapper.setProps({
+          list: [...items]
+        });
+        await nextTick();
+      });
+
+      it("updates the rendered elements", () => {
+        expect(wrapper.html()).toEqual(updatedRender);
+      });
+
+      it("updates indexes", async () => {
+        await nextTick();
+        expect(vm.visibleIndexes).toEqual([-1, 0, 1, 2, 3, 4]);
+      });
+    });
   });
 
   describe("when initiating a drag operation in clone context", () => {

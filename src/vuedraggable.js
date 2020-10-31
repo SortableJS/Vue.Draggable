@@ -21,21 +21,6 @@ function computeVmIndex(vNodes, htmlElement) {
   return index;
 }
 
-function computeIndexes(
-  vNodes,
-  domChildren,
-  { transitionMode, offsets: { footer: footerOffset } }
-) {
-  const domChildrenFromNodes = vNodes.map(({ el }) => el);
-  const footerIndex = domChildren.length - footerOffset;
-  const rawIndexes = [...domChildren].map((elt, idx) =>
-    idx >= footerIndex
-      ? domChildrenFromNodes.length
-      : domChildrenFromNodes.indexOf(elt)
-  );
-  return transitionMode ? rawIndexes.filter(ind => ind !== -1) : rawIndexes;
-}
-
 function emit(evtName, evtData) {
   nextTick(() => this.$emit(evtName.toLowerCase(), evtData));
 }
@@ -98,14 +83,10 @@ const draggableComponent = defineComponent({
   props,
 
   render() {
-    const { $slots, $attrs, tag, componentData } = this;
-    const componentStructure = computeComponentStructure({
-      $slots,
-      tag
-    }).checkCoherence();
+    const { $slots, $attrs, tag, componentData, $el } = this;
+    const componentStructure = computeComponentStructure({ $slots, tag, $el });
     this.componentStructure = componentStructure;
     const attributes = getComponentAttributes({ $attrs, componentData });
-
     return h(componentStructure.tag, attributes, componentStructure.children);
   },
 
@@ -118,7 +99,8 @@ const draggableComponent = defineComponent({
   },
 
   mounted() {
-    const { $attrs, rootContainer } = this;
+    const { $attrs, $el, componentStructure } = this;
+    componentStructure.setHtmlRoot($el);
 
     const sortableOptions = createSortableOption({
       $attrs,
@@ -128,7 +110,9 @@ const draggableComponent = defineComponent({
         manage: event => manage.call(this, event)
       }
     });
-
+    const {
+      componentStructure: { rootContainer }
+    } = this;
     this._sortable = new Sortable(rootContainer, sortableOptions);
     rootContainer.__draggable_component__ = this;
     this.computeIndexes();
@@ -139,22 +123,6 @@ const draggableComponent = defineComponent({
   },
 
   computed: {
-    rootContainer() {
-      const {
-        $el,
-        componentStructure: { transitionMode }
-      } = this;
-      if (!transitionMode) {
-        return $el;
-      }
-      const { children } = $el;
-      if (children.length !== 1) {
-        return $el;
-      }
-      const firstChild = children.item(0);
-      return !!firstChild.__vnode.transition ? $el : firstChild;
-    },
-
     realList() {
       return this.list ? this.list : this.modelValue;
     }
@@ -174,10 +142,6 @@ const draggableComponent = defineComponent({
   },
 
   methods: {
-    getIsFunctional() {
-      return typeof this.mainNode.type === "function";
-    },
-
     updateOptions(newOptionValue) {
       const { _sortable } = this;
       getValidSortableEntries(newOptionValue).forEach(([key, value]) => {
@@ -185,47 +149,15 @@ const draggableComponent = defineComponent({
       });
     },
 
-    getChildrenNodes() {
-      const {
-        componentStructure: {
-          noneFunctional,
-          transitionMode,
-          nodes: { default: defaultNodes }
-        }
-      } = this;
-      if (noneFunctional) {
-        //TODO check
-        return defaultNodes[0].children;
-        //return this.$children[0].$slots.default();
-      }
-
-      if (transitionMode) {
-        const [{ children }] = defaultNodes;
-        if (Array.isArray(children)) {
-          return children;
-        }
-        return [...this.rootContainer.children]
-          .map(c => c.__vnode)
-          .filter(node => !!node.transition);
-      }
-
-      return defaultNodes.length === 1 && defaultNodes[0].el.nodeType === 3
-        ? defaultNodes[0].children
-        : defaultNodes;
-    },
-
     computeIndexes() {
       nextTick(() => {
-        this.visibleIndexes = computeIndexes(
-          this.getChildrenNodes(),
-          this.rootContainer.children,
-          this.componentStructure
-        );
+        this.visibleIndexes = this.componentStructure.computeIndexes();
       });
     },
 
     getUnderlyingVm(htmlElement) {
-      const index = computeVmIndex(this.getChildrenNodes(), htmlElement);
+      const childrenNodes = this.componentStructure.getChildrenNodes();
+      const index = computeVmIndex(childrenNodes, htmlElement);
       if (index === -1) {
         //Edge case during move callback: related element might be
         //an element different from collection
@@ -307,7 +239,10 @@ const draggableComponent = defineComponent({
     },
 
     onDragRemove(evt) {
-      insertNodeAt(this.rootContainer, evt.item, evt.oldIndex);
+      const {
+        componentStructure: { rootContainer }
+      } = this;
+      insertNodeAt(rootContainer, evt.item, evt.oldIndex);
       if (evt.pullMode === "clone") {
         removeNode(evt.clone);
         return;

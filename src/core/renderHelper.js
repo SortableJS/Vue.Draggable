@@ -11,12 +11,12 @@ function computeNodes(slots) {
   const [header, defaultNodes, footer] = [
     "header",
     "default",
-    "footer",
-  ].map((name) => getSlot(slots, name));
+    "footer"
+  ].map(name => getSlot(slots, name));
   return {
     header,
     footer,
-    default: defaultNodes,
+    default: defaultNodes
   };
 }
 
@@ -28,10 +28,10 @@ function getRootInformation(tag) {
   };
 }
 
-function computeComponentStructure({ $slots, tag }) {
+function computeComponentStructure({ $slots, tag, $el }) {
   const nodes = computeNodes($slots);
   const root = getRootInformation(tag);
-  return new ComponentStructure({ nodes, root });
+  return new ComponentStructure({ nodes, root, $el });
 }
 
 export { computeComponentStructure };
