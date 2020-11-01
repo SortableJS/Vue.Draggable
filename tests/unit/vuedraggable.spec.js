@@ -48,10 +48,8 @@ function resetMocks() {
 }
 
 describe("draggable.vue when initialized with list", () => {
-  let computeIndexesSpy;
   beforeEach(() => {
     resetMocks();
-    computeIndexesSpy = jest.spyOn(draggable.methods, "computeIndexes");
 
     items = ["a", "b", "c"];
     wrapper = mount(draggable, {
@@ -206,16 +204,7 @@ describe("draggable.vue when initialized with list", () => {
 
   it("computes indexes", async () => {
     await nextTick();
-    expect(vm.visibleIndexes).toEqual([-1, 0, 1, 2, 3]);
-  });
-
-  it("update indexes", async () => {
-    await nextTick();
-
-    computeIndexesSpy.mockClear();
-    wrapper.setProps({ list: ["c", "d", "e", "f", "g"] });
-    await nextTick();
-    expect(computeIndexesSpy).toHaveBeenCalledTimes(1);
+    expect(vm.componentStructure.visibleIndexes).toEqual([-1, 0, 1, 2, 3]);
   });
 
   it("set realList", () => {
@@ -658,25 +647,26 @@ describe("draggable.vue when initialized with list", () => {
         expect(wrapper.emitted().end).toEqual([[endEvt]]);
       });
     });
+  });
 
-    describe("when re-rendering", () => {
-      const updatedRender= "<div><header></header><div>a</div><div>b</div><div>c</div><div>d</div><footer></footer></div>";
-      beforeEach(async () => {
-        items.push("d");
-        wrapper.setProps({
-          list: [...items]
-        });
-        await nextTick();
+  describe("when re-rendering", () => {
+    const updatedRender= "<div><header></header><div>a</div><div>b</div><div>c</div><div>d</div><footer></footer></div>";
+    beforeEach(async () => {
+      items.push("d");
+      wrapper.setProps({
+        list: [...items]
       });
+      vm.$forceUpdate();
+      await nextTick();
+    });
 
-      it("updates the rendered elements", () => {
-        expect(wrapper.html()).toEqual(updatedRender);
-      });
+    it("updates the rendered elements", () => {
+      expect(wrapper.html()).toEqual(updatedRender);
+    });
 
-      it("updates indexes", async () => {
-        await nextTick();
-        expect(vm.visibleIndexes).toEqual([-1, 0, 1, 2, 3, 4]);
-      });
+    it("updates indexes", async () => {
+      await nextTick();
+      expect(vm.componentStructure.visibleIndexes).toEqual([-1, 0, 1, 2, 3, 4]);
     });
   });
 
@@ -948,11 +938,8 @@ describe("draggable.vue when initialized with list", () => {
 });
 
 describe("draggable.vue when initialized with modelValue", () => {
-  let computeIndexesSpy;
-
   beforeEach(() => {
     Sortable.mockClear();
-    computeIndexesSpy = jest.spyOn(draggable.methods, "computeIndexes");
 
     items = ["a", "b", "c"];
     wrapper = mount(draggable, {
@@ -970,20 +957,11 @@ describe("draggable.vue when initialized with modelValue", () => {
 
   it("computes indexes", async () => {
     await nextTick();
-    expect(vm.visibleIndexes).toEqual([0, 1, 2]);
+    expect(vm.componentStructure.visibleIndexes).toEqual([0, 1, 2]);
   });
 
   it("renders correctly", () => {
     expectHTML(wrapper, initialRenderRaw);
-  });
-
-  it("update indexes", async () => {
-    await nextTick();
-    computeIndexesSpy.mockClear();
-
-    wrapper.setProps({ modelValue: ["c", "d", "e", "f", "g"] });
-    await nextTick();
-    expect(computeIndexesSpy).toHaveBeenCalledTimes(1);
   });
 
   it("set realList", () => {
@@ -1138,7 +1116,7 @@ describe("draggable.vue when initialized with a transition group", () => {
 
   it("computes indexes", async () => {
     await nextTick();
-    expect(vm.visibleIndexes).toEqual([0, 1, 2]);
+    expect(vm.componentStructure.visibleIndexes).toEqual([0, 1, 2]);
   });
 
   it("set realList", () => {

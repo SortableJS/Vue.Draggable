@@ -98,12 +98,9 @@ const draggableComponent = defineComponent({
         manage: event => manage.call(this, event)
       }
     });
-    const {
-      componentStructure: { rootContainer }
-    } = this;
+    const { rootContainer } = componentStructure;
     this._sortable = new Sortable(rootContainer, sortableOptions);
     rootContainer.__draggable_component__ = this;
-    this.computeIndexes();
   },
 
   beforeUnmount() {
@@ -112,42 +109,26 @@ const draggableComponent = defineComponent({
 
   computed: {
     realList() {
-      return this.list ? this.list : this.modelValue;
+      const { list } = this;
+      return list ? list : this.modelValue;
     }
   },
 
   watch: {
     $attrs: {
       handler(newOptionValue) {
-        this.updateOptions(newOptionValue);
-      },
-      deep: true
-    },
-
-    realList: {
-      handler() {
-        this.computeIndexes();
+        const { _sortable } = this;
+        getValidSortableEntries(newOptionValue).forEach(([key, value]) => {
+          _sortable.option(key, value);
+        });
       },
       deep: true
     }
   },
 
   methods: {
-    updateOptions(newOptionValue) {
-      const { _sortable } = this;
-      getValidSortableEntries(newOptionValue).forEach(([key, value]) => {
-        _sortable.option(key, value);
-      });
-    },
-
-    computeIndexes() {
-      nextTick(() => {
-        this.visibleIndexes = this.componentStructure.computeIndexes();
-      });
-    },
-
-    getUnderlyingVm(htmlElement) {
-      const index = this.componentStructure.computeVmIndex(htmlElement);
+    getUnderlyingVm(domElement) {
+      const index = this.componentStructure.computeVmIndex(domElement);
       if (index === -1) {
         //Edge case during move callback: related element might be
         //an element different from collection
@@ -163,9 +144,7 @@ const draggableComponent = defineComponent({
     },
 
     emitChanges(evt) {
-      nextTick(() => {
-        this.$emit("change", evt);
-      });
+      nextTick(() => this.$emit("change", evt));
     },
 
     alterList(onList) {
@@ -204,9 +183,7 @@ const draggableComponent = defineComponent({
     },
 
     getVmIndexFromDomIndex(domIndex) {
-      const indexes = this.visibleIndexes;
-      const numberIndexes = indexes.length;
-      return domIndex > numberIndexes - 1 ? numberIndexes : indexes[domIndex];
+      return this.componentStructure.getVmIndexFromDomIndex(domIndex);
     },
 
     onDragStart(evt) {
@@ -223,7 +200,6 @@ const draggableComponent = defineComponent({
       removeNode(evt.item);
       const newIndex = this.getVmIndexFromDomIndex(evt.newIndex);
       this.spliceList(newIndex, 0, element);
-      this.computeIndexes();
       const added = { element, newIndex };
       this.emitChanges({ added });
     },
@@ -291,7 +267,6 @@ const draggableComponent = defineComponent({
     },
 
     onDragEnd() {
-      this.computeIndexes();
       draggingElement = null;
     }
   }

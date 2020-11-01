@@ -1,3 +1,4 @@
+import { nextTick } from "vue";
 import { isTransition as isTransitionName } from "../util/tags";
 
 const getHtmlElementFromNode = ({ el }) => el;
@@ -40,6 +41,18 @@ class ComponentStructure {
     this._checkCoherence();
   }
 
+  setHtmlRoot($el) {
+    if (!$el) {
+      return;
+    }
+    this.$el = $el;
+    this.rootContainer = getRootContainer(this);
+    nextTick(() => {
+      this.visibleIndexes = this._computeIndexes();
+    });
+    return this;
+  }
+
   get _domChildrenFromNodes() {
     return this._getChildrenNodes().map(getHtmlElementFromNode);
   }
@@ -79,7 +92,7 @@ class ComponentStructure {
       .filter(node => !!node.transition);
   }
 
-  computeIndexes() {
+  _computeIndexes() {
     const {
       _domChildrenFromNodes,
       transitionMode,
@@ -96,17 +109,16 @@ class ComponentStructure {
     return transitionMode ? rawIndexes.filter(ind => ind !== -1) : rawIndexes;
   }
 
-  setHtmlRoot($el) {
-    if (!$el) {
-      return;
-    }
-    this.$el = $el;
-    this.rootContainer = getRootContainer(this);
-    return this;
+  computeVmIndex(domElement) {
+    return this._domChildrenFromNodes.indexOf(domElement);
   }
 
-  computeVmIndex(htmlElement) {
-    return this._domChildrenFromNodes.indexOf(htmlElement);
+  getVmIndexFromDomIndex(domIndex) {
+    const { visibleIndexes } = this;
+    const numberIndexes = visibleIndexes.length;
+    return domIndex > numberIndexes - 1
+      ? numberIndexes
+      : visibleIndexes[domIndex];
   }
 }
 
