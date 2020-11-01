@@ -9,18 +9,6 @@ import {
 import { computeComponentStructure } from "./core/renderHelper";
 import { h, defineComponent, nextTick } from "vue";
 
-function computeVmIndex(vNodes, htmlElement) {
-  const domElements = vNodes.map(({ el }) => el);
-  const index = domElements.indexOf(htmlElement);
-  if (index === -1) {
-    throw new Error("node not found", {
-      nodes: domElements,
-      htmlElement
-    });
-  }
-  return index;
-}
-
 function emit(evtName, evtData) {
   nextTick(() => this.$emit(evtName.toLowerCase(), evtData));
 }
@@ -136,8 +124,11 @@ const draggableComponent = defineComponent({
       deep: true
     },
 
-    realList() {
-      this.computeIndexes();
+    realList: {
+      handler() {
+        this.computeIndexes();
+      },
+      deep: true
     }
   },
 
@@ -156,8 +147,7 @@ const draggableComponent = defineComponent({
     },
 
     getUnderlyingVm(htmlElement) {
-      const childrenNodes = this.componentStructure.getChildrenNodes();
-      const index = computeVmIndex(childrenNodes, htmlElement);
+      const index = this.componentStructure.computeVmIndex(htmlElement);
       if (index === -1) {
         //Edge case during move callback: related element might be
         //an element different from collection

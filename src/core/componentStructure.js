@@ -40,6 +40,10 @@ class ComponentStructure {
     this._checkCoherence();
   }
 
+  get _domChildrenFromNodes() {
+    return this._getChildrenNodes().map(getHtmlElementFromNode);
+  }
+
   _checkCoherence() {
     if (this.noneFunctional && this.transitionMode) {
       throw new Error(
@@ -48,7 +52,7 @@ class ComponentStructure {
     }
   }
 
-  getChildrenNodes() {
+  _getChildrenNodes() {
     const {
       noneFunctional,
       transitionMode,
@@ -77,19 +81,17 @@ class ComponentStructure {
 
   computeIndexes() {
     const {
+      _domChildrenFromNodes,
       transitionMode,
       offsets: { footer: footerOffset }
     } = this;
 
-    const domChildrenFromNodes = this.getChildrenNodes().map(
-      getHtmlElementFromNode
-    );
     const domChildren = this.rootContainer.children;
     const footerIndex = domChildren.length - footerOffset;
     const rawIndexes = [...domChildren].map((elt, idx) =>
       idx >= footerIndex
-        ? domChildrenFromNodes.length
-        : domChildrenFromNodes.indexOf(elt)
+        ? _domChildrenFromNodes.length
+        : _domChildrenFromNodes.indexOf(elt)
     );
     return transitionMode ? rawIndexes.filter(ind => ind !== -1) : rawIndexes;
   }
@@ -101,6 +103,10 @@ class ComponentStructure {
     this.$el = $el;
     this.rootContainer = getRootContainer(this);
     return this;
+  }
+
+  computeVmIndex(htmlElement) {
+    return this._domChildrenFromNodes.indexOf(htmlElement);
   }
 }
 
