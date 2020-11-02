@@ -1,10 +1,10 @@
 export default {
-  name: "Fake",
+  name: "FakeRoot",
   props: {
     prop1: {
       type: String,
       default: "string"
     }
   },
-  template: "<div>{{prop1}}</div>"
+  template: `<div class="fake-root" :id="prop1"><slot></slot></div>`
 }

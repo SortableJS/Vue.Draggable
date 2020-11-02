@@ -38,7 +38,6 @@ class ComponentStructure {
     this.noneFunctional =
       this.externalComponent && typeof this.tag !== "function";
     this.setHtmlRoot($el);
-    this._checkCoherence();
   }
 
   setHtmlRoot($el) {
@@ -57,14 +56,6 @@ class ComponentStructure {
     return this._getChildrenNodes().map(getHtmlElementFromNode);
   }
 
-  _checkCoherence() {
-    if (this.noneFunctional && this.transitionMode) {
-      throw new Error(
-        `Transition-group inside component is not supported. Please alter tag value or remove transition-group. Current tag value: ${this.tag}`
-      );
-    }
-  }
-
   _getChildrenNodes() {
     const {
       noneFunctional,
@@ -73,7 +64,6 @@ class ComponentStructure {
     } = this;
 
     if (noneFunctional) {
-      //TODO check problem here
       return defaultNodes[0].children;
     }
 
