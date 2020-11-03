@@ -21,8 +21,10 @@ function computeNodes(slots) {
 }
 
 function getRootInformation(tag) {
-  const externalComponent = !isHtmlTag(tag) && !isTransition(tag);
+  const transition = isTransition(tag);
+  const externalComponent = !isHtmlTag(tag) && !transition;
   return {
+    transition,
     externalComponent,
     tag: externalComponent ? resolveComponent(tag) : tag
   };

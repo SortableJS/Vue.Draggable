@@ -192,13 +192,6 @@ describe("draggable.vue when initialized with list", () => {
       const expectedRegex = new RegExp(`^<${tag}>.*<\/${tag}>$`);
       expect(wrapper.html()).toMatch(expectedRegex);
     });
-
-    it("set noneFunctional to false ", () => {
-      const {
-        componentStructure: { noneFunctional }
-      } = vm;
-      expect(noneFunctional).toBe(false);
-    });
   });
 
   it("computes indexes", async () => {
@@ -306,36 +299,6 @@ describe("draggable.vue when initialized with list", () => {
       const attrValue = child.attributes("attribute1");
       expect(attrValue).toEqual("value1");
     });
-  });
-
-  describe("when creating a component", () => {
-    test.each([
-      ["Fake", true, Fake],
-      ["FakeFunctional", false, FakeFunctional]
-    ])(
-      "when using component with tag %p compute noneFunctionalComponentMode as %p ",
-      (_, expectedNoneFunctionalComponentMode, component) => {
-        wrapper = mount(draggable, {
-          propsData: {
-            tag: "child"
-          },
-          slots: {
-            default: () => []
-          },
-          global: {
-            components: {
-              child: component
-            }
-          }
-        });
-        const {
-          vm: {
-            componentStructure: { noneFunctional }
-          }
-        } = wrapper;
-        expect(noneFunctional).toBe(expectedNoneFunctionalComponentMode);
-      }
-    );
   });
 
   it("keeps a reference to Sortable instance", () => {

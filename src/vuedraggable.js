@@ -75,7 +75,7 @@ const draggableComponent = defineComponent({
     const componentStructure = computeComponentStructure({ $slots, tag, $el });
     this.componentStructure = componentStructure;
     const attributes = getComponentAttributes({ $attrs, componentData });
-    return h(componentStructure.tag, attributes, componentStructure.children);
+    return componentStructure.render(h, attributes);
   },
 
   created() {

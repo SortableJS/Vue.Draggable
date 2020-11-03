@@ -34,10 +34,23 @@ class ComponentStructure {
     };
     this.transitionMode = isTransition(defaultNodes);
     this.externalComponent = root.externalComponent;
+    this.rootTransition = root.transition;
     this.tag = root.tag;
-    this.noneFunctional =
-      this.externalComponent && typeof this.tag !== "function";
     this.setHtmlRoot($el);
+  }
+
+  get _domChildrenFromNodes() {
+    return this._getChildrenNodes().map(getHtmlElementFromNode);
+  }
+
+  get _isRootComponent() {
+    return this.externalComponent || this.rootTransition;
+  }
+
+  render(h, attributes) {
+    const { tag, children, _isRootComponent } = this;
+    const option = !_isRootComponent ? children : { default: () => children };
+    return h(tag, attributes, option);
   }
 
   setHtmlRoot($el) {
@@ -52,20 +65,11 @@ class ComponentStructure {
     return this;
   }
 
-  get _domChildrenFromNodes() {
-    return this._getChildrenNodes().map(getHtmlElementFromNode);
-  }
-
   _getChildrenNodes() {
     const {
-      noneFunctional,
       transitionMode,
       nodes: { default: defaultNodes }
     } = this;
-
-    if (noneFunctional) {
-      return defaultNodes[0].children;
-    }
 
     if (!transitionMode) {
       return defaultNodes.length === 1 && defaultNodes[0].el.nodeType === 3
