@@ -50,6 +50,7 @@
     "babel-jest": "^24.6.0",
     "bootstrap": "^4.3.1",
     "codecov": "^3.2.0",
+    "element-plus": "^1.0.1-alpha.12",
     "eslint": "^6.7.2",
     "eslint-plugin-prettier": "^3.1.0",
     "eslint-plugin-vue": "^7.0.0-0",

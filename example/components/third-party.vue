@@ -4,7 +4,7 @@
       <h3>
         Integration with
         <a
-          href="https://element.eleme.io/#/en-US/component/collapse#collapse"
+          href="https://element-plus.org/#/en-US/component/collapse"
           target="_blank"
           >Element collapse</a
         >
@@ -80,10 +80,11 @@ export default {
       activeNames: [1],
       collapseComponentData: {
         on: {
-          input: this.inputChanged
+          "update:modelValue": this.inputChanged,
+          change: this.onChanged
         },
         props: {
-          value: this.activeNames
+          modelValue: this.activeNames
         }
       }
     };
@@ -91,6 +92,9 @@ export default {
   methods: {
     inputChanged(val) {
       this.activeNames = val;
+    },
+    onChanged(evt) {
+      window.console.log({ evt });
     }
   }
 };
