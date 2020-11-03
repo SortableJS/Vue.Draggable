@@ -37,6 +37,7 @@
       >
         <div
           class="list-group-item"
+          :class="{ 'not-draggable': !enabled }"
           v-for="element in list"
           :key="element.name"
         >
@@ -96,5 +97,9 @@ export default {
 .ghost {
   opacity: 0.5;
   background: #c8ebfb;
+}
+
+.not-draggable {
+  cursor: no-drop;
 }
 </style>
