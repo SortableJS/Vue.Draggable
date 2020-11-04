@@ -6,7 +6,7 @@
         <a
           href="https://element-plus.org/#/en-US/component/collapse"
           target="_blank"
-          >Element collapse</a
+          >Element+ collapse</a
         >
       </h3>
 
@@ -41,6 +41,7 @@ export default {
     draggable
   },
   data() {
+    const activeNames = [1];
     return {
       list: [
         {
@@ -77,14 +78,13 @@ export default {
           ]
         }
       ],
-      activeNames: [1],
+      activeNames,
       collapseComponentData: {
         on: {
-          "update:modelValue": this.inputChanged,
-          change: this.onChanged
+          "update:modelValue": this.inputChanged
         },
         props: {
-          modelValue: this.activeNames
+          modelValue: activeNames
         }
       }
     };
@@ -92,9 +92,6 @@ export default {
   methods: {
     inputChanged(val) {
       this.activeNames = val;
-    },
-    onChanged(evt) {
-      window.console.log({ evt });
     }
   }
 };
