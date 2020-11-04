@@ -17,9 +17,9 @@ const router = createRouter({
   routes
 });
 
-const app = createApp(App);
-app.use(store);
-app.use(router);
-app.use(ElementPlus);
-app.component("rawDisplayer", rawDisplayer);
+const app = createApp(App)
+  .use(store)
+  .use(router)
+  .use(ElementPlus)
+  .component("rawDisplayer", rawDisplayer);
 router.isReady().then(() => app.mount("#app"));
