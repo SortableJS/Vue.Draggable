@@ -80,12 +80,8 @@ export default {
       ],
       activeNames,
       collapseComponentData: {
-        on: {
-          "update:modelValue": this.inputChanged
-        },
-        props: {
-          modelValue: activeNames
-        }
+        "onUpdate:modelValue": this.inputChanged,
+        modelValue: activeNames
       }
     };
   },

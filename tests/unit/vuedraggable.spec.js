@@ -213,16 +213,10 @@ describe("draggable.vue when initialized with list", () => {
         props: {
           tag: "component-tag",
           componentData: {
-            on: {
-              ["update:modelValue"]: input
-            },
-            attrs: {
-              attribute1: "value1"
-            },
-            props: {
-              prop1: "info",
-              prop2: true
-            }
+            ["onUpdate:modelValue"]: input,
+            attribute1: "value1",
+            prop1: "info",
+            prop2: true
           }
         },
         global: {
@@ -267,13 +261,9 @@ describe("draggable.vue when initialized with list", () => {
         props: {
           tag: "component-tag",
           componentData: {
-            attrs: {
-              attribute1: "value1"
-            },
-            props: {
-              prop1: "info",
-              prop2: true
-            }
+            attribute1: "value1",
+            prop1: "info",
+            prop2: true
           }
         },
         global: {

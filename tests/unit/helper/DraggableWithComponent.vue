@@ -1,9 +1,5 @@
 <template>
-  <draggable
-    :list="array"
-    tag="fake"
-    :component-data="{ props: { prop1: 'my-id' } }"
-  >
+  <draggable :list="array" tag="fake" :component-data="{ prop1: 'my-id' }">
     <div v-for="item in array" :key="item">{{ item }}</div>
   </draggable>
 </template>

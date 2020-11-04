@@ -9,21 +9,13 @@ function project(entries) {
   }, {});
 }
 
-function getComponentAttributes({ $attrs, componentData }) {
+function getComponentAttributes({ $attrs, componentData = {} }) {
   const attributes = project(
     Object.entries($attrs).filter(([key, _]) => isHtmlAttribute(key))
   );
-  if (!componentData) {
-    return attributes;
-  }
-  const { on, props, attrs } = componentData;
-  Object.entries(on || {}).forEach(([key, value]) => {
-    attributes[`on${capitalize(key)}`] = value;
-  });
   return {
     ...attributes,
-    ...attrs,
-    ...props
+    ...componentData
   };
 }
 
