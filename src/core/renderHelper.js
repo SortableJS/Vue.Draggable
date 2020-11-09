@@ -1,18 +1,29 @@
 import { ComponentStructure } from "./componentStructure";
 import { isHtmlTag, isTransition } from "../util/tags";
-import { resolveComponent } from "vue";
+import { resolveComponent, TransitionGroup } from "vue";
 
 function getSlot(slots, key) {
   const slotValue = slots[key];
   return slotValue ? slotValue() : [];
 }
 
-function computeNodes(slots) {
-  const [header, defaultNodes, footer] = [
-    "header",
-    "default",
-    "footer"
-  ].map(name => getSlot(slots, name));
+function computeNodes({ $slots, realList, itemKey }) {
+  const [header, footer] = ["header", "footer"].map(name =>
+    getSlot($slots, name)
+  );
+  const { item } = $slots;
+  if (!item) {
+    throw new Error("draggable element must have an item slot");
+  }
+  const defaultNodes = realList.flatMap((element, index) =>
+    item({ element, index }).map(node => {
+      node.key = element[itemKey];
+      return node;
+    })
+  );
+  if (defaultNodes.length !== realList.length) {
+    throw new Error("Item slot must have only one child");
+  }
   return {
     header,
     footer,
@@ -26,12 +37,16 @@ function getRootInformation(tag) {
   return {
     transition,
     externalComponent,
-    tag: externalComponent ? resolveComponent(tag) : tag
+    tag: externalComponent
+      ? resolveComponent(tag)
+      : transition
+      ? TransitionGroup
+      : tag
   };
 }
 
-function computeComponentStructure({ $slots, tag, $el }) {
-  const nodes = computeNodes($slots);
+function computeComponentStructure({ $slots, tag, $el, realList, itemKey }) {
+  const nodes = computeNodes({ $slots, realList, itemKey });
   const root = getRootInformation(tag);
   return new ComponentStructure({ nodes, root, $el });
 }

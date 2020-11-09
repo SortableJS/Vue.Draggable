@@ -6,17 +6,19 @@
       <draggable
         :list="list"
         class="list-group"
-        draggable=".item"
         @start="dragging = true"
         @end="dragging = false"
+        item-key="name"
       >
-        <div
-          class="list-group-item item"
-          v-for="element in list"
-          :key="element.name"
-        >
-          {{ element.name }}
-        </div>
+        <template v-slot:footer>
+          <div
+            class="btn-group list-group-item"
+            role="group"
+            aria-label="Basic example"
+          >
+            <button class="btn btn-secondary" @click="replace">Replace</button>
+          </div>
+        </template>
 
         <template v-slot:header>
           <div
@@ -25,7 +27,12 @@
             aria-label="Basic example"
           >
             <button class="btn btn-secondary" @click="add">Add</button>
-            <button class="btn btn-secondary" @click="replace">Replace</button>
+          </div>
+        </template>
+
+        <template v-slot:item="{ element }">
+          <div class="list-group-item item">
+            {{ element.name }}
           </div>
         </template>
       </draggable>

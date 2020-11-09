@@ -42,6 +42,10 @@ const props = {
     required: false,
     default: null
   },
+  itemKey: {
+    type: [String, Function],
+    required: true
+  },
   clone: {
     type: Function,
     default: original => {
@@ -71,8 +75,14 @@ const draggableComponent = defineComponent({
   props,
 
   render() {
-    const { $slots, $attrs, tag, componentData, $el } = this;
-    const componentStructure = computeComponentStructure({ $slots, tag, $el });
+    const { $slots, $attrs, tag, componentData, $el, realList, itemKey } = this;
+    const componentStructure = computeComponentStructure({
+      $slots,
+      tag,
+      $el,
+      realList,
+      itemKey
+    });
     this.componentStructure = componentStructure;
     const attributes = getComponentAttributes({ $attrs, componentData });
     return componentStructure.render(h, attributes);
@@ -98,9 +108,8 @@ const draggableComponent = defineComponent({
         manage: event => manage.call(this, event)
       }
     });
-    const { rootContainer } = componentStructure;
-    this._sortable = new Sortable(rootContainer, sortableOptions);
-    rootContainer.__draggable_component__ = this;
+    this._sortable = new Sortable($el, sortableOptions);
+    $el.__draggable_component__ = this;
   },
 
   beforeUnmount() {

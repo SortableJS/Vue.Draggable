@@ -4,24 +4,26 @@
       <button class="btn btn-secondary button" @click="sort">
         To original order
       </button>
+
+      <button class="btn btn-secondary button" @click="add">
+        Add \
+      </button>
     </div>
 
     <div class="col-6">
       <h3>Transition</h3>
       <draggable
         class="list-group"
-        tag="ul"
+        item-key="order"
+        tag="transition-group"
+        :component-data="{ tag: 'ul', name: 'flip-list', type: 'transition' }"
         v-model="list"
         v-bind="dragOptions"
         @start="isDragging = true"
         @end="isDragging = false"
       >
-        <transition-group type="transition" name="flip-list">
-          <li
-            class="list-group-item"
-            v-for="element in list"
-            :key="element.order"
-          >
+        <template v-slot:item="{ element }">
+          <li class="list-group-item">
             <i
               :class="
                 element.fixed ? 'fa fa-anchor' : 'glyphicon glyphicon-pushpin'
@@ -31,7 +33,7 @@
             ></i>
             {{ element.name }}
           </li>
-        </transition-group>
+        </template>
       </draggable>
     </div>
 
@@ -51,6 +53,7 @@ const message = [
   "on",
   "Sortablejs"
 ];
+let order = message.length;
 
 export default {
   name: "transition-example",
@@ -69,6 +72,9 @@ export default {
   methods: {
     sort() {
       this.list = this.list.sort((a, b) => a.order - b.order);
+    },
+    add() {
+      this.list.push({ name: "nanannana", order: ++order });
     }
   },
   computed: {
