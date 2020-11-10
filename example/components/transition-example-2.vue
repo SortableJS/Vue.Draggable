@@ -22,7 +22,7 @@
         @end="drag = false"
         item-key="order"
       >
-        <template v-slot:item="{ element }">
+        <template #item="{ element }">
           <li class="list-group-item">
             <i
               :class="

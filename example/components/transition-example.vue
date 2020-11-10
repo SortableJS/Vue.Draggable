@@ -22,7 +22,7 @@
         @start="isDragging = true"
         @end="isDragging = false"
       >
-        <template v-slot:item="{ element }">
+        <template #item="{ element }">
           <li class="list-group-item">
             <i
               :class="

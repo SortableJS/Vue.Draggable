@@ -1,19 +1,19 @@
-import { nextTick } from "vue";
-
 const getHtmlElementFromNode = ({ el }) => el;
+const addContext = (domElement, context) => (domElement.__draggable_context = context);
+const getContext = domElement => domElement.__draggable_context;
 
 class ComponentStructure {
-  constructor({ nodes: { header, default: defaultNodes, footer }, root, $el }) {
+  constructor({
+    nodes: { header, default: defaultNodes, footer },
+    root,
+    realList
+  }) {
     this.nodes = { header, default: defaultNodes, footer };
     this.children = [...header, ...defaultNodes, ...footer];
-    this.offsets = {
-      header: header.length,
-      footer: footer.length
-    };
     this.externalComponent = root.externalComponent;
     this.rootTransition = root.transition;
     this.tag = root.tag;
-    this.setHtmlRoot($el);
+    this.realList = realList;
   }
 
   get _domChildrenFromNodes() {
@@ -30,43 +30,44 @@ class ComponentStructure {
     return h(tag, attributes, option);
   }
 
-  setHtmlRoot($el) {
-    if (!$el) {
-      return;
-    }
-    this.$el = $el;
-    nextTick(() => {
-      this.visibleIndexes = this._computeIndexes();
-    });
-    return this;
-  }
-
-  _computeIndexes() {
+  updated() {
     const {
-      _domChildrenFromNodes,
-      offsets: { footer: footerOffset }
+      nodes: { default: defaultNodes },
+      realList
     } = this;
+    defaultNodes.forEach((node, index) => {
+      addContext(getHtmlElementFromNode(node), {
+        element: realList[index],
+        index
+      });
+    });
+  }
 
-    const domChildren = this.$el.children;
-    const footerIndex = domChildren.length - footerOffset;
-    const rawIndexes = [...domChildren].map((elt, idx) =>
-      idx >= footerIndex
-        ? _domChildrenFromNodes.length
-        : _domChildrenFromNodes.indexOf(elt)
+  getUnderlyingVm(domElement) {
+    return getContext(domElement);
+  }
+
+  getVmIndexFromDomIndex(domIndex, $el) {
+    const domChildren = $el.children;
+    const domElement = domChildren.item(domIndex);
+    const context = getContext(domElement);
+    if (context) {
+      return context.index;
+    }
+    const {
+      nodes: { default: defaultNodes }
+    } = this;
+    const { length } = defaultNodes;
+
+    if (length === 0) {
+      return -1;
+    }
+
+    const firstDomListElement = getHtmlElementFromNode(defaultNodes[0]);
+    const indexFirstDomListElement = [...domChildren].findIndex(
+      element => element === firstDomListElement
     );
-    return rawIndexes;
-  }
-
-  computeVmIndex(domElement) {
-    return this._domChildrenFromNodes.indexOf(domElement);
-  }
-
-  getVmIndexFromDomIndex(domIndex) {
-    const { visibleIndexes } = this;
-    const numberIndexes = visibleIndexes.length;
-    return domIndex > numberIndexes - 1
-      ? numberIndexes
-      : visibleIndexes[domIndex];
+    return domIndex < indexFirstDomListElement ? -1 : length;
   }
 }
 

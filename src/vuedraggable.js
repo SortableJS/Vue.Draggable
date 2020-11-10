@@ -74,18 +74,29 @@ const draggableComponent = defineComponent({
 
   props,
 
+  data() {
+    return {
+      error: false
+    };
+  },
+
   render() {
-    const { $slots, $attrs, tag, componentData, $el, realList, itemKey } = this;
-    const componentStructure = computeComponentStructure({
-      $slots,
-      tag,
-      $el,
-      realList,
-      itemKey
-    });
-    this.componentStructure = componentStructure;
-    const attributes = getComponentAttributes({ $attrs, componentData });
-    return componentStructure.render(h, attributes);
+    try {
+      this.error = false;
+      const { $slots, $attrs, tag, componentData, realList, itemKey } = this;
+      const componentStructure = computeComponentStructure({
+        $slots,
+        tag,
+        realList,
+        itemKey
+      });
+      this.componentStructure = componentStructure;
+      const attributes = getComponentAttributes({ $attrs, componentData });
+      return componentStructure.render(h, attributes);
+    } catch (err) {
+      this.error = true;
+      return h("pre", { style: { color: "red" } }, err.stack);
+    }
   },
 
   created() {
@@ -97,8 +108,12 @@ const draggableComponent = defineComponent({
   },
 
   mounted() {
+    if (this.error) {
+      return;
+    }
+
     const { $attrs, $el, componentStructure } = this;
-    componentStructure.setHtmlRoot($el);
+    componentStructure.updated();
 
     const sortableOptions = createSortableOption({
       $attrs,
@@ -110,6 +125,10 @@ const draggableComponent = defineComponent({
     });
     this._sortable = new Sortable($el, sortableOptions);
     $el.__draggable_component__ = this;
+  },
+
+  updated() {
+    this.componentStructure.updated();
   },
 
   beforeUnmount() {
@@ -137,14 +156,7 @@ const draggableComponent = defineComponent({
 
   methods: {
     getUnderlyingVm(domElement) {
-      const index = this.componentStructure.computeVmIndex(domElement);
-      if (index === -1) {
-        //Edge case during move callback: related element might be
-        //an element different from collection
-        return null;
-      }
-      const element = this.realList[index];
-      return { index, element };
+      return this.componentStructure.getUnderlyingVm(domElement) || null;
     },
 
     getUnderlyingPotencialDraggableComponent(htmElement) {
@@ -192,7 +204,7 @@ const draggableComponent = defineComponent({
     },
 
     getVmIndexFromDomIndex(domIndex) {
-      return this.componentStructure.getVmIndexFromDomIndex(domIndex);
+      return this.componentStructure.getVmIndexFromDomIndex(domIndex, this.$el);
     },
 
     onDragStart(evt) {

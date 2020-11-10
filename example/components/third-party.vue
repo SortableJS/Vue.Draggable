@@ -16,7 +16,7 @@
         :component-data="collapseComponentData"
         item-key="id"
       >
-        <template v-slot:item="{ element }">
+        <template #item="{ element }">
           <el-collapse-item :title="element.title" :name="element.id">
             <div v-for="(lign, idx) in element.text" :key="idx">{{ lign }}</div>
           </el-collapse-item>

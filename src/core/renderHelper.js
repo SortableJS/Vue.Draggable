@@ -45,10 +45,10 @@ function getRootInformation(tag) {
   };
 }
 
-function computeComponentStructure({ $slots, tag, $el, realList, itemKey }) {
+function computeComponentStructure({ $slots, tag, realList, itemKey }) {
   const nodes = computeNodes({ $slots, realList, itemKey });
   const root = getRootInformation(tag);
-  return new ComponentStructure({ nodes, root, $el });
+  return new ComponentStructure({ nodes, root, realList });
 }
 
 export { computeComponentStructure };

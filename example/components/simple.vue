@@ -36,7 +36,7 @@
         @start="dragging = true"
         @end="dragging = false"
       >
-        <template v-slot:item="{ element }">
+        <template #item="{ element }">
           <div class="list-group-item" :class="{ 'not-draggable': !enabled }">
             {{ element.name }}
           </div>
