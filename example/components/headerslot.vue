@@ -10,17 +10,7 @@
         @end="dragging = false"
         item-key="name"
       >
-        <template v-slot:footer>
-          <div
-            class="btn-group list-group-item"
-            role="group"
-            aria-label="Basic example"
-          >
-            <button class="btn btn-secondary" @click="replace">Replace</button>
-          </div>
-        </template>
-
-        <template v-slot:header>
+        <template #header>
           <div
             class="btn-group list-group-item"
             role="group"
@@ -30,7 +20,17 @@
           </div>
         </template>
 
-        <template v-slot:item="{ element }">
+        <template #footer>
+          <div
+            class="btn-group list-group-item"
+            role="group"
+            aria-label="Basic example"
+          >
+            <button class="btn btn-secondary" @click="replace">Replace</button>
+          </div>
+        </template>
+
+        <template #item="{ element }">
           <div class="list-group-item item">
             {{ element.name }}
           </div>

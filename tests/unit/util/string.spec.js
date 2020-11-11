@@ -1,4 +1,4 @@
-import { camelize, capitalize } from "@/util/string";
+import { camelize } from "@/util/string";
 
 describe("camelize", () => {
   test.each([
@@ -12,22 +12,6 @@ describe("camelize", () => {
     "transform %s into %s",
     (value, expected) =>{
       const actual = camelize(value);
-      expect(actual).toEqual(expected);
-    }
-  )
-});
-
-describe("capitalize", () => {
-  test.each([
-    ["myProp", "MyProp"],
-    ["abcdde", "Abcdde"],
-    ["Zab", "Zab"],
-    ["zab", "Zab"],
-    ["123456", "123456"]
-  ])(
-    "transform %s into %s",
-    (value, expected) =>{
-      const actual = capitalize(value);
       expect(actual).toEqual(expected);
     }
   )

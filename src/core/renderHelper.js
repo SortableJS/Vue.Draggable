@@ -18,6 +18,7 @@ function computeNodes({ $slots, realList, itemKey }) {
   const defaultNodes = realList.flatMap((element, index) =>
     item({ element, index }).map(node => {
       node.key = element[itemKey];
+      node.props = { ...(node.props || {}), "data-draggable": true };
       return node;
     })
   );
