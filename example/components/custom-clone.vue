@@ -8,10 +8,13 @@
         :group="{ name: 'people', pull: 'clone', put: false }"
         :clone="cloneDog"
         @change="log"
+        item-key="id"
       >
-        <div class="list-group-item" v-for="element in list1" :key="element.id">
-          {{ element.name }}
-        </div>
+        <template #item="{ element }">
+          <div class="list-group-item">
+            {{ element.name }}
+          </div>
+        </template>
       </draggable>
     </div>
 
@@ -22,10 +25,13 @@
         :list="list2"
         group="people"
         @change="log"
+        item-key="id"
       >
-        <div class="list-group-item" v-for="element in list2" :key="element.id">
-          {{ element.name }}
-        </div>
+        <template #item="{ element }">
+          <div class="list-group-item">
+            {{ element.name }}
+          </div>
+        </template>
       </draggable>
     </div>
 

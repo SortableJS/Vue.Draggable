@@ -12,16 +12,15 @@
         :animation="100"
         @start="dragging = true"
         @end="dragging = false"
+        item-key="name"
       >
-        <div
-          class="list-group-item item"
-          v-for="element in list"
-          :key="element.name"
-        >
-          {{ element.name }}
-        </div>
+        <template #item="{ element }">
+          <div class="list-group-item item">
+            {{ element.name }}
+          </div>
+        </template>
 
-        <template v-slot:footer>
+        <template #footer>
           <div
             class="btn-group list-group-item"
             role="group"
@@ -58,10 +57,8 @@ export default {
       ],
       dragging: false,
       componentData: {
-        props: {
-          type: "transition",
-          name: "flip-list"
-        }
+        type: "transition",
+        name: "flip-list"
       }
     };
   },
