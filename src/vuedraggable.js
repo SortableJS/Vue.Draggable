@@ -123,8 +123,9 @@ const draggableComponent = defineComponent({
         manage: event => manage.call(this, event)
       }
     });
-    this._sortable = new Sortable($el, sortableOptions);
-    $el.__draggable_component__ = this;
+    const targetDomElement = $el.nodeType === 1 ? $el : $el.parentElement;
+    this._sortable = new Sortable(targetDomElement, sortableOptions);
+    targetDomElement.__draggable_component__ = this;
   },
 
   updated() {
@@ -204,7 +205,10 @@ const draggableComponent = defineComponent({
     },
 
     getVmIndexFromDomIndex(domIndex) {
-      return this.componentStructure.getVmIndexFromDomIndex(domIndex, this.$el);
+      return this.componentStructure.getVmIndexFromDomIndex(
+        domIndex,
+        this._sortable.el
+      );
     },
 
     onDragStart(evt) {
