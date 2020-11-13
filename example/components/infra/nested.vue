@@ -1,9 +1,17 @@
 <template>
-  <draggable class="dragArea" tag="ul" :list="tasks" :group="{ name: 'g1' }">
-    <li v-for="el in tasks" :key="el.name">
-      <p>{{ el.name }}</p>
-      <nested-draggable :tasks="el.tasks" />
-    </li>
+  <draggable
+    class="dragArea"
+    tag="ul"
+    :list="tasks"
+    :group="{ name: 'g1' }"
+    item-key="name"
+  >
+    <template #item="{ element }">
+      <li>
+        <p>{{ element.name }}</p>
+        <nested-draggable :tasks="element.tasks" />
+      </li>
+    </template>
   </draggable>
 </template>
 <script>

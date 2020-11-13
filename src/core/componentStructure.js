@@ -9,7 +9,7 @@ class ComponentStructure {
     root,
     realList
   }) {
-    this.nodes = { header, default: defaultNodes, footer };
+    this.defaultNodes = defaultNodes;
     this.children = [...header, ...defaultNodes, ...footer];
     this.externalComponent = root.externalComponent;
     this.rootTransition = root.transition;
@@ -32,10 +32,7 @@ class ComponentStructure {
   }
 
   updated() {
-    const {
-      nodes: { default: defaultNodes },
-      realList
-    } = this;
+    const { defaultNodes, realList } = this;
     defaultNodes.forEach((node, index) => {
       addContext(getHtmlElementFromNode(node), {
         element: realList[index],
@@ -49,26 +46,27 @@ class ComponentStructure {
   }
 
   getVmIndexFromDomIndex(domIndex, $el) {
+    const { defaultNodes } = this;
+    const { length } = defaultNodes;
     const domChildren = $el.children;
     const domElement = domChildren.item(domIndex);
+
+    if (domElement === null) {
+      return length;
+    }
     const context = getContext(domElement);
     if (context) {
       return context.index;
     }
-    const {
-      nodes: { default: defaultNodes }
-    } = this;
-    const { length } = defaultNodes;
 
     if (length === 0) {
-      return -1;
+      return 0;
     }
-
     const firstDomListElement = getHtmlElementFromNode(defaultNodes[0]);
     const indexFirstDomListElement = [...domChildren].findIndex(
       element => element === firstDomListElement
     );
-    return domIndex < indexFirstDomListElement ? -1 : length;
+    return domIndex < indexFirstDomListElement ? 0 : length;
   }
 }
 

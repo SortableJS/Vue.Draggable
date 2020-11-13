@@ -4,10 +4,6 @@
       <button class="btn btn-secondary button" @click="sort">
         To original order
       </button>
-
-      <button class="btn btn-secondary button" @click="add">
-        Add \
-      </button>
     </div>
 
     <div class="col-6">
@@ -72,9 +68,6 @@ export default {
   methods: {
     sort() {
       this.list = this.list.sort((a, b) => a.order - b.order);
-    },
-    add() {
-      this.list.push({ name: "nanannana", order: ++order });
     }
   },
   computed: {

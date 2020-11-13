@@ -7,20 +7,24 @@
     <div class="col-7">
       <h3>Draggable {{ draggingInfo }}</h3>
 
-      <draggable tag="ul" :list="list" class="list-group" handle=".handle">
-        <li
-          class="list-group-item"
-          v-for="(element, idx) in list"
-          :key="element.name"
-        >
-          <i class="fa fa-align-justify handle"></i>
+      <draggable
+        tag="ul"
+        :list="list"
+        class="list-group"
+        handle=".handle"
+        item-key="name"
+      >
+        <template #item="{ element, index }">
+          <li class="list-group-item">
+            <i class="fa fa-align-justify handle"></i>
 
-          <span class="text">{{ element.name }} </span>
+            <span class="text">{{ element.name }} </span>
 
-          <input type="text" class="form-control" v-model="element.text" />
+            <input type="text" class="form-control" v-model="element.text" />
 
-          <i class="fa fa-times close" @click="removeAt(idx)"></i>
-        </li>
+            <i class="fa fa-times close" @click="removeAt(index)"></i>
+          </li>
+        </template>
       </draggable>
     </div>
 

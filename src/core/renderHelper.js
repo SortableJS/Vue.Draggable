@@ -7,7 +7,7 @@ function getSlot(slots, key) {
   return slotValue ? slotValue() : [];
 }
 
-function computeNodes({ $slots, realList, itemKey }) {
+function computeNodes({ $slots, realList, getKey }) {
   const [header, footer] = ["header", "footer"].map(name =>
     getSlot($slots, name)
   );
@@ -17,7 +17,7 @@ function computeNodes({ $slots, realList, itemKey }) {
   }
   const defaultNodes = realList.flatMap((element, index) =>
     item({ element, index }).map(node => {
-      node.key = element[itemKey];
+      node.key = getKey(element);
       node.props = { ...(node.props || {}), "data-draggable": true };
       return node;
     })
@@ -46,8 +46,8 @@ function getRootInformation(tag) {
   };
 }
 
-function computeComponentStructure({ $slots, tag, realList, itemKey }) {
-  const nodes = computeNodes({ $slots, realList, itemKey });
+function computeComponentStructure({ $slots, tag, realList, getKey }) {
+  const nodes = computeNodes({ $slots, realList, getKey });
   const root = getRootInformation(tag);
   return new ComponentStructure({ nodes, root, realList });
 }

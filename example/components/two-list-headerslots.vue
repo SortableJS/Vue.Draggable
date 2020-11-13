@@ -8,23 +8,17 @@
         data-source="juju"
         :list="list"
         class="list-group"
-        draggable=".item"
         group="a"
+        item-key="name"
       >
-        <div
-          class="list-group-item item"
-          v-for="element in list"
-          :key="element.name"
-        >
-          {{ element.name }}
-        </div>
+        <template #item="{ element }">
+          <div class="list-group-item">
+            {{ element.name }}
+          </div>
+        </template>
 
-        <template v-slot:footer>
-          <div
-            class="btn-group list-group-item"
-            role="group"
-            aria-label="Basic example"
-          >
+        <template #footer>
+          <div class="btn-group list-group-item" role="group">
             <button class="btn btn-secondary" @click="add">Add</button>
             <button class="btn btn-secondary" @click="replace">Replace</button>
           </div>
@@ -35,16 +29,14 @@
     <div class="col-4">
       <h3>Second draggable with header</h3>
 
-      <draggable :list="list2" class="list-group" draggable=".item" group="a">
-        <div
-          class="list-group-item item"
-          v-for="element in list2"
-          :key="element.name"
-        >
-          {{ element.name }}
-        </div>
+      <draggable :list="list2" class="list-group" group="a" item-key="name">
+        <template #item="{ element }">
+          <div class="list-group-item item">
+            {{ element.name }}
+          </div>
+        </template>
 
-        <template v-slot:header>
+        <template #header>
           <div
             class="btn-group list-group-item"
             role="group"

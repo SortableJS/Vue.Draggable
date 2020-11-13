@@ -11,21 +11,13 @@
         item-key="name"
       >
         <template #header>
-          <div
-            class="btn-group list-group-item"
-            role="group"
-            aria-label="Basic example"
-          >
+          <div class="btn-group list-group-item" role="group">
             <button class="btn btn-secondary" @click="add">Add</button>
           </div>
         </template>
 
         <template #footer>
-          <div
-            class="btn-group list-group-item"
-            role="group"
-            aria-label="Basic example"
-          >
+          <div class="btn-group list-group-item" role="group">
             <button class="btn btn-secondary" @click="replace">Replace</button>
           </div>
         </template>

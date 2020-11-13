@@ -83,12 +83,12 @@ const draggableComponent = defineComponent({
   render() {
     try {
       this.error = false;
-      const { $slots, $attrs, tag, componentData, realList, itemKey } = this;
+      const { $slots, $attrs, tag, componentData, realList, getKey } = this;
       const componentStructure = computeComponentStructure({
         $slots,
         tag,
         realList,
-        itemKey
+        getKey
       });
       this.componentStructure = componentStructure;
       const attributes = getComponentAttributes({ $attrs, componentData });
@@ -140,6 +140,14 @@ const draggableComponent = defineComponent({
     realList() {
       const { list } = this;
       return list ? list : this.modelValue;
+    },
+
+    getKey() {
+      const { itemKey } = this;
+      if (typeof itemKey === "function") {
+        return itemKey;
+      }
+      return element => element[itemKey];
     }
   },
 

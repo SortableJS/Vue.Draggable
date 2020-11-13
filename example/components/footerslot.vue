@@ -7,15 +7,13 @@
         tag="transition-group"
         :componentData="componentData"
         :list="list"
-        class="list-group"
-        draggable=".item"
         :animation="100"
         @start="dragging = true"
         @end="dragging = false"
         item-key="name"
       >
         <template #item="{ element }">
-          <div class="list-group-item item">
+          <div class="list-group-item">
             {{ element.name }}
           </div>
         </template>
