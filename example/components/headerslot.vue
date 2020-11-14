@@ -8,6 +8,7 @@
         class="list-group"
         @start="dragging = true"
         @end="dragging = false"
+        @change="log"
         item-key="name"
       >
         <template #header>
@@ -60,6 +61,9 @@ export default {
     },
     replace: function() {
       this.list = [{ name: "Edgard", id: id++ }];
+    },
+    log: function(evt) {
+      window.console.log(evt);
     }
   }
 };
