@@ -8,6 +8,7 @@ function getSlot(slots, key) {
 }
 
 function computeNodes({ $slots, realList, getKey }) {
+  const normalizedList = realList || [];
   const [header, footer] = ["header", "footer"].map(name =>
     getSlot($slots, name)
   );
@@ -15,14 +16,14 @@ function computeNodes({ $slots, realList, getKey }) {
   if (!item) {
     throw new Error("draggable element must have an item slot");
   }
-  const defaultNodes = realList.flatMap((element, index) =>
+  const defaultNodes = normalizedList.flatMap((element, index) =>
     item({ element, index }).map(node => {
       node.key = getKey(element);
       node.props = { ...(node.props || {}), "data-draggable": true };
       return node;
     })
   );
-  if (defaultNodes.length !== realList.length) {
+  if (defaultNodes.length !== normalizedList.length) {
     throw new Error("Item slot must have only one child");
   }
   return {
