@@ -45,10 +45,10 @@ class ComponentStructure {
     return getContext(domElement);
   }
 
-  getVmIndexFromDomIndex(domIndex, $el) {
+  getVmIndexFromDomIndex(domIndex, element) {
     const { defaultNodes } = this;
     const { length } = defaultNodes;
-    const domChildren = $el.children;
+    const domChildren = element.children;
     const domElement = domChildren.item(domIndex);
 
     if (domElement === null) {
