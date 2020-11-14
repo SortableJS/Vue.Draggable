@@ -7,7 +7,11 @@ const SortableFake = {
   destroy: jest.fn(),
   option: jest.fn(),
 };
-Sortable.mockImplementation(() => SortableFake);
+Sortable.mockImplementation(element => {
+  console.log(element);
+  SortableFake.el = element;
+  return SortableFake;
+});
 
 import { nextTick } from "vue";
 import DraggableWithList from "./helper/DraggableWithList";
@@ -29,18 +33,18 @@ function getEvent(name) {
 const expectedArray = [0, 1, 3, 4, 5, 6, 7, 2, 8, 9];
 const expectedDomWithWrapper = (wrapper, attr = "") =>
   `<${wrapper}${attr}>${expectedArray
-    .map((nu) => `<div>${nu}</div>`)
+    .map((nu) => `<div data-draggable="true">${nu}</div>`)
     .join("")}</${wrapper}>`;
 
 const expectedDomNoTransition = expectedDomWithWrapper("span");
 const expectedDomTransition = expectedDomWithWrapper("div");
 const expectedDomComponent = expectedDomWithWrapper(
   "div",
-  'class="fake-root"id="my-id"'
+  ' class="fake-root" id="my-id"'
 );
 
 function normalizeHTML(wrapper) {
-  return wrapper.html().replace(/(\r\n\t|\n|\r\t| )/gm, "");
+  return wrapper.html();
 }
 
 function expectHTML(wrapper, expected) {
