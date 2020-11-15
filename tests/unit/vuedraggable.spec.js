@@ -11,6 +11,8 @@ import { nextTick, h } from "vue";
 
 import Fake from "./helper/FakeRoot.js";
 import DraggableOption from "./helper/DraggableOption.vue";
+import DraggableWithFragment from "./helper/DraggableWithFragment.vue";
+import FragmentRoot from "./helper/FragmentComponent";
 
 let wrapper;
 let vm;
@@ -1544,5 +1546,39 @@ describe("when using only footer slot with an none-empty list", () => {
       const expectedEvt = { added: { element: "last", newIndex: 1 } };
       expect(wrapper.emitted().change).toEqual([[expectedEvt]]);
     });
+  });
+});
+
+describe("when using a fragment component as tag", () => {
+  beforeEach(async () => {
+    resetMocks();
+
+    wrapper = mount(DraggableWithFragment, {
+      global: {
+        components: {
+          FragmentRoot
+        }
+      }
+    });
+    vm = wrapper.vm;
+    element = wrapper.element;
+  });
+
+  it("renders correctly", () => {
+    const expectedDOM = `<div id="root"><div data-draggable="true">a-0</div><div data-draggable="true">b-1</div><div data-draggable="true">c-2</div></div>`;
+    expectHTML(wrapper, expectedDOM);
+  });
+
+  it("creates sortable instance with parent node", () => {
+    expect(Sortable.mock.calls.length).toBe(1);
+    const parameters = Sortable.mock.calls[0];
+    expect(parameters[0]).toBe(element);
+  });
+
+  it("sets nodes keys", () => {
+    const keys = [0, 1, 2]
+      .map(index => element.children.item(index))
+      .map(el => el.__vnode.key);
+    expect(keys).toEqual(["a", "b", "c"]);
   });
 });
