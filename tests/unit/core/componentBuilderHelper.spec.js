@@ -71,22 +71,28 @@ describe("getComponentAttributes", () => {
 
 describe("createSortableOption", () => {
   test.each([
-    [{ $attrs: {}, callBackBuilder: {} }, { draggable: ">*" }],
-    [{ $attrs: { onStart: 23 }, callBackBuilder: {} }, { draggable: ">*" }],
-    [{ $attrs: { onEnd: 23 }, callBackBuilder: {} }, { draggable: ">*" }],
+    [{ $attrs: {}, callBackBuilder: {} }, { draggable: "[data-draggable]" }],
+    [
+      { $attrs: { onStart: 23 }, callBackBuilder: {} },
+      { draggable: "[data-draggable]" }
+    ],
+    [
+      { $attrs: { onEnd: 23 }, callBackBuilder: {} },
+      { draggable: "[data-draggable]" }
+    ],
     [
       {
         $attrs: { id: "id", class: "class", "data-app": "app" },
         callBackBuilder: {}
       },
-      { draggable: ">*" }
+      { draggable: "[data-draggable]" }
     ],
     [
       {
         $attrs: { value: "43" },
         callBackBuilder: {}
       },
-      { value: "43", draggable: ">*" }
+      { value: "43", draggable: "[data-draggable]" }
     ],
     [
       {
@@ -100,7 +106,7 @@ describe("createSortableOption", () => {
       {
         value: "43",
         ghostClass: "phantom",
-        draggable: ".draggable"
+        draggable: "[data-draggable].draggable"
       }
     ],
     [
@@ -115,7 +121,7 @@ describe("createSortableOption", () => {
       },
       {
         value: "7",
-        draggable: ".draggable",
+        draggable: "[data-draggable].draggable",
         onChoose: "Choose",
         onClone: "Clone",
         onFilter: "Filter",
@@ -136,7 +142,7 @@ describe("createSortableOption", () => {
       },
       {
         property: "property",
-        draggable: ">*",
+        draggable: "[data-draggable]",
         onChoose: "emit-Choose",
         onClone: "emit-Clone",
         onFilter: "emit-Filter",

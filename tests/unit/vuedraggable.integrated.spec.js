@@ -1,17 +1,17 @@
 import { mount, config } from "@vue/test-utils";
 config.global.stubs["transition-group"] = false;
 import Sortable from "sortablejs";
+
 jest.genMockFromModule("sortablejs");
 jest.mock("sortablejs");
+
 const SortableFake = {
   destroy: jest.fn(),
-  option: jest.fn(),
+  option: jest.fn()
 };
-Sortable.mockImplementation(element => {
-  console.log(element);
-  SortableFake.el = element;
-  return SortableFake;
-});
+Sortable.mockImplementation(() => SortableFake);
+
+import draggable from "@/vuedraggable";
 
 import { nextTick } from "vue";
 import DraggableWithList from "./helper/DraggableWithList";
@@ -19,8 +19,6 @@ import DraggableWithComponent from "./helper/DraggableWithComponent.vue";
 import DraggableWithModel from "./helper/DraggableWithList";
 import DraggableWithTransition from "./helper/DraggableWithTransition";
 import fake from "./helper/FakeRoot";
-
-import draggable from "@/vuedraggable";
 
 let wrapper;
 let element;

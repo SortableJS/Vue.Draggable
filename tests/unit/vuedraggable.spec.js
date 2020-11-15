@@ -2,14 +2,10 @@ import { mount, config } from "@vue/test-utils";
 import Sortable from "sortablejs";
 jest.mock("sortablejs");
 const SortableFake = {
-  el: null,
   destroy: jest.fn(),
   option: jest.fn()
 };
-Sortable.mockImplementation(element => {
-  SortableFake.el = element;
-  return SortableFake;
-});
+Sortable.mockImplementation(() => SortableFake);
 import draggable from "@/vuedraggable";
 import { nextTick, h } from "vue";
 
@@ -341,6 +337,7 @@ describe("draggable.vue when initialized with list", () => {
 
   describe("when add is called", () => {
     let newItem;
+    const expectedDOMAfterUpdate = `<div><header></header><div data-draggable="true">a</div><div data-draggable="true">b</div><div data-draggable="true">d</div><div data-draggable="true">c</div><footer></footer></div>`;
     beforeEach(async () => {
       await nextTick();
       newItem = document.createElement("div");
@@ -349,6 +346,7 @@ describe("draggable.vue when initialized with list", () => {
       newItem._underlying_vm_ = "d";
       const last = element.children[3];
       element.insertBefore(newItem, last);
+
       const add = getEvent("onAdd");
       add({
         item: newItem,
@@ -356,9 +354,9 @@ describe("draggable.vue when initialized with list", () => {
       });
     });
 
-    it("DOM changes should be reverted", async () => {
+    it("DOM changes should be performed", async () => {
       await nextTick();
-      expectHTML(wrapper, initialRender);
+      expectHTML(wrapper, expectedDOMAfterUpdate);
     });
 
     it("list should be updated", async () => {
@@ -506,6 +504,7 @@ describe("draggable.vue when initialized with list", () => {
     });
 
     describe("when remove is called", () => {
+      const expectedDomAfterRemove = `<div><header></header><div data-draggable="true">a</div><div data-draggable="true">c</div><footer></footer></div>`;
       beforeEach(() => {
         element.removeChild(item);
         const remove = getEvent("onRemove");
@@ -515,9 +514,9 @@ describe("draggable.vue when initialized with list", () => {
         });
       });
 
-      it("DOM changes should be reverted", async () => {
+      it("DOM should be updated", async () => {
         await nextTick();
-        expectHTML(wrapper, initialRender);
+        expectHTML(wrapper, expectedDomAfterRemove);
       });
 
       it("list should be updated", async () => {
@@ -544,6 +543,10 @@ describe("draggable.vue when initialized with list", () => {
     ])(
       "when update is called with new index being %i",
       (index, expectedList) => {
+        const expectedDomAfterUpdate = `<div><header></header>${expectedList
+          .map(value => `<div data-draggable="true">${value}</div>`)
+          .join("")}<footer></footer></div>`;
+
         beforeEach(() => {
           const firstDraggable = element.children[index];
           element.removeChild(item);
@@ -557,9 +560,9 @@ describe("draggable.vue when initialized with list", () => {
           });
         });
 
-        it("DOM changes should be reverted", async () => {
+        it("DOM should be updated", async () => {
           await nextTick();
-          expectHTML(wrapper, initialRender);
+          expectHTML(wrapper, expectedDomAfterUpdate);
         });
 
         it("list should be updated", async () => {
@@ -1046,6 +1049,9 @@ describe("draggable.vue when initialized with a transition group", () => {
       props: {
         modelValue: items,
         tag: "transition-group",
+        componentData: {
+          tag: "div"
+        },
         itemKey: k => k
       },
       slots: {
@@ -1076,7 +1082,7 @@ describe("draggable.vue when initialized with a transition group", () => {
   describe("when initiating a drag operation", () => {
     let evt;
     beforeEach(() => {
-      item = element.children[0].children[1];
+      item = element.children[1];
       evt = { item };
       const start = getEvent("onStart");
       start(evt);
@@ -1099,7 +1105,7 @@ describe("draggable.vue when initialized with a transition group", () => {
 
     describe("when remove is called", () => {
       beforeEach(() => {
-        element.children[0].removeChild(item);
+        element.removeChild(item);
         const remove = getEvent("onRemove");
         remove({
           item,
@@ -1134,7 +1140,6 @@ describe("draggable.vue when initialized with a transition group", () => {
     describe("when update is called", () => {
       beforeEach(() => {
         const transitionRoot = element;
-        //.children[0];
         const firstDraggable = transitionRoot.children[0];
         transitionRoot.removeChild(item);
         transitionRoot.insertBefore(item, firstDraggable);
@@ -1164,7 +1169,7 @@ describe("draggable.vue when initialized with a transition group", () => {
           item,
           oldIndex: 1,
           newIndex: 0,
-          from: element.children[0]
+          from: element
         };
         expect(wrapper.emitted().update).toEqual([[expectedEvt]]);
       });
@@ -1187,8 +1192,8 @@ describe("draggable.vue when initialized with a transition group", () => {
         move = jest.fn();
         wrapper.setProps({ move });
         evt = {
-          to: element.children[0],
-          related: element.children[0].children[1],
+          to: element,
+          related: element.children[1],
           willInsertAfter: false
         };
         originalEvt = {
@@ -1210,8 +1215,8 @@ describe("draggable.vue when initialized with a transition group", () => {
             index: 1,
             list: ["a", "b", "c"]
           },
-          to: element.children[0],
-          related: element.children[0].children[1],
+          to: element,
+          related: element.children[1],
           willInsertAfter: false
         };
         doMove();

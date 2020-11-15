@@ -125,6 +125,7 @@ const draggableComponent = defineComponent({
     });
     const targetDomElement = $el.nodeType === 1 ? $el : $el.parentElement;
     this._sortable = new Sortable(targetDomElement, sortableOptions);
+    this.targetDomElement = targetDomElement;
     targetDomElement.__draggable_component__ = this;
   },
 
@@ -215,7 +216,7 @@ const draggableComponent = defineComponent({
     getVmIndexFromDomIndex(domIndex) {
       return this.componentStructure.getVmIndexFromDomIndex(
         domIndex,
-        this._sortable.el
+        this.targetDomElement
       );
     },
 

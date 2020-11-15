@@ -1,5 +1,10 @@
 <template>
-  <draggable tag="transition-group" v-model="array" :item-key="key => key">
+  <draggable
+    tag="transition-group"
+    :component-data="{ tag: 'div' }"
+    v-model="array"
+    :item-key="key => key"
+  >
     <template #item="{element}">
       <div>{{ element }}</div>
     </template>
