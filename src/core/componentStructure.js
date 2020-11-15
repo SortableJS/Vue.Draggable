@@ -17,10 +17,6 @@ class ComponentStructure {
     this.realList = realList;
   }
 
-  get _domChildrenFromNodes() {
-    return this.nodes.default.map(getHtmlElementFromNode);
-  }
-
   get _isRootComponent() {
     return this.externalComponent || this.rootTransition;
   }
