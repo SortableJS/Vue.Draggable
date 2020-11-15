@@ -423,6 +423,53 @@ describe("draggable.vue when initialized with list", () => {
     });
   });
 
+  describe("when add is called on an empty list", () => {
+    let newItem;
+    const expectedDOMAfterUpdate = `<div><header></header><div data-draggable="true">e</div><footer></footer></div>`;
+    beforeEach(async () => {
+      await nextTick();
+
+      vm.list.splice(0, 3);
+      newItem = document.createElement("div");
+      const newContent = document.createTextNode("d");
+      newItem.appendChild(newContent);
+      newItem._underlying_vm_ = "e";
+      const last = element.children[2];
+      element.insertBefore(newItem, last);
+
+      const add = getEvent("onAdd");
+      add({
+        item: newItem,
+        newIndex: 0
+      });
+    });
+
+    it("DOM changes should be performed", async () => {
+      await nextTick();
+      expectHTML(wrapper, expectedDOMAfterUpdate);
+    });
+
+    it("list should be updated", async () => {
+      await nextTick();
+      expect(vm.list).toEqual(["e"]);
+    });
+
+    it("sends a update event", async () => {
+      await nextTick();
+      const expectedEvt = {
+        item: newItem,
+        newIndex: 0
+      };
+      expect(wrapper.emitted().add).toEqual([[expectedEvt]]);
+    });
+
+    it("sends a change event", async () => {
+      await nextTick();
+      const expectedEvt = { added: { element: "e", newIndex: 0 } };
+      expect(wrapper.emitted().change).toEqual([[expectedEvt]]);
+    });
+  });
+
   describe("when initiating a drag operation", () => {
     let evt;
     beforeEach(() => {
