@@ -98,6 +98,21 @@ describe("draggable.vue when initialized with list", () => {
         "modelValue and list props are mutually exclusive! Please set one or another."
       );
     });
+
+    it("renders an error when there is no item slot", () => {
+      wrapper = mount(draggable, {
+        props: {
+          list: [],
+          modelValue: [],
+          itemKey: k => k
+        }
+      });
+
+      expect(wrapper.element.nodeName).toEqual("PRE");
+      expect(wrapper.html()).toContain(
+        "Error: draggable element must have an item slot"
+      );
+    })
   });
 
   it("instantiate without error", () => {
@@ -145,6 +160,14 @@ describe("draggable.vue when initialized with list", () => {
         type: Object,
         required: false,
         default: null
+      }
+    ],
+    [
+      "itemKey",
+      {
+        type: [String, Function],
+        required: true,
+        default: undefined
       }
     ]
   ])("should have props %s equal to %j", (name, expectedValue) => {
