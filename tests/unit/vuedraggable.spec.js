@@ -1068,6 +1068,50 @@ describe("draggable.vue when initialized with modelValue", () => {
       });
     });
 
+    describe("when add is called on an empty list", () => {
+      let newItem;
+      beforeEach(async () => {
+        wrapper.setProps({ modelValue: [] });
+
+        await nextTick();
+
+        newItem = document.createElement("div");
+        const newContent = document.createTextNode("z");
+        newItem.appendChild(newContent);
+        newItem._underlying_vm_ = "z";
+        element.appendChild(newItem);
+        const add = getEvent("onAdd");
+        add({
+          item: newItem,
+          newIndex: 0
+        });
+      });
+      it("DOM should be reverted", async () => {
+        await nextTick();
+        expectHTML(wrapper, "<div></div>");
+      });
+
+      it("sends a update event", async () => {
+        await nextTick();
+        const expectedEvt = {
+          item: newItem,
+          newIndex: 0
+        };
+        expect(wrapper.emitted().add).toEqual([[expectedEvt]]);
+      });
+
+      it("sends a update:modelValue event", async () => {
+        await nextTick();
+        expect(wrapper.emitted()["update:modelValue"][0]).toEqual([["z"]]);
+      });
+
+      it("sends a change event", async () => {
+        await nextTick();
+        const expectedEvt = { added: { element: "z", newIndex: 0 } };
+        expect(wrapper.emitted().change).toEqual([[expectedEvt]]);
+      });
+    });
+
     describe("when update is called", () => {
       beforeEach(() => {
         const firstDraggable = element.children[0];
