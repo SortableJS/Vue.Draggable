@@ -1405,7 +1405,7 @@ describe("draggable.vue when initialized with a transition group", () => {
   });
 });
 
-describe("when using only footer slot", () => {
+describe("when using only footer slot with an empty list", () => {
   beforeEach(async () => {
     resetMocks();
 
@@ -1429,7 +1429,7 @@ describe("when using only footer slot", () => {
     expectHTML(wrapper, expectedDOM);
   });
 
-  describe("when add is called on an empty list with", () => {
+  describe("when add is called", () => {
     let newItem;
     const expectedDOMAfterUpdate = `<ul><li data-draggable="true">1</li><footer>I am the footer</footer></ul>`;
     beforeEach(async () => {
@@ -1471,6 +1471,77 @@ describe("when using only footer slot", () => {
     it("sends a change event", async () => {
       await nextTick();
       const expectedEvt = { added: { element: "1", newIndex: 0 } };
+      expect(wrapper.emitted().change).toEqual([[expectedEvt]]);
+    });
+  });
+});
+
+describe("when using only footer slot with an none-empty list", () => {
+  beforeEach(async () => {
+    resetMocks();
+
+    wrapper = mount(draggable, {
+      props: {
+        tag: "ul",
+        list: ["first"],
+        itemKey: k => k
+      },
+      slots: {
+        item: ({ element }) => h("li", null, element),
+        footer: () => h("footer", null, "I am the footer")
+      }
+    });
+    vm = wrapper.vm;
+    element = wrapper.element;
+  });
+
+  it("renders correctly", () => {
+    const expectedDOM = `<ul><li data-draggable="true">first</li><footer>I am the footer</footer></ul>`;
+    expectHTML(wrapper, expectedDOM);
+  });
+
+  describe("when add is called", () => {
+    let newItem;
+    const expectedDOMAfterUpdate = `<ul><li data-draggable="true">first</li><li data-draggable="true">last</li><footer>I am the footer</footer></ul>`;
+    beforeEach(async () => {
+      await nextTick();
+
+      newItem = document.createElement("li");
+      const newContent = document.createTextNode("1");
+      newItem.appendChild(newContent);
+      newItem._underlying_vm_ = "last";
+      const last = element.children[1];
+      element.insertBefore(newItem, last);
+
+      const add = getEvent("onAdd");
+      add({
+        item: newItem,
+        newIndex: 1
+      });
+    });
+
+    it("DOM changes should be performed", async () => {
+      await nextTick();
+      expectHTML(wrapper, expectedDOMAfterUpdate);
+    });
+
+    it("list should be updated", async () => {
+      await nextTick();
+      expect(vm.list).toEqual(["first","last"]);
+    });
+
+    it("sends a update event", async () => {
+      await nextTick();
+      const expectedEvt = {
+        item: newItem,
+        newIndex: 1
+      };
+      expect(wrapper.emitted().add).toEqual([[expectedEvt]]);
+    });
+
+    it("sends a change event", async () => {
+      await nextTick();
+      const expectedEvt = { added: { element: "last", newIndex: 1 } };
       expect(wrapper.emitted().change).toEqual([[expectedEvt]]);
     });
   });
