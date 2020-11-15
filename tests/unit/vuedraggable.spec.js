@@ -69,7 +69,7 @@ describe("draggable.vue when initialized with list", () => {
     element = wrapper.element;
   });
 
-  describe("when initialized with incorrect props", () => {
+  describe("in case of misuse", () => {
     const { error } = console;
     const { warn } = console;
 
@@ -83,7 +83,7 @@ describe("draggable.vue when initialized with list", () => {
       console.warn = warn;
     });
 
-    it("log an error when list and value are both not null", () => {
+    it("logs an error when list and value are both not null when initialized with incorrect props", () => {
       wrapper = mount(draggable, {
         props: {
           list: [],
@@ -91,7 +91,7 @@ describe("draggable.vue when initialized with list", () => {
           itemKey: k => k
         },
         slots: {
-          item: ({element}) => h("div", null, element)
+          item: ({ element }) => h("div", null, element)
         }
       });
       expect(console.error).toBeCalledWith(
@@ -112,7 +112,27 @@ describe("draggable.vue when initialized with list", () => {
       expect(wrapper.html()).toContain(
         "Error: draggable element must have an item slot"
       );
-    })
+    });
+
+    it("renders an error when item slot render multiple nodes", () => {
+      wrapper = mount(draggable, {
+        props: {
+          list: [1],
+          modelValue: [],
+          itemKey: k => k
+        },
+        slots: {
+          item: ({ element, index }) => {
+            return [h("div", null, element), h("span", null, index)];
+          }
+        }
+      });
+
+      expect(wrapper.element.nodeName).toEqual("PRE");
+      expect(wrapper.html()).toContain(
+        "Error: Item slot must have only one child"
+      );
+    });
   });
 
   it("instantiate without error", () => {
