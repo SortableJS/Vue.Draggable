@@ -55,9 +55,6 @@ class ComponentStructure {
       return context.index;
     }
 
-    if (length === 0) {
-      return 0;
-    }
     const firstDomListElement = getHtmlElementFromNode(defaultNodes[0]);
     const indexFirstDomListElement = [...domChildren].findIndex(
       element => element === firstDomListElement
