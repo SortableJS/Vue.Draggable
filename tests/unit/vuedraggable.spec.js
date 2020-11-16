@@ -1574,11 +1574,36 @@ describe("when using a fragment component as tag", () => {
     const parameters = Sortable.mock.calls[0];
     expect(parameters[0]).toBe(element);
   });
+});
 
-  it("sets nodes keys", () => {
-    const keys = [0, 1, 2]
+describe.each([
+  ["a", ["a", "b"]],
+  ["n", [0, 1]],
+  [({ a, n }) => `${a}-${n}`, ["a-0", "b-1"]]
+])("when using %p as item-key", (itemKey, expected) => {
+  beforeEach(async () => {
+    resetMocks();
+
+    wrapper = mount(draggable, {
+      props: {
+        list: [
+          { a: "a", n: 0 },
+          { a: "b", n: 1 }
+        ],
+        itemKey
+      },
+      slots: {
+        item: ({ element }) => {
+          return h("div", null, element);
+        }
+      }
+    });
+    element = wrapper.element;
+  });
+  it("sets nodes keys accordingly", () => {
+    const keys = [0, 1]
       .map(index => element.children.item(index))
       .map(el => el.__vnode.key);
-    expect(keys).toEqual(["a", "b", "c"]);
+    expect(keys).toEqual(expected);
   });
-});
+})
