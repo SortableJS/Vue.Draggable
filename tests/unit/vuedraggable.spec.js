@@ -595,14 +595,30 @@ describe("draggable.vue when initialized with list", () => {
       });
     });
 
-    describe("when remove is called", () => {
-      const expectedDomAfterRemove = `<div><header></header><div data-draggable="true">a</div><div data-draggable="true">c</div><footer></footer></div>`;
-      beforeEach(() => {
+    describe.each([
+      [1, ["a", "c"]],
+      [0, ["b", "c"]],
+      [2, ["a", "b"]]
+    ])("when remove is called with index %p + 1", (oldIndex, expectedList) => {
+      const expectedDomAfterRemove = `<div><header></header>${expectedList
+        .map(el => `<div data-draggable="true">${el}</div>`)
+        .join("")}<footer></footer></div>`;
+      const domIndex = oldIndex + 1;
+      const expectedEvt = {
+        removed: { element: ["a", "b", "c"][oldIndex], oldIndex }
+      };
+
+      beforeEach(async () => {
+        item = element.children.item(domIndex);
+        const startEvt = { item };
+        getEvent("onStart")(startEvt);
+        await nextTick();
+
         element.removeChild(item);
         const remove = getEvent("onRemove");
         remove({
           item,
-          oldIndex: 2
+          oldIndex: domIndex
         });
       });
 
@@ -613,21 +629,88 @@ describe("draggable.vue when initialized with list", () => {
 
       it("list should be updated", async () => {
         await nextTick();
-        expect(vm.list).toEqual(["a", "c"]);
+        expect(vm.list).toEqual(expectedList);
       });
 
       it("sends a remove event", async () => {
         await nextTick();
-        const expectedEvt = { item, oldIndex: 2 };
+        const expectedEvt = { item, oldIndex: domIndex };
         expect(wrapper.emitted().remove).toEqual([[expectedEvt]]);
       });
 
       it("sends a change event", async () => {
         await nextTick();
-        const expectedEvt = { removed: { element: "b", oldIndex: 1 } };
         expect(wrapper.emitted().change).toEqual([[expectedEvt]]);
       });
     });
+
+    describe.each([
+      [1, ["a", "c"]],
+      [0, ["b", "c"]],
+      [2, ["a", "b"]]
+    ])(
+      "when remove is called with index %p on component without extra slots",
+      (oldIndex, expectedList) => {
+        const expectedDomAfterRemove = `<div>${expectedList
+          .map(el => `<div data-draggable="true">${el}</div>`)
+          .join("")}</div>`;
+        const expectedEvt = {
+          removed: { element: ["a", "b", "c"][oldIndex], oldIndex }
+        };
+
+        beforeEach(async () => {
+          resetMocks();
+
+          wrapper = mount(draggable, {
+            props: {
+              list: ["a", "b", "c"],
+              itemKey: k => k
+            },
+            slots: {
+              item: ({ element }) => {
+                return h("div", null, element);
+              }
+            }
+          });
+          vm = wrapper.vm;
+          element = wrapper.element;
+          await nextTick();
+
+          item = element.children.item(oldIndex);
+          const startEvt = { item };
+          getEvent("onStart")(startEvt);
+          await nextTick();
+
+          element.removeChild(item);
+          const remove = getEvent("onRemove");
+          remove({
+            item,
+            oldIndex
+          });
+        });
+
+        it("DOM should be updated", async () => {
+          await nextTick();
+          expectHTML(wrapper, expectedDomAfterRemove);
+        });
+
+        it("list should be updated", async () => {
+          await nextTick();
+          expect(vm.list).toEqual(expectedList);
+        });
+
+        it("sends a remove event", async () => {
+          await nextTick();
+          const expectedRemoveEvt = { item, oldIndex };
+          expect(wrapper.emitted().remove).toEqual([[expectedRemoveEvt]]);
+        });
+
+        it("sends a change event", async () => {
+          await nextTick();
+          expect(wrapper.emitted().change).toEqual([[expectedEvt]]);
+        });
+      }
+    );
 
     describe.each([
       [1, ["b", "a", "c"]],
@@ -1529,7 +1612,7 @@ describe("when using only footer slot with an none-empty list", () => {
 
     it("list should be updated", async () => {
       await nextTick();
-      expect(vm.list).toEqual(["first","last"]);
+      expect(vm.list).toEqual(["first", "last"]);
     });
 
     it("sends a update event", async () => {
@@ -1550,7 +1633,7 @@ describe("when using only footer slot with an none-empty list", () => {
 });
 
 describe("when using a fragment component as tag", () => {
-  beforeEach(async () => {
+  beforeEach(() => {
     resetMocks();
 
     wrapper = mount(DraggableWithFragment, {
@@ -1581,7 +1664,7 @@ describe.each([
   ["n", [0, 1]],
   [({ a, n }) => `${a}-${n}`, ["a-0", "b-1"]]
 ])("when using %p as item-key", (itemKey, expected) => {
-  beforeEach(async () => {
+  beforeEach(() => {
     resetMocks();
 
     wrapper = mount(draggable, {
@@ -1606,4 +1689,4 @@ describe.each([
       .map(el => el.__vnode.key);
     expect(keys).toEqual(expected);
   });
-})
+});
