@@ -22,22 +22,21 @@
         :disabled="!enabled"
         class="list-group"
         ghost-class="ghost"
+        item-key="name"
       >
-        <div
-          class="list-group-item"
-          v-for="element in list"
-          :key="element.name"
-        >
-          {{ element.name }}
-        </div>
+        <template #item="{ element }">
+          <div class="list-group-item">
+            {{ element.name }}
+          </div>
+        </template>
 
-        <template v-slot:header>
+        <template #header>
           <div>
             header slot
           </div>
         </template>
 
-        <template v-slot:footer>
+        <template #footer>
           <div>
             footer slot
           </div>

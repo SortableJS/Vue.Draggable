@@ -42,6 +42,10 @@ const props = {
     required: false,
     default: null
   },
+  itemKey: {
+    type: [String, Function],
+    required: true
+  },
   clone: {
     type: Function,
     default: original => {
@@ -70,12 +74,29 @@ const draggableComponent = defineComponent({
 
   props,
 
+  data() {
+    return {
+      error: false
+    };
+  },
+
   render() {
-    const { $slots, $attrs, tag, componentData, $el } = this;
-    const componentStructure = computeComponentStructure({ $slots, tag, $el });
-    this.componentStructure = componentStructure;
-    const attributes = getComponentAttributes({ $attrs, componentData });
-    return componentStructure.render(h, attributes);
+    try {
+      this.error = false;
+      const { $slots, $attrs, tag, componentData, realList, getKey } = this;
+      const componentStructure = computeComponentStructure({
+        $slots,
+        tag,
+        realList,
+        getKey
+      });
+      this.componentStructure = componentStructure;
+      const attributes = getComponentAttributes({ $attrs, componentData });
+      return componentStructure.render(h, attributes);
+    } catch (err) {
+      this.error = true;
+      return h("pre", { style: { color: "red" } }, err.stack);
+    }
   },
 
   created() {
@@ -87,8 +108,12 @@ const draggableComponent = defineComponent({
   },
 
   mounted() {
+    if (this.error) {
+      return;
+    }
+
     const { $attrs, $el, componentStructure } = this;
-    componentStructure.setHtmlRoot($el);
+    componentStructure.updated();
 
     const sortableOptions = createSortableOption({
       $attrs,
@@ -98,9 +123,14 @@ const draggableComponent = defineComponent({
         manage: event => manage.call(this, event)
       }
     });
-    const { rootContainer } = componentStructure;
-    this._sortable = new Sortable(rootContainer, sortableOptions);
-    rootContainer.__draggable_component__ = this;
+    const targetDomElement = $el.nodeType === 1 ? $el : $el.parentElement;
+    this._sortable = new Sortable(targetDomElement, sortableOptions);
+    this.targetDomElement = targetDomElement;
+    targetDomElement.__draggable_component__ = this;
+  },
+
+  updated() {
+    this.componentStructure.updated();
   },
 
   beforeUnmount() {
@@ -111,6 +141,14 @@ const draggableComponent = defineComponent({
     realList() {
       const { list } = this;
       return list ? list : this.modelValue;
+    },
+
+    getKey() {
+      const { itemKey } = this;
+      if (typeof itemKey === "function") {
+        return itemKey;
+      }
+      return element => element[itemKey];
     }
   },
 
@@ -128,14 +166,7 @@ const draggableComponent = defineComponent({
 
   methods: {
     getUnderlyingVm(domElement) {
-      const index = this.componentStructure.computeVmIndex(domElement);
-      if (index === -1) {
-        //Edge case during move callback: related element might be
-        //an element different from collection
-        return null;
-      }
-      const element = this.realList[index];
-      return { index, element };
+      return this.componentStructure.getUnderlyingVm(domElement) || null;
     },
 
     getUnderlyingPotencialDraggableComponent(htmElement) {
@@ -183,7 +214,10 @@ const draggableComponent = defineComponent({
     },
 
     getVmIndexFromDomIndex(domIndex) {
-      return this.componentStructure.getVmIndexFromDomIndex(domIndex);
+      return this.componentStructure.getVmIndexFromDomIndex(
+        domIndex,
+        this.targetDomElement
+      );
     },
 
     onDragStart(evt) {
@@ -205,10 +239,7 @@ const draggableComponent = defineComponent({
     },
 
     onDragRemove(evt) {
-      const {
-        componentStructure: { rootContainer }
-      } = this;
-      insertNodeAt(rootContainer, evt.item, evt.oldIndex);
+      insertNodeAt(this.$el, evt.item, evt.oldIndex);
       if (evt.pullMode === "clone") {
         removeNode(evt.clone);
         return;

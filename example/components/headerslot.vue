@@ -6,26 +6,26 @@
       <draggable
         :list="list"
         class="list-group"
-        draggable=".item"
         @start="dragging = true"
         @end="dragging = false"
+        @change="log"
+        item-key="name"
       >
-        <div
-          class="list-group-item item"
-          v-for="element in list"
-          :key="element.name"
-        >
-          {{ element.name }}
-        </div>
-
-        <template v-slot:header>
-          <div
-            class="btn-group list-group-item"
-            role="group"
-            aria-label="Basic example"
-          >
+        <template #header>
+          <div class="btn-group list-group-item" role="group">
             <button class="btn btn-secondary" @click="add">Add</button>
+          </div>
+        </template>
+
+        <template #footer>
+          <div class="btn-group list-group-item" role="group">
             <button class="btn btn-secondary" @click="replace">Replace</button>
+          </div>
+        </template>
+
+        <template #item="{ element }">
+          <div class="list-group-item item">
+            {{ element.name }}
           </div>
         </template>
       </draggable>
@@ -61,6 +61,9 @@ export default {
     },
     replace: function() {
       this.list = [{ name: "Edgard", id: id++ }];
+    },
+    log: function(evt) {
+      window.console.log(evt);
     }
   }
 };

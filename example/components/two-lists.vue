@@ -2,27 +2,31 @@
   <div class="row">
     <div class="col-3">
       <h3>Draggable 1</h3>
-      <draggable class="list-group" :list="list1" group="people" @change="log">
-        <div
-          class="list-group-item"
-          v-for="(element, index) in list1"
-          :key="element.name"
-        >
-          {{ element.name }} {{ index }}
-        </div>
+      <draggable
+        class="list-group"
+        :list="list1"
+        group="people"
+        @change="log"
+        itemKey="name"
+      >
+        <template #item="{ element, index }">
+          <div class="list-group-item">{{ element.name }} {{ index }}</div>
+        </template>
       </draggable>
     </div>
 
     <div class="col-3">
       <h3>Draggable 2</h3>
-      <draggable class="list-group" :list="list2" group="people" @change="log">
-        <div
-          class="list-group-item"
-          v-for="(element, index) in list2"
-          :key="element.name"
-        >
-          {{ element.name }} {{ index }}
-        </div>
+      <draggable
+        class="list-group"
+        :list="list2"
+        group="people"
+        @change="log"
+        itemKey="name"
+      >
+        <template #item="{ element, index }">
+          <div class="list-group-item">{{ element.name }} {{ index }}</div>
+        </template>
       </draggable>
     </div>
 

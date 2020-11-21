@@ -1,13 +1,17 @@
 import { mount, config } from "@vue/test-utils";
 config.global.stubs["transition-group"] = false;
 import Sortable from "sortablejs";
+
 jest.genMockFromModule("sortablejs");
 jest.mock("sortablejs");
+
 const SortableFake = {
   destroy: jest.fn(),
-  option: jest.fn(),
+  option: jest.fn()
 };
 Sortable.mockImplementation(() => SortableFake);
+
+import draggable from "@/vuedraggable";
 
 import { nextTick } from "vue";
 import DraggableWithList from "./helper/DraggableWithList";
@@ -15,8 +19,6 @@ import DraggableWithComponent from "./helper/DraggableWithComponent.vue";
 import DraggableWithModel from "./helper/DraggableWithList";
 import DraggableWithTransition from "./helper/DraggableWithTransition";
 import fake from "./helper/FakeRoot";
-
-import draggable from "@/vuedraggable";
 
 let wrapper;
 let element;
@@ -29,18 +31,18 @@ function getEvent(name) {
 const expectedArray = [0, 1, 3, 4, 5, 6, 7, 2, 8, 9];
 const expectedDomWithWrapper = (wrapper, attr = "") =>
   `<${wrapper}${attr}>${expectedArray
-    .map((nu) => `<div>${nu}</div>`)
+    .map((nu) => `<div data-draggable="true">${nu}</div>`)
     .join("")}</${wrapper}>`;
 
 const expectedDomNoTransition = expectedDomWithWrapper("span");
 const expectedDomTransition = expectedDomWithWrapper("div");
 const expectedDomComponent = expectedDomWithWrapper(
   "div",
-  'class="fake-root"id="my-id"'
+  ' class="fake-root" id="my-id"'
 );
 
 function normalizeHTML(wrapper) {
-  return wrapper.html().replace(/(\r\n\t|\n|\r\t| )/gm, "");
+  return wrapper.html();
 }
 
 function expectHTML(wrapper, expected) {

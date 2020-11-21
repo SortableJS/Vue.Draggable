@@ -21,16 +21,13 @@
             tag="v-layout"
             :group="{ name: 'row' }"
             class="row wrap justify-space-around"
+            item-key="title"
           >
-            <v-flex
-              v-for="item in row.items"
-              :key="item.title"
-              xs4
-              pa-3
-              class="row-v"
-            >
-              <v-card style="height: 100px;">{{ item.title }}</v-card>
-            </v-flex>
+            <template #item="{ element: item }">
+              <v-flex pa-3 class="row-v">
+                <v-card style="height: 100px;">{{ item.title }}</v-card>
+              </v-flex>
+            </template>
           </draggable>
         </v-flex>
       </draggable>

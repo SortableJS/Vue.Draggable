@@ -14,15 +14,13 @@
         tag="el-collapse"
         :list="list"
         :component-data="collapseComponentData"
+        item-key="id"
       >
-        <el-collapse-item
-          v-for="item in list"
-          :key="item.id"
-          :title="item.title"
-          :name="item.id"
-        >
-          <div v-for="(lign, idx) in item.text" :key="idx">{{ lign }}</div>
-        </el-collapse-item>
+        <template #item="{ element }">
+          <el-collapse-item :title="element.title" :name="element.id">
+            <div v-for="(lign, idx) in element.text" :key="idx">{{ lign }}</div>
+          </el-collapse-item>
+        </template>
       </draggable>
     </div>
     <rawDisplayer class="col-3" :value="list" title="List" />

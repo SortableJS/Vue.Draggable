@@ -1,5 +1,5 @@
-import { capitalize, camelize } from "../util/string";
-import { events, isReadOnlyEvent } from "./sortableEvents";
+import { camelize } from "../util/string";
+import { events, isReadOnly } from "./sortableEvents";
 import { isHtmlAttribute } from "../util/tags";
 
 function project(entries) {
@@ -26,9 +26,10 @@ function createSortableOption({ $attrs, callBackBuilder }) {
       options[`on${event}`] = eventBuilder(event);
     });
   });
+  const draggable = `[data-draggable]${options.draggable || ""}`;
   return {
-    draggable: ">*",
-    ...options
+    ...options,
+    draggable
   };
 }
 
@@ -36,7 +37,7 @@ function getValidSortableEntries(value) {
   return Object.entries(value)
     .filter(([key, _]) => !isHtmlAttribute(key))
     .map(([key, value]) => [camelize(key), value])
-    .filter(([key, _]) => !isReadOnlyEvent(key));
+    .filter(([key, _]) => !isReadOnly(key));
 }
 
 export {

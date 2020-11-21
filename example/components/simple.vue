@@ -29,20 +29,18 @@
       <draggable
         :list="list"
         :disabled="!enabled"
+        item-key="name"
         class="list-group"
         ghost-class="ghost"
         :move="checkMove"
         @start="dragging = true"
         @end="dragging = false"
       >
-        <div
-          class="list-group-item"
-          :class="{ 'not-draggable': !enabled }"
-          v-for="element in list"
-          :key="element.name"
-        >
-          {{ element.name }}
-        </div>
+        <template #item="{ element }">
+          <div class="list-group-item" :class="{ 'not-draggable': !enabled }">
+            {{ element.name }}
+          </div>
+        </template>
       </draggable>
     </div>
 
