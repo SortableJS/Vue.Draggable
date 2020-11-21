@@ -15,6 +15,10 @@ Vue component (Vue.js 2.0) or directive (Vue.js 1.0) allowing drag-and-drop and 
 
 Based on and offering all features of [Sortable.js](https://github.com/RubaXa/Sortable)
 
+
+## For Vue 3
+   See [vue.draggable.next](https://github.com/SortableJS/vue.draggable.next)
+
 ## Demo
 
 ![demo gif](https://raw.githubusercontent.com/SortableJS/Vue.Draggable/master/example.gif)
