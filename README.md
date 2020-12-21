@@ -31,16 +31,17 @@ https://david-desmaisons.github.io/draggable-example/
 
 ## Features
 
-* Full support of [Sortable.js](https://github.com/RubaXa/Sortable) features:
-    * Supports touch devices
-    * Supports drag handles and selectable text
+* Full support of [Sortable.js](https://github.com/RubaXa/Sortable) features, including:
+    * Touch devices
+    * Drag handles
+    * Selectable text
     * Smart auto-scrolling
-    * Support drag and drop between different lists
+    * Drag and drop between different lists
     * No jQuery dependency
-* Keeps in sync HTML and view model list
-* Compatible with Vue.js 2.0 transition-group
+* Keeps HTML and view model list in sync 
+* Compatible with Vue.js 2.0 `transition-group`
 * Cancellation support
-* Events reporting any changes when full control is needed
+* Makes events available reporting any changes, in case your code needs to be notified
 * Reuse existing UI library components (such as [vuetify](https://vuetifyjs.com), [element](http://element.eleme.io/), or [vue material](https://vuematerial.io) etc...) and make them draggable using `tag` and `componentData` props
 
 ## Backers
@@ -68,8 +69,7 @@ yarn add vuedraggable
 
 npm i -S vuedraggable
 ```
-
-**Beware it is vuedraggable for Vue 2.0 and not vue-draggable which is for version 1.0**
+**Note different package names: `vuedraggable` for Vue.js 2.0, versus `vue-draggable` for Vue.js 1.0**
 
 ### with direct link 
 ```html
@@ -86,7 +86,7 @@ npm i -S vuedraggable
 
 ## For Vue.js 2.0
 
-Use draggable component:
+Use the `draggable` component:
 
 ### Typical use:
 ``` html
@@ -116,7 +116,7 @@ Use draggable component:
 </draggable>
 ```
 
-Draggable component should directly wrap the draggable elements, or a `transition-component` containing the draggable elements.
+The `draggable` component should directly wrap the draggable elements, or (if you want fancier animation) a `transition` component containing the draggable elements.
 
 
 ### With footer slot:
@@ -139,7 +139,6 @@ Draggable component should directly wrap the draggable elements, or a `transitio
 ```
 
 ### With Vuex:
-
 ```html
 <draggable v-model='myList'>
 ``` 
@@ -164,9 +163,9 @@ Type: `Array`<br>
 Required: `false`<br>
 Default: `null`
 
-Input array to draggable component. Typically same array as referenced by inner element v-for directive.<br>
+Input array to draggable component. Typically same array as referenced by inner element `v-for` directive.<br>
 This is the preferred way to use Vue.draggable as it is compatible with Vuex.<br>
-It should not be used directly but only though the `v-model` directive:
+It should not be used directly but only through the `v-model` directive:
 ```html
 <draggable v-model="myArray">
 ```
@@ -178,25 +177,19 @@ Default: `null`
 
 Alternative to the `value` prop, list is an array to be synchronized with drag-and-drop.<br>
 The main difference is that `list` prop is updated by draggable component using splice method, whereas `value` is immutable.<br>
-**Do not use in conjunction with value prop.**
+**Do not use in conjunction with `value` prop.**
 
-#### All sortable options
-New in version 2.19
+#### All options of Sortable.js!
+Since version 2.19, you can use any of the dozens of [options of Sortable.js](https://github.com/RubaXa/Sortable#options). For multiword option names, use "kebab-case", i.e. lower case with hyphens. `Draggable` will convert them into the appropriate `Sortable.js` option. For example, if you want to use the `ghostClass` option of Sortable, write `ghost-class`. The exceptions are the methods starting with `on`, which you can access simply from `draggable`'s own event API.
 
-Sortable options can be set directly as vue.draggable props since version 2.19.
-
-This means that all [sortable option](https://github.com/RubaXa/Sortable#options) are valid sortable props with the notable exception of all the method starting by "on" as draggable component expose the same API via events.
-
-kebab-case propery are supported: for example `ghost-class` props will be converted to `ghostClass` sortable option.
-
-Example setting handle, sortable and a group option:
+For example, to set the Sortable.js options for `handle`, `sort`, `group` and `ghostClass`:
 ```HTML
 <draggable
         v-model="list"
         handle=".handle"
+        :sort="false"
         :group="{ name: 'people', pull: 'clone', put: false }"
         ghost-class="ghost"
-        :sort="false"
         @change="log"
       >
       <!-- -->
@@ -207,9 +200,9 @@ Example setting handle, sortable and a group option:
 Type: `String`<br>
 Default: `'div'`
 
-HTML node type of the element that draggable component create as outer element for the included slot.<br>
-It is also possible to pass the name of vue component as element. In this case, draggable attribute will be passed to the create component.<br>
-See also [componentData](#componentdata) if you need to set props or event to the created component.
+With this you can tell `draggable` what HTML element type to create as the outer element for the included slot.<br>
+You can also pass the name of a Vue component, in which case the `draggable` attribute will be passed to the created component.<br>
+See also [componentData](#componentdata) if you need to set props or events for the created component.
 
 #### clone
 Type: `Function`<br>
@@ -350,7 +343,7 @@ Ex:
 ```
 
 #### Footer
-Use the `footer` slot to add none-draggable element inside the vuedraggable component.
+Use the `footer` slot to add non-draggable element inside the vuedraggable component.
 Important: it should be used in conjunction with draggable option to tag draggable elements.
 Note that footer slot will always be added after the default slot regardless its position in the template.
 Ex:
@@ -366,11 +359,11 @@ Ex:
  ### Gotchas
  
  - Vue.draggable children should always map the list or value prop using a v-for directive
-   * You may use [header](https://github.com/SortableJS/Vue.Draggable#header) and [footer](https://github.com/SortableJS/Vue.Draggable#footer) slot to by-pass this limitation.
+   * You may use [header](https://github.com/SortableJS/Vue.Draggable#header) and [footer](https://github.com/SortableJS/Vue.Draggable#footer) slot to bypass this limitation.
  
- - Children elements inside v-for should be keyed as any element in Vue.js. Be carefull to provide revelant key values in particular:
-    * typically providing array index as keys won't work as key should be linked to the items content
-    * cloned elements should provide updated keys, it is doable using the [clone props](#clone) for example
+ - Child elements inside v-for should have a `:key` set. 
+    * Use a key based on the item's content, not just the array index.
+    * When you clone an element, you must give the clone a different key, for example using [clone props](#clone).
 
 
  ### Example 
