@@ -1,36 +1,13 @@
 import Sortable from "sortablejs";
 import { insertNodeAt, removeNode } from "./util/htmlHelper";
 import { console } from "./util/console";
-import { isHtmlTag, isTransition as isTransitionName } from "./util/tags";
 import {
   getComponentAttributes,
   createSortableOption,
   getValidSortableEntries
 } from "./core/componentBuilderHelper";
-import { h, defineComponent, nextTick, resolveComponent } from "vue";
-
-function computeVmIndex(vNodes, element) {
-  const domElements = vNodes.map(({ el }) => el);
-  const index = domElements.indexOf(element);
-  if (index === -1) {
-    throw new Error("node not found", {
-      nodes: domElements,
-      element
-    });
-  }
-  return index;
-}
-
-function computeIndexes(vNodes, domChildren, isTransition, footerOffset) {
-  const domChildrenFromNodes = vNodes.map(({ el }) => el);
-  const footerIndex = domChildren.length - footerOffset;
-  const rawIndexes = [...domChildren].map((elt, idx) =>
-    idx >= footerIndex
-      ? domChildrenFromNodes.length
-      : domChildrenFromNodes.indexOf(elt)
-  );
-  return isTransition ? rawIndexes.filter(ind => ind !== -1) : rawIndexes;
-}
+import { computeComponentStructure } from "./core/renderHelper";
+import { h, defineComponent, nextTick } from "vue";
 
 function emit(evtName, evtData) {
   nextTick(() => this.$emit(evtName.toLowerCase(), evtData));
@@ -52,40 +29,7 @@ function manageAndEmit(evtName) {
   };
 }
 
-function isTransition(slots) {
-  if (!slots || slots.length !== 1) {
-    return false;
-  }
-  const [{ type }] = slots;
-  if (!type) {
-    return false;
-  }
-  return !!type && (isTransitionName(type) || isTransitionName(type.name));
-}
-
-function getSlot(slot, key) {
-  const slotValue = slot[key];
-  return slotValue ? slotValue() : undefined;
-}
-
-function computeChildrenAndOffsets(defaultNodes, slot) {
-  let children = [...defaultNodes];
-  let headerOffset = 0;
-  let footerOffset = 0;
-  const header = getSlot(slot, "header");
-  if (header) {
-    headerOffset = header.length;
-    children = [...header, ...children];
-  }
-  const footer = getSlot(slot, "footer");
-  if (footer) {
-    footerOffset = footer.length;
-    children = [...children, ...footer];
-  }
-  return { children, headerOffset, footerOffset };
-}
-
-var draggingElement = null;
+let draggingElement = null;
 
 const props = {
   list: {
@@ -97,6 +41,10 @@ const props = {
     type: Array,
     required: false,
     default: null
+  },
+  itemKey: {
+    type: [String, Function],
+    required: true
   },
   clone: {
     type: Function,
@@ -128,28 +76,27 @@ const draggableComponent = defineComponent({
 
   data() {
     return {
-      transitionMode: false,
-      noneFunctionalComponentMode: false
+      error: false
     };
   },
 
   render() {
-    const { $slots, $attrs, tag, componentData } = this;
-    const defaultSlots = getSlot($slots, "default") || [];
-    this.transitionMode = isTransition(defaultSlots);
-    const { children, headerOffset, footerOffset } = computeChildrenAndOffsets(
-      defaultSlots,
-      $slots
-    );
-    this.headerOffset = headerOffset;
-    this.footerOffset = footerOffset;
-    this.defaultSlots = defaultSlots;
-    const attributes = getComponentAttributes({ $attrs, componentData });
-    const realRoot =
-      isHtmlTag(tag) || isTransitionName(tag) ? tag : resolveComponent(tag);
-    const mainNode = h(realRoot, attributes, children);
-    this.mainNode = mainNode;
-    return mainNode;
+    try {
+      this.error = false;
+      const { $slots, $attrs, tag, componentData, realList, getKey } = this;
+      const componentStructure = computeComponentStructure({
+        $slots,
+        tag,
+        realList,
+        getKey
+      });
+      this.componentStructure = componentStructure;
+      const attributes = getComponentAttributes({ $attrs, componentData });
+      return componentStructure.render(h, attributes);
+    } catch (err) {
+      this.error = true;
+      return h("pre", { style: { color: "red" } }, err.stack);
+    }
   },
 
   created() {
@@ -161,15 +108,13 @@ const draggableComponent = defineComponent({
   },
 
   mounted() {
-    const { tag, $attrs, rootContainer } = this;
-    this.noneFunctionalComponentMode =
-      tag.toLowerCase() !== this.$el.nodeName.toLowerCase() &&
-      !this.getIsFunctional();
-    if (this.noneFunctionalComponentMode && this.transitionMode) {
-      throw new Error(
-        `Transition-group inside component is not supported. Please alter tag value or remove transition-group. Current tag value: ${tag}`
-      );
+    if (this.error) {
+      return;
     }
+
+    const { $attrs, $el, componentStructure } = this;
+    componentStructure.updated();
+
     const sortableOptions = createSortableOption({
       $attrs,
       callBackBuilder: {
@@ -178,10 +123,14 @@ const draggableComponent = defineComponent({
         manage: event => manage.call(this, event)
       }
     });
+    const targetDomElement = $el.nodeType === 1 ? $el : $el.parentElement;
+    this._sortable = new Sortable(targetDomElement, sortableOptions);
+    this.targetDomElement = targetDomElement;
+    targetDomElement.__draggable_component__ = this;
+  },
 
-    this._sortable = new Sortable(rootContainer, sortableOptions);
-    rootContainer.__draggable_component__ = this;
-    this.computeIndexes();
+  updated() {
+    this.componentStructure.updated();
   },
 
   beforeUnmount() {
@@ -189,98 +138,35 @@ const draggableComponent = defineComponent({
   },
 
   computed: {
-    rootContainer() {
-      const { $el, transitionMode } = this;
-      if (!transitionMode) {
-        return $el;
-      }
-      const { children } = $el;
-      if (children.length !== 1) {
-        return $el;
-      }
-      const firstChild = children.item(0);
-      return !!firstChild.__vnode.transition ? $el : firstChild;
+    realList() {
+      const { list } = this;
+      return list ? list : this.modelValue;
     },
 
-    realList() {
-      return this.list ? this.list : this.modelValue;
+    getKey() {
+      const { itemKey } = this;
+      if (typeof itemKey === "function") {
+        return itemKey;
+      }
+      return element => element[itemKey];
     }
   },
 
   watch: {
     $attrs: {
       handler(newOptionValue) {
-        this.updateOptions(newOptionValue);
+        const { _sortable } = this;
+        getValidSortableEntries(newOptionValue).forEach(([key, value]) => {
+          _sortable.option(key, value);
+        });
       },
       deep: true
-    },
-
-    realList() {
-      this.computeIndexes();
     }
   },
 
   methods: {
-    getIsFunctional() {
-      //TODO check this logic
-      const { fnOptions } = this.mainNode;
-      return fnOptions && fnOptions.functional;
-    },
-
-    updateOptions(newOptionValue) {
-      const { _sortable } = this;
-      getValidSortableEntries(newOptionValue).forEach(([key, value]) => {
-        _sortable.option(key, value);
-      });
-    },
-
-    getChildrenNodes() {
-      const {
-        noneFunctionalComponentMode,
-        transitionMode,
-        defaultSlots
-      } = this;
-      if (noneFunctionalComponentMode) {
-        //TODO check
-        return this.defaultSlots[0].children;
-        //return this.$children[0].$slots.default();
-      }
-      //const rawNodes = this.defaultSlots;
-      if (transitionMode) {
-        const [{ children }] = defaultSlots;
-        if (Array.isArray(children)) {
-          return children;
-        }
-        //TODO check transition with tag
-        return [...this.rootContainer.children]
-          .map(c => c.__vnode)
-          .filter(node => !!node.transition);
-      }
-      return defaultSlots.length === 1 && defaultSlots[0].el.nodeType === 3
-        ? defaultSlots[0].children
-        : defaultSlots;
-    },
-
-    computeIndexes() {
-      nextTick(() => {
-        this.visibleIndexes = computeIndexes(
-          this.getChildrenNodes(),
-          this.rootContainer.children,
-          this.transitionMode,
-          this.footerOffset
-        );
-      });
-    },
-
-    getUnderlyingVm(htmlElt) {
-      const index = computeVmIndex(this.getChildrenNodes() || [], htmlElt);
-      if (index === -1) {
-        //Edge case during move callback: related element might be
-        //an element different from collection
-        return null;
-      }
-      const element = this.realList[index];
-      return { index, element };
+    getUnderlyingVm(domElement) {
+      return this.componentStructure.getUnderlyingVm(domElement) || null;
     },
 
     getUnderlyingPotencialDraggableComponent(htmElement) {
@@ -289,9 +175,7 @@ const draggableComponent = defineComponent({
     },
 
     emitChanges(evt) {
-      nextTick(() => {
-        this.$emit("change", evt);
-      });
+      nextTick(() => this.$emit("change", evt));
     },
 
     alterList(onList) {
@@ -330,9 +214,10 @@ const draggableComponent = defineComponent({
     },
 
     getVmIndexFromDomIndex(domIndex) {
-      const indexes = this.visibleIndexes;
-      const numberIndexes = indexes.length;
-      return domIndex > numberIndexes - 1 ? numberIndexes : indexes[domIndex];
+      return this.componentStructure.getVmIndexFromDomIndex(
+        domIndex,
+        this.targetDomElement
+      );
     },
 
     onDragStart(evt) {
@@ -349,13 +234,12 @@ const draggableComponent = defineComponent({
       removeNode(evt.item);
       const newIndex = this.getVmIndexFromDomIndex(evt.newIndex);
       this.spliceList(newIndex, 0, element);
-      this.computeIndexes();
       const added = { element, newIndex };
       this.emitChanges({ added });
     },
 
     onDragRemove(evt) {
-      insertNodeAt(this.rootContainer, evt.item, evt.oldIndex);
+      insertNodeAt(this.$el, evt.item, evt.oldIndex);
       if (evt.pullMode === "clone") {
         removeNode(evt.clone);
         return;
@@ -407,14 +291,13 @@ const draggableComponent = defineComponent({
       };
       const sendEvent = {
         ...evt,
-        ...{ relatedContext },
-        ...{ draggedContext }
+        relatedContext,
+        draggedContext
       };
       return move(sendEvent, originalEvent);
     },
 
     onDragEnd() {
-      this.computeIndexes();
       draggingElement = null;
     }
   }

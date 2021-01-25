@@ -6,10 +6,13 @@
     ghost-class="ghost"
     @start="dragging = true"
     @end="dragging = false"
+    item-key="name"
   >
-    <div class="list-group-item" v-for="element in list" :key="element.name">
-      {{ element.name }}
-    </div>
+    <template #item="{ element }">
+      <div class="list-group-item">
+        {{ element.name }}
+      </div>
+    </template>
   </draggable>
 </template>
 

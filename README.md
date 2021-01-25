@@ -11,7 +11,7 @@
 [![MIT License](https://img.shields.io/github/license/SortableJS/Vue.Draggable.svg)](https://github.com/SortableJS/Vue.Draggable/blob/master/LICENSE)
 
 
-Vue component (Vue.js 2.0) or directive (Vue.js 1.0) allowing drag-and-drop and synchronization with view model array.
+Vue component (Vue.js 2.0 and vue 3) or directive (Vue.js 1.0) allowing drag-and-drop and synchronization with view model array.
 
 Based on and offering all features of [Sortable.js](https://github.com/RubaXa/Sortable)
 
@@ -121,7 +121,9 @@ Draggable component should directly wrap the draggable elements, or a `transitio
     <div v-for="element in myArray" :key="element.id" class="item">
         {{element.name}}
     </div>
-    <button slot="footer" @click="addPeople">Add</button>
+    <template slot="footer">
+      <button @click="addPeople">Add</button>
+    </template>
 </draggable>
 ```
 ### With header slot:
@@ -130,7 +132,9 @@ Draggable component should directly wrap the draggable elements, or a `transitio
     <div v-for="element in myArray" :key="element.id" class="item">
         {{element.name}}
     </div>
-    <button slot="header" @click="addPeople">Add</button>
+    <template slot="header">
+      <button @click="addPeople">Add</button>
+    </template>
 </draggable>
 ```
 
@@ -155,7 +159,7 @@ computed: {
 
 
 ### Props
-#### value
+#### modelValue
 Type: `Array`<br>
 Required: `false`<br>
 Default: `null`
@@ -172,9 +176,9 @@ Type: `Array`<br>
 Required: `false`<br>
 Default: `null`
 
-Alternative to the `value` prop, list is an array to be synchronized with drag-and-drop.<br>
-The main difference is that `list` prop is updated by draggable component using splice method, whereas `value` is immutable.<br>
-**Do not use in conjunction with value prop.**
+Alternative to the `modelValue` prop, list is an array to be synchronized with drag-and-drop.<br>
+The main difference is that `list` prop is updated by draggable component using splice method, whereas `modelValue` is immutable.<br>
+**Do not use in conjunction with modelValue prop.**
 
 #### All sortable options
 New in version 2.19
@@ -258,10 +262,7 @@ Required: `false`<br>
 Default: `null`<br>
 
 This props is used to pass additional information to child component declared by [tag props](#tag).<br>
-Value:
-* `props`: props to be passed to the child component
-* `attrs`: attrs to be passed to the child component
-* `on`: events to be subscribe in the child component
+Value: an object corresponding to the attributes, props and events we would pass to the component.
 
 Example (using [element UI library](http://element.eleme.io/#/en-US)):
 ```HTML
@@ -281,16 +282,10 @@ methods: {
     },
     getComponentData() {
       return {
-        on: {
-          change: this.handleChange,
-          input: this.inputChanged
-        },
-        attrs:{
-          wrap: true
-        },
-        props: {
-          value: this.activeNames
-        }
+        onChange: this.handleChange,
+        onInput: this.inputChanged,
+        wrap: true,
+        value: this.activeNames
       };
     }
   }
@@ -341,7 +336,9 @@ Ex:
     <div v-for="element in myArray" :key="element.id" class="item">
         {{element.name}}
     </div>
-    <button slot="header" @click="addPeople">Add</button>
+    <template slot="header">
+      <button @click="addPeople">Add</button>
+    </template>
 </draggable>
 ```
 
@@ -356,15 +353,17 @@ Ex:
     <div v-for="element in myArray" :key="element.id" class="item">
         {{element.name}}
     </div>
-    <button slot="footer" @click="addPeople">Add</button>
+    <template slot="footer">
+      <button @click="addPeople">Add</button>
+    </template>
 </draggable>
 ```
  ### Gotchas
  
- - Vue.draggable children should always map the list or value prop using a v-for directive
+ - Vue.draggable children should always map the list or modelValue prop using a v-for directive
    * You may use [header](https://github.com/SortableJS/Vue.Draggable#header) and [footer](https://github.com/SortableJS/Vue.Draggable#footer) slot to by-pass this limitation.
  
- - Children elements inside v-for should be keyed as any element in Vue.js. Be carefull to provide revelant key values in particular:
+ - Children elements inside v-for should be keyed as any element in Vue.js. Be careful to provide relevant key values in particular:
     * typically providing array index as keys won't work as key should be linked to the items content
     * cloned elements should provide updated keys, it is doable using the [clone props](#clone) for example
 

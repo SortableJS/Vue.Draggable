@@ -1,7 +1,5 @@
 import { mount, config } from "@vue/test-utils";
-//config.global.stubs["transition-group"] = false;
 import Sortable from "sortablejs";
-jest.genMockFromModule("sortablejs");
 jest.mock("sortablejs");
 const SortableFake = {
   destroy: jest.fn(),
@@ -11,9 +9,10 @@ Sortable.mockImplementation(() => SortableFake);
 import draggable from "@/vuedraggable";
 import { nextTick, h } from "vue";
 
-import Fake from "./helper/FakeComponent.js";
+import Fake from "./helper/FakeRoot.js";
 import DraggableOption from "./helper/DraggableOption.vue";
-import FakeFunctional from "./helper/FakeFunctionalComponent.js";
+import DraggableWithFragment from "./helper/DraggableWithFragment.vue";
+import FragmentRoot from "./helper/FragmentComponent";
 
 let wrapper;
 let vm;
@@ -22,14 +21,12 @@ let items;
 let item;
 let element;
 let input;
-const initialRender =
-  "<div><header></header><div>a</div><div>b</div><div>c</div><footer></footer></div>";
-const initialRenderRaw = "<div><div>a</div><div>b</div><div>c</div></div>";
-const initialRenderTransition =
-  "<div><transition-group><div>a</div><div>b</div><div>c</div></transition-group></div>";
+const initialRender = `<div><header></header><div data-draggable="true">a</div><div data-draggable="true">b</div><div data-draggable="true">c</div><footer></footer></div>`;
+const initialRenderRaw = `<div><div data-draggable="true">a</div><div data-draggable="true">b</div><div data-draggable="true">c</div></div>`;
+const initialRenderTransition = `<transition-group-stub><div data-draggable="true">a</div><div data-draggable="true">b</div><div data-draggable="true">c</div></transition-group-stub>`;
 
 function normalizeHTML(wrapper) {
-  return wrapper.html().replace(/(\r\n\t|\n|\r\t| )/gm, "");
+  return wrapper.html();
 }
 
 function expectHTML(wrapper, expected) {
@@ -48,22 +45,23 @@ function resetMocks() {
 }
 
 describe("draggable.vue when initialized with list", () => {
-  let computeIndexesSpy;
   beforeEach(() => {
     resetMocks();
-    computeIndexesSpy = jest.spyOn(draggable.methods, "computeIndexes");
 
     items = ["a", "b", "c"];
     wrapper = mount(draggable, {
       props: {
-        list: items
+        list: items,
+        itemKey: key => key
       },
       attrs: {
         sortableOption: "value",
         "to-be-camelized": true
       },
       slots: {
-        default: () => items.map(item => h("div", { key: item }, item)),
+        item: ({ element }) => {
+          return h("div", null, element);
+        },
         header: () => h("header"),
         footer: () => h("footer")
       }
@@ -73,7 +71,7 @@ describe("draggable.vue when initialized with list", () => {
     element = wrapper.element;
   });
 
-  describe("when initialized with incorrect props", () => {
+  describe("in case of misuse", () => {
     const { error } = console;
     const { warn } = console;
 
@@ -87,18 +85,54 @@ describe("draggable.vue when initialized with list", () => {
       console.warn = warn;
     });
 
-    it("log an error when list and value are both not null", () => {
+    it("logs an error when list and value are both not null when initialized with incorrect props", () => {
       wrapper = mount(draggable, {
         props: {
           list: [],
-          modelValue: []
+          modelValue: [],
+          itemKey: k => k
         },
         slots: {
-          default: () => []
+          item: ({ element }) => h("div", null, element)
         }
       });
       expect(console.error).toBeCalledWith(
         "modelValue and list props are mutually exclusive! Please set one or another."
+      );
+    });
+
+    it("renders an error when there is no item slot", () => {
+      wrapper = mount(draggable, {
+        props: {
+          list: [],
+          modelValue: [],
+          itemKey: k => k
+        }
+      });
+
+      expect(wrapper.element.nodeName).toEqual("PRE");
+      expect(wrapper.html()).toContain(
+        "Error: draggable element must have an item slot"
+      );
+    });
+
+    it("renders an error when item slot render multiple nodes", () => {
+      wrapper = mount(draggable, {
+        props: {
+          list: [1],
+          modelValue: [],
+          itemKey: k => k
+        },
+        slots: {
+          item: ({ element, index }) => {
+            return [h("div", null, element), h("span", null, index)];
+          }
+        }
+      });
+
+      expect(wrapper.element.nodeName).toEqual("PRE");
+      expect(wrapper.html()).toContain(
+        "Error: Item slot must have only one child"
       );
     });
   });
@@ -149,8 +183,16 @@ describe("draggable.vue when initialized with list", () => {
         required: false,
         default: null
       }
+    ],
+    [
+      "itemKey",
+      {
+        type: [String, Function],
+        required: true,
+        default: undefined
+      }
     ]
-  ])("should have props %s equal to %o", (name, expectedValue) => {
+  ])("should have props %s equal to %j", (name, expectedValue) => {
     const { type, required, default: _default } = props[name];
     expect({ type, required, default: _default }).toEqual(expectedValue);
   });
@@ -176,7 +218,7 @@ describe("draggable.vue when initialized with list", () => {
 
   it("renders default slot element correctly", () => {
     expect(normalizeHTML(wrapper)).toContain(
-      "<div>a</div><div>b</div><div>c</div>"
+      `<div data-draggable="true">a</div><div data-draggable="true">b</div><div data-draggable="true">c</div>`
     );
   });
 
@@ -187,7 +229,10 @@ describe("draggable.vue when initialized with list", () => {
   describe.each(["ul", "span", "div"])("considering a tag %s", tag => {
     beforeEach(() => {
       wrapper = mount(draggable, {
-        props: { tag }
+        props: { tag, itemKey: "id" },
+        slots: {
+          item: () => []
+        }
       });
     });
 
@@ -195,25 +240,6 @@ describe("draggable.vue when initialized with list", () => {
       const expectedRegex = new RegExp(`^<${tag}>.*<\/${tag}>$`);
       expect(wrapper.html()).toMatch(expectedRegex);
     });
-
-    it("set noneFunctionalComponentMode to false ", () => {
-      const { noneFunctionalComponentMode } = vm;
-      expect(noneFunctionalComponentMode).toBe(false);
-    });
-  });
-
-  it("computes indexes", async () => {
-    await nextTick();
-    expect(vm.visibleIndexes).toEqual([-1, 0, 1, 2, 3]);
-  });
-
-  it("update indexes", async () => {
-    await nextTick();
-
-    computeIndexesSpy.mockClear();
-    wrapper.setProps({ list: ["c", "d", "e", "f", "g"] });
-    await nextTick();
-    expect(computeIndexesSpy).toHaveBeenCalledTimes(1);
   });
 
   it("set realList", () => {
@@ -225,21 +251,16 @@ describe("draggable.vue when initialized with list", () => {
       input = jest.fn();
       wrapper = mount(draggable, {
         slots: {
-          default: () => []
+          item: ({ element }) => h("div", null, element)
         },
         props: {
+          itemKey: k => k,
           tag: "component-tag",
           componentData: {
-            on: {
-              ["update:modelValue"]: input
-            },
-            attrs: {
-              attribute1: "value1"
-            },
-            props: {
-              prop1: "info",
-              prop2: true
-            }
+            ["onUpdate:modelValue"]: input,
+            attribute1: "value1",
+            prop1: "info",
+            prop2: true
           }
         },
         global: {
@@ -279,18 +300,15 @@ describe("draggable.vue when initialized with list", () => {
       input = jest.fn();
       wrapper = mount(draggable, {
         slots: {
-          default: () => []
+          item: () => []
         },
         props: {
+          itemKey: "id",
           tag: "component-tag",
           componentData: {
-            attrs: {
-              attribute1: "value1"
-            },
-            props: {
-              prop1: "info",
-              prop2: true
-            }
+            attribute1: "value1",
+            prop1: "info",
+            prop2: true
           }
         },
         global: {
@@ -318,35 +336,6 @@ describe("draggable.vue when initialized with list", () => {
     });
   });
 
-  // TODO check
-  // test.each([
-  //   [true, Fake],
-  //   [false, FakeFunctional],
-  // ])(
-  //   "compute noneFunctionalComponentMode as %p when using component as tag",
-  //   (expectedNoneFunctionalComponentMode, component) => {
-  //     wrapper = mount(draggable, {
-  //       propsData: {
-  //         tag: "child",
-  //       },
-  //       slots: {
-  //         default: () => [],
-  //       },
-  //       global: {
-  //         components: {
-  //           child: component,
-  //         },
-  //       },
-  //     });
-  //     const {
-  //       vm: { noneFunctionalComponentMode },
-  //     } = wrapper;
-  //     expect(noneFunctionalComponentMode).toBe(
-  //       expectedNoneFunctionalComponentMode
-  //     );
-  //   }
-  // );
-
   it("keeps a reference to Sortable instance", () => {
     expect(vm._sortable).toBe(SortableFake);
   });
@@ -356,7 +345,7 @@ describe("draggable.vue when initialized with list", () => {
     const parameters = Sortable.mock.calls[0];
     expect(parameters[0]).toBe(element);
     expect(parameters[1]).toMatchObject({
-      draggable: ">*",
+      draggable: "[data-draggable]",
       sortableOption: "value",
       toBeCamelized: true
     });
@@ -385,7 +374,7 @@ describe("draggable.vue when initialized with list", () => {
     const parameters = Sortable.mock.calls[0];
     expect(parameters[0]).toBe(element);
     expect(parameters[1]).toMatchObject({
-      draggable: ">*",
+      draggable: "[data-draggable]",
       sortableOption: "value",
       toBeCamelized: true
     });
@@ -393,6 +382,7 @@ describe("draggable.vue when initialized with list", () => {
 
   describe("when add is called", () => {
     let newItem;
+    const expectedDOMAfterUpdate = `<div><header></header><div data-draggable="true">a</div><div data-draggable="true">b</div><div data-draggable="true">d</div><div data-draggable="true">c</div><footer></footer></div>`;
     beforeEach(async () => {
       await nextTick();
       newItem = document.createElement("div");
@@ -401,6 +391,7 @@ describe("draggable.vue when initialized with list", () => {
       newItem._underlying_vm_ = "d";
       const last = element.children[3];
       element.insertBefore(newItem, last);
+
       const add = getEvent("onAdd");
       add({
         item: newItem,
@@ -408,9 +399,9 @@ describe("draggable.vue when initialized with list", () => {
       });
     });
 
-    it("DOM changes should be reverted", async () => {
+    it("DOM changes should be performed", async () => {
       await nextTick();
-      expectHTML(wrapper, initialRender);
+      expectHTML(wrapper, expectedDOMAfterUpdate);
     });
 
     it("list should be updated", async () => {
@@ -430,6 +421,53 @@ describe("draggable.vue when initialized with list", () => {
     it("sends a change event", async () => {
       await nextTick();
       const expectedEvt = { added: { element: "d", newIndex: 2 } };
+      expect(wrapper.emitted().change).toEqual([[expectedEvt]]);
+    });
+  });
+
+  describe("when add is called on an empty list", () => {
+    let newItem;
+    const expectedDOMAfterUpdate = `<div><header></header><div data-draggable="true">e</div><footer></footer></div>`;
+    beforeEach(async () => {
+      await nextTick();
+
+      vm.list.splice(0, 3);
+      newItem = document.createElement("div");
+      const newContent = document.createTextNode("d");
+      newItem.appendChild(newContent);
+      newItem._underlying_vm_ = "e";
+      const last = element.children[2];
+      element.insertBefore(newItem, last);
+
+      const add = getEvent("onAdd");
+      add({
+        item: newItem,
+        newIndex: 0
+      });
+    });
+
+    it("DOM changes should be performed", async () => {
+      await nextTick();
+      expectHTML(wrapper, expectedDOMAfterUpdate);
+    });
+
+    it("list should be updated", async () => {
+      await nextTick();
+      expect(vm.list).toEqual(["e"]);
+    });
+
+    it("sends a update event", async () => {
+      await nextTick();
+      const expectedEvt = {
+        item: newItem,
+        newIndex: 0
+      };
+      expect(wrapper.emitted().add).toEqual([[expectedEvt]]);
+    });
+
+    it("sends a change event", async () => {
+      await nextTick();
+      const expectedEvt = { added: { element: "e", newIndex: 0 } };
       expect(wrapper.emitted().change).toEqual([[expectedEvt]]);
     });
   });
@@ -557,38 +595,122 @@ describe("draggable.vue when initialized with list", () => {
       });
     });
 
-    describe("when remove is called", () => {
-      beforeEach(() => {
+    describe.each([
+      [1, ["a", "c"]],
+      [0, ["b", "c"]],
+      [2, ["a", "b"]]
+    ])("when remove is called with index %p + 1", (oldIndex, expectedList) => {
+      const expectedDomAfterRemove = `<div><header></header>${expectedList
+        .map(el => `<div data-draggable="true">${el}</div>`)
+        .join("")}<footer></footer></div>`;
+      const domIndex = oldIndex + 1;
+      const expectedEvt = {
+        removed: { element: ["a", "b", "c"][oldIndex], oldIndex }
+      };
+
+      beforeEach(async () => {
+        item = element.children.item(domIndex);
+        const startEvt = { item };
+        getEvent("onStart")(startEvt);
+        await nextTick();
+
         element.removeChild(item);
         const remove = getEvent("onRemove");
         remove({
           item,
-          oldIndex: 2
+          oldIndex: domIndex
         });
       });
 
-      it("DOM changes should be reverted", async () => {
+      it("DOM should be updated", async () => {
         await nextTick();
-        expectHTML(wrapper, initialRender);
+        expectHTML(wrapper, expectedDomAfterRemove);
       });
 
       it("list should be updated", async () => {
         await nextTick();
-        expect(vm.list).toEqual(["a", "c"]);
+        expect(vm.list).toEqual(expectedList);
       });
 
       it("sends a remove event", async () => {
         await nextTick();
-        const expectedEvt = { item, oldIndex: 2 };
+        const expectedEvt = { item, oldIndex: domIndex };
         expect(wrapper.emitted().remove).toEqual([[expectedEvt]]);
       });
 
       it("sends a change event", async () => {
         await nextTick();
-        const expectedEvt = { removed: { element: "b", oldIndex: 1 } };
         expect(wrapper.emitted().change).toEqual([[expectedEvt]]);
       });
     });
+
+    describe.each([
+      [1, ["a", "c"]],
+      [0, ["b", "c"]],
+      [2, ["a", "b"]]
+    ])(
+      "when remove is called with index %p on component without extra slots",
+      (oldIndex, expectedList) => {
+        const expectedDomAfterRemove = `<div>${expectedList
+          .map(el => `<div data-draggable="true">${el}</div>`)
+          .join("")}</div>`;
+        const expectedEvt = {
+          removed: { element: ["a", "b", "c"][oldIndex], oldIndex }
+        };
+
+        beforeEach(async () => {
+          resetMocks();
+
+          wrapper = mount(draggable, {
+            props: {
+              list: ["a", "b", "c"],
+              itemKey: k => k
+            },
+            slots: {
+              item: ({ element }) => {
+                return h("div", null, element);
+              }
+            }
+          });
+          vm = wrapper.vm;
+          element = wrapper.element;
+          await nextTick();
+
+          item = element.children.item(oldIndex);
+          const startEvt = { item };
+          getEvent("onStart")(startEvt);
+          await nextTick();
+
+          element.removeChild(item);
+          const remove = getEvent("onRemove");
+          remove({
+            item,
+            oldIndex
+          });
+        });
+
+        it("DOM should be updated", async () => {
+          await nextTick();
+          expectHTML(wrapper, expectedDomAfterRemove);
+        });
+
+        it("list should be updated", async () => {
+          await nextTick();
+          expect(vm.list).toEqual(expectedList);
+        });
+
+        it("sends a remove event", async () => {
+          await nextTick();
+          const expectedRemoveEvt = { item, oldIndex };
+          expect(wrapper.emitted().remove).toEqual([[expectedRemoveEvt]]);
+        });
+
+        it("sends a change event", async () => {
+          await nextTick();
+          expect(wrapper.emitted().change).toEqual([[expectedEvt]]);
+        });
+      }
+    );
 
     describe.each([
       [1, ["b", "a", "c"]],
@@ -596,6 +718,10 @@ describe("draggable.vue when initialized with list", () => {
     ])(
       "when update is called with new index being %i",
       (index, expectedList) => {
+        const expectedDomAfterUpdate = `<div><header></header>${expectedList
+          .map(value => `<div data-draggable="true">${value}</div>`)
+          .join("")}<footer></footer></div>`;
+
         beforeEach(() => {
           const firstDraggable = element.children[index];
           element.removeChild(item);
@@ -609,9 +735,9 @@ describe("draggable.vue when initialized with list", () => {
           });
         });
 
-        it("DOM changes should be reverted", async () => {
+        it("DOM should be updated", async () => {
           await nextTick();
-          expectHTML(wrapper, initialRender);
+          expectHTML(wrapper, expectedDomAfterUpdate);
         });
 
         it("list should be updated", async () => {
@@ -657,16 +783,30 @@ describe("draggable.vue when initialized with list", () => {
     });
   });
 
+  describe("when re-rendering", () => {
+    const updatedRender = `<div><header></header><div data-draggable="true">a</div><div data-draggable="true">b</div><div data-draggable="true">c</div><div data-draggable="true">d</div><footer></footer></div>`;
+    beforeEach(async () => {
+      items.push("d");
+      vm.$forceUpdate();
+      await nextTick();
+    });
+
+    it("updates the rendered elements", () => {
+      expect(wrapper.html()).toEqual(updatedRender);
+    });
+  });
+
   describe("when initiating a drag operation in clone context", () => {
     let evt;
     beforeEach(() => {
       resetMocks();
       wrapper = mount(draggable, {
         props: {
-          list: items
+          list: items,
+          itemKey: k => k
         },
         slots: {
-          default: () => items.map(item => h("div", { key: item }, item))
+          item: ({ element }) => h("div", null, element)
         }
       });
       vm = wrapper.vm;
@@ -728,13 +868,14 @@ describe("draggable.vue when initialized with list", () => {
       resetMocks();
       wrapper = mount(draggable, {
         props: {
-          list: items
+          list: items,
+          itemKey: k => k
         },
         attrs: {
           group: { pull: () => "clone" }
         },
         slots: {
-          default: () => items.map(item => h("div", { key: item }, item))
+          item: ({ element }) => h("div", null, element)
         }
       });
       vm = wrapper.vm;
@@ -866,13 +1007,14 @@ describe("draggable.vue when initialized with list", () => {
   it("renders id as html attribute", () => {
     wrapper = mount(draggable, {
       props: {
-        list: []
+        list: [],
+        itemKey: "id"
       },
       attrs: {
         id: "my-id"
       },
       slots: {
-        default: () => []
+        item: () => []
       }
     });
 
@@ -884,14 +1026,15 @@ describe("draggable.vue when initialized with list", () => {
   it("renders class as html attribute", () => {
     wrapper = mount(draggable, {
       props: {
-        list: []
+        list: [],
+        itemKey: "id"
       },
       attrs: {
         id: "my-id",
         class: "my-class"
       },
       slots: {
-        default: () => []
+        item: () => []
       }
     });
 
@@ -908,13 +1051,14 @@ describe("draggable.vue when initialized with list", () => {
     (attribute, value) => {
       wrapper = mount(draggable, {
         props: {
-          list: []
+          list: [],
+          itemKey: k => k
         },
         attrs: {
           [attribute]: value
         },
         slots: {
-          default: () => []
+          item: () => []
         }
       });
       const wrapperElement = wrapper.find(`[${attribute}='${value}']`);
@@ -925,19 +1069,17 @@ describe("draggable.vue when initialized with list", () => {
 });
 
 describe("draggable.vue when initialized with modelValue", () => {
-  let computeIndexesSpy;
-
   beforeEach(() => {
     Sortable.mockClear();
-    computeIndexesSpy = jest.spyOn(draggable.methods, "computeIndexes");
 
     items = ["a", "b", "c"];
     wrapper = mount(draggable, {
       props: {
-        modelValue: items
+        modelValue: items,
+        itemKey: key => key
       },
       slots: {
-        default: () => items.map(item => h("div", { key: item }, item))
+        item: ({ element }) => h("div", null, element)
       }
     });
     vm = wrapper.vm;
@@ -945,30 +1087,12 @@ describe("draggable.vue when initialized with modelValue", () => {
     element = wrapper.element;
   });
 
-  it("computes indexes", async () => {
-    await nextTick();
-    expect(vm.visibleIndexes).toEqual([0, 1, 2]);
-  });
-
   it("renders correctly", () => {
     expectHTML(wrapper, initialRenderRaw);
   });
 
-  it("update indexes", async () => {
-    await nextTick();
-    computeIndexesSpy.mockClear();
-
-    wrapper.setProps({ modelValue: ["c", "d", "e", "f", "g"] });
-    await nextTick();
-    expect(computeIndexesSpy).toHaveBeenCalledTimes(1);
-  });
-
   it("set realList", () => {
     expect(vm.realList).toEqual(["a", "b", "c"]);
-  });
-
-  it("transition mode should be false", () => {
-    expect(vm.transitionMode).toBe(false);
   });
 
   describe("when initiating a drag operation", () => {
@@ -1025,6 +1149,50 @@ describe("draggable.vue when initialized with modelValue", () => {
       it("sends a change event", async () => {
         await nextTick();
         const expectedEvt = { removed: { element: "b", oldIndex: 1 } };
+        expect(wrapper.emitted().change).toEqual([[expectedEvt]]);
+      });
+    });
+
+    describe("when add is called on an empty list", () => {
+      let newItem;
+      beforeEach(async () => {
+        wrapper.setProps({ modelValue: [] });
+
+        await nextTick();
+
+        newItem = document.createElement("div");
+        const newContent = document.createTextNode("z");
+        newItem.appendChild(newContent);
+        newItem._underlying_vm_ = "z";
+        element.appendChild(newItem);
+        const add = getEvent("onAdd");
+        add({
+          item: newItem,
+          newIndex: 0
+        });
+      });
+      it("DOM should be reverted", async () => {
+        await nextTick();
+        expectHTML(wrapper, "<div></div>");
+      });
+
+      it("sends a update event", async () => {
+        await nextTick();
+        const expectedEvt = {
+          item: newItem,
+          newIndex: 0
+        };
+        expect(wrapper.emitted().add).toEqual([[expectedEvt]]);
+      });
+
+      it("sends a update:modelValue event", async () => {
+        await nextTick();
+        expect(wrapper.emitted()["update:modelValue"][0]).toEqual([["z"]]);
+      });
+
+      it("sends a change event", async () => {
+        await nextTick();
+        const expectedEvt = { added: { element: "z", newIndex: 0 } };
         expect(wrapper.emitted().change).toEqual([[expectedEvt]]);
       });
     });
@@ -1099,47 +1267,41 @@ describe("draggable.vue when initialized with a transition group", () => {
     wrapper = mount(draggable, {
       props: {
         modelValue: items,
+        tag: "transition-group",
+        componentData: {
+          tag: "div"
+        },
+        itemKey: k => k
       },
       slots: {
-        default() {
-          return h("transition-group", {}, [
-            ...items.map(item => h("div", {key: item}, item))
-          ]);
-        },
-      },
+        item({ element }) {
+          return h("div", null, element);
+        }
+      }
     });
     vm = wrapper.vm;
     props = vm.$options.props;
     element = wrapper.element;
   });
 
-  it("computes indexes", async () => {
-    await nextTick();
-    expect(vm.visibleIndexes).toEqual([0, 1, 2]);
-  });
-
   it("set realList", () => {
     expect(vm.realList).toEqual(["a", "b", "c"]);
-  });
-
-  it("transition mode should be true", () => {
-    expect(vm.transitionMode).toBe(true);
   });
 
   it("renders correctly", () => {
     expectHTML(wrapper, initialRenderTransition);
   });
 
-  it("creates sortable instance with options on transition root", () => {
+  it("creates sortable instance with options on root", () => {
     expect(Sortable.mock.calls.length).toBe(1);
     const parameters = Sortable.mock.calls[0];
-    expect(parameters[0]).toBe(element.children[0]);
+    expect(parameters[0]).toBe(element);
   });
 
   describe("when initiating a drag operation", () => {
     let evt;
     beforeEach(() => {
-      item = element.children[0].children[1];
+      item = element.children[1];
       evt = { item };
       const start = getEvent("onStart");
       start(evt);
@@ -1148,7 +1310,7 @@ describe("draggable.vue when initialized with a transition group", () => {
     it("sends a start event", async () => {
       await nextTick();
       expect(wrapper.emitted()).toEqual({
-        start: [[evt]],
+        start: [[evt]]
       });
     });
 
@@ -1156,17 +1318,17 @@ describe("draggable.vue when initialized with a transition group", () => {
       await nextTick();
       expect(vm.context).toEqual({
         element: "b",
-        index: 1,
+        index: 1
       });
     });
 
     describe("when remove is called", () => {
       beforeEach(() => {
-        element.children[0].removeChild(item);
+        element.removeChild(item);
         const remove = getEvent("onRemove");
         remove({
           item,
-          oldIndex: 1,
+          oldIndex: 1
         });
       });
 
@@ -1196,7 +1358,7 @@ describe("draggable.vue when initialized with a transition group", () => {
 
     describe("when update is called", () => {
       beforeEach(() => {
-        const transitionRoot = element.children[0];
+        const transitionRoot = element;
         const firstDraggable = transitionRoot.children[0];
         transitionRoot.removeChild(item);
         transitionRoot.insertBefore(item, firstDraggable);
@@ -1205,7 +1367,7 @@ describe("draggable.vue when initialized with a transition group", () => {
           item,
           oldIndex: 1,
           newIndex: 0,
-          from: transitionRoot,
+          from: transitionRoot
         });
       });
 
@@ -1226,7 +1388,7 @@ describe("draggable.vue when initialized with a transition group", () => {
           item,
           oldIndex: 1,
           newIndex: 0,
-          from: element.children[0],
+          from: element
         };
         expect(wrapper.emitted().update).toEqual([[expectedEvt]]);
       });
@@ -1234,7 +1396,7 @@ describe("draggable.vue when initialized with a transition group", () => {
       it("sends a change event", async () => {
         await nextTick();
         const expectedEvt = {
-          moved: { element: "b", oldIndex: 1, newIndex: 0 },
+          moved: { element: "b", oldIndex: 1, newIndex: 0 }
         };
         expect(wrapper.emitted().change).toEqual([[expectedEvt]]);
       });
@@ -1249,12 +1411,12 @@ describe("draggable.vue when initialized with a transition group", () => {
         move = jest.fn();
         wrapper.setProps({ move });
         evt = {
-          to: element.children[0],
-          related: element.children[0].children[1],
-          willInsertAfter: false,
+          to: element,
+          related: element.children[1],
+          willInsertAfter: false
         };
         originalEvt = {
-          domInfo: true,
+          domInfo: true
         };
         doMove = () => getEvent("onMove")(evt, originalEvt);
       });
@@ -1264,17 +1426,17 @@ describe("draggable.vue when initialized with a transition group", () => {
           draggedContext: {
             element: "b",
             futureIndex: 1,
-            index: 1,
+            index: 1
           },
           relatedContext: {
             component: vm,
             element: "b",
             index: 1,
-            list: ["a", "b", "c"],
+            list: ["a", "b", "c"]
           },
-          to: element.children[0],
-          related: element.children[0].children[1],
-          willInsertAfter: false,
+          to: element,
+          related: element.children[1],
+          willInsertAfter: false
         };
         doMove();
         expect(move.mock.calls).toEqual([[expectedEvt, originalEvt]]);
@@ -1285,7 +1447,7 @@ describe("draggable.vue when initialized with a transition group", () => {
       let endEvt;
       beforeEach(() => {
         endEvt = {
-          data: "data",
+          data: "data"
         };
         const onEnd = getEvent("onEnd");
         onEnd(endEvt);
@@ -1305,16 +1467,17 @@ describe("draggable.vue when initialized with a transition group", () => {
       wrapper = mount(draggable, {
         props: {
           list: items,
+          itemKey: k => k
         },
         attrs: {
           sortableOption: "value",
-          "to-be-camelized": true,
+          "to-be-camelized": true
         },
         slots: {
-          default: () => items.map((item) => h("div", {key: item}, item)),
+          item: ({ element }) => h("div", null, element),
           header: () => h("header"),
-          footer: () => h("footer"),
-        },
+          footer: () => h("footer")
+        }
       });
       vm = wrapper.vm;
       props = vm.$options.props;
@@ -1324,5 +1487,206 @@ describe("draggable.vue when initialized with a transition group", () => {
     it("renders correctly", () => {
       expectHTML(wrapper, initialRender);
     });
+  });
+});
+
+describe("when using only footer slot with an empty list", () => {
+  beforeEach(async () => {
+    resetMocks();
+
+    wrapper = mount(draggable, {
+      props: {
+        tag: "ul",
+        list: [],
+        itemKey: k => k
+      },
+      slots: {
+        item: ({ element }) => h("li", null, element),
+        footer: () => h("footer", null, "I am the footer")
+      }
+    });
+    vm = wrapper.vm;
+    element = wrapper.element;
+  });
+
+  it("renders correctly", () => {
+    const expectedDOM = `<ul><footer>I am the footer</footer></ul>`;
+    expectHTML(wrapper, expectedDOM);
+  });
+
+  describe("when add is called", () => {
+    let newItem;
+    const expectedDOMAfterUpdate = `<ul><li data-draggable="true">1</li><footer>I am the footer</footer></ul>`;
+    beforeEach(async () => {
+      await nextTick();
+
+      newItem = document.createElement("li");
+      const newContent = document.createTextNode("1");
+      newItem.appendChild(newContent);
+      newItem._underlying_vm_ = "1";
+      const last = element.children[0];
+      element.insertBefore(newItem, last);
+
+      const add = getEvent("onAdd");
+      add({
+        item: newItem,
+        newIndex: 0
+      });
+    });
+
+    it("DOM changes should be performed", async () => {
+      await nextTick();
+      expectHTML(wrapper, expectedDOMAfterUpdate);
+    });
+
+    it("list should be updated", async () => {
+      await nextTick();
+      expect(vm.list).toEqual(["1"]);
+    });
+
+    it("sends a update event", async () => {
+      await nextTick();
+      const expectedEvt = {
+        item: newItem,
+        newIndex: 0
+      };
+      expect(wrapper.emitted().add).toEqual([[expectedEvt]]);
+    });
+
+    it("sends a change event", async () => {
+      await nextTick();
+      const expectedEvt = { added: { element: "1", newIndex: 0 } };
+      expect(wrapper.emitted().change).toEqual([[expectedEvt]]);
+    });
+  });
+});
+
+describe("when using only footer slot with an none-empty list", () => {
+  beforeEach(async () => {
+    resetMocks();
+
+    wrapper = mount(draggable, {
+      props: {
+        tag: "ul",
+        list: ["first"],
+        itemKey: k => k
+      },
+      slots: {
+        item: ({ element }) => h("li", null, element),
+        footer: () => h("footer", null, "I am the footer")
+      }
+    });
+    vm = wrapper.vm;
+    element = wrapper.element;
+  });
+
+  it("renders correctly", () => {
+    const expectedDOM = `<ul><li data-draggable="true">first</li><footer>I am the footer</footer></ul>`;
+    expectHTML(wrapper, expectedDOM);
+  });
+
+  describe("when add is called", () => {
+    let newItem;
+    const expectedDOMAfterUpdate = `<ul><li data-draggable="true">first</li><li data-draggable="true">last</li><footer>I am the footer</footer></ul>`;
+    beforeEach(async () => {
+      await nextTick();
+
+      newItem = document.createElement("li");
+      const newContent = document.createTextNode("1");
+      newItem.appendChild(newContent);
+      newItem._underlying_vm_ = "last";
+      const last = element.children[1];
+      element.insertBefore(newItem, last);
+
+      const add = getEvent("onAdd");
+      add({
+        item: newItem,
+        newIndex: 1
+      });
+    });
+
+    it("DOM changes should be performed", async () => {
+      await nextTick();
+      expectHTML(wrapper, expectedDOMAfterUpdate);
+    });
+
+    it("list should be updated", async () => {
+      await nextTick();
+      expect(vm.list).toEqual(["first", "last"]);
+    });
+
+    it("sends a update event", async () => {
+      await nextTick();
+      const expectedEvt = {
+        item: newItem,
+        newIndex: 1
+      };
+      expect(wrapper.emitted().add).toEqual([[expectedEvt]]);
+    });
+
+    it("sends a change event", async () => {
+      await nextTick();
+      const expectedEvt = { added: { element: "last", newIndex: 1 } };
+      expect(wrapper.emitted().change).toEqual([[expectedEvt]]);
+    });
+  });
+});
+
+describe("when using a fragment component as tag", () => {
+  beforeEach(() => {
+    resetMocks();
+
+    wrapper = mount(DraggableWithFragment, {
+      global: {
+        components: {
+          FragmentRoot
+        }
+      }
+    });
+    vm = wrapper.vm;
+    element = wrapper.element;
+  });
+
+  it("renders correctly", () => {
+    const expectedDOM = `<div id="root"><div data-draggable="true">a-0</div><div data-draggable="true">b-1</div><div data-draggable="true">c-2</div></div>`;
+    expectHTML(wrapper, expectedDOM);
+  });
+
+  it("creates sortable instance with parent node", () => {
+    expect(Sortable.mock.calls.length).toBe(1);
+    const parameters = Sortable.mock.calls[0];
+    expect(parameters[0]).toBe(element);
+  });
+});
+
+describe.each([
+  ["a", ["a", "b"]],
+  ["n", [0, 1]],
+  [({ a, n }) => `${a}-${n}`, ["a-0", "b-1"]]
+])("when using %p as item-key", (itemKey, expected) => {
+  beforeEach(() => {
+    resetMocks();
+
+    wrapper = mount(draggable, {
+      props: {
+        list: [
+          { a: "a", n: 0 },
+          { a: "b", n: 1 }
+        ],
+        itemKey
+      },
+      slots: {
+        item: ({ element }) => {
+          return h("div", null, element);
+        }
+      }
+    });
+    element = wrapper.element;
+  });
+  it("sets nodes keys accordingly", () => {
+    const keys = [0, 1]
+      .map(index => element.children.item(index))
+      .map(el => el.__vnode.key);
+    expect(keys).toEqual(expected);
   });
 });

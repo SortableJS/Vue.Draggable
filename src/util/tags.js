@@ -126,4 +126,8 @@ function isTransition(name) {
   return ["transition-group", "TransitionGroup"].includes(name);
 }
 
-export { isHtmlTag, isTransition };
+function isHtmlAttribute(value) {
+  return ["id", "class"].includes(value) || value.startsWith("data-");
+}
+
+export { isHtmlTag, isHtmlAttribute, isTransition };

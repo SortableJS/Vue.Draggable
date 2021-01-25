@@ -8,19 +8,29 @@
         :clone="clone"
         :group="{ name: 'people', pull: pullFunction }"
         @start="start"
+        item-key="id"
       >
-        <div class="list-group-item" v-for="element in list1" :key="element.id">
-          {{ element.name }}
-        </div>
+        <template #item="{ element }">
+          <div class="list-group-item">
+            {{ element.name }}
+          </div>
+        </template>
       </draggable>
     </div>
 
     <div class="col-3">
       <h3>Draggable 2</h3>
-      <draggable class="dragArea list-group" :list="list2" group="people">
-        <div class="list-group-item" v-for="element in list2" :key="element.id">
-          {{ element.name }}
-        </div>
+      <draggable
+        class="dragArea list-group"
+        :list="list2"
+        group="people"
+        item-key="id"
+      >
+        <template #item="{ element }">
+          <div class="list-group-item">
+            {{ element.name }}
+          </div>
+        </template>
       </draggable>
     </div>
 

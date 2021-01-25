@@ -1,52 +1,43 @@
-import { capitalize } from "../util/string";
 import { camelize } from "../util/string";
-import { events, isReadOnlyEvent } from "./sortableEvents";
+import { events, isReadOnly } from "./sortableEvents";
+import { isHtmlAttribute } from "../util/tags";
 
-function isHtmlAttribute(value) {
-  return ["id", "class"].includes(value) || value.startsWith("data-");
+function project(entries) {
+  return entries.reduce((res, [key, value]) => {
+    res[key] = value;
+    return res;
+  }, {});
 }
 
-function getComponentAttributes({ $attrs, componentData }) {
-  const attributes = Object.entries($attrs)
-    .filter(([key, _]) => isHtmlAttribute(key))
-    .reduce((res, [key, value]) => {
-      res[key] = value;
-      return res;
-    }, {});
-
-  if (!componentData) {
-    return attributes;
-  }
-  const { on, props, attrs } = componentData;
-  Object.entries(on || {}).forEach(([key, value]) => {
-    attributes[`on${capitalize(key)}`] = value;
-  });
-  return { ...attributes, ...attrs, ...props };
+function getComponentAttributes({ $attrs, componentData = {} }) {
+  const attributes = project(
+    Object.entries($attrs).filter(([key, _]) => isHtmlAttribute(key))
+  );
+  return {
+    ...attributes,
+    ...componentData
+  };
 }
 
 function createSortableOption({ $attrs, callBackBuilder }) {
-  const options = {
-    draggable: ">*"
-  };
-  Object.entries($attrs)
-    .filter(([key, _]) => !isHtmlAttribute(key))
-    .map(([key, value]) => [camelize(key), value])
-    .filter(([key, _]) => !isReadOnlyEvent(key))
-    .forEach(([key, value]) => {
-      options[key] = value;
-    });
+  const options = project(getValidSortableEntries($attrs));
   Object.entries(callBackBuilder).forEach(([eventType, eventBuilder]) => {
     events[eventType].forEach(event => {
       options[`on${event}`] = eventBuilder(event);
     });
   });
-  return options;
+  const draggable = `[data-draggable]${options.draggable || ""}`;
+  return {
+    ...options,
+    draggable
+  };
 }
 
 function getValidSortableEntries(value) {
   return Object.entries(value)
+    .filter(([key, _]) => !isHtmlAttribute(key))
     .map(([key, value]) => [camelize(key), value])
-    .filter(([key, _]) => !isReadOnlyEvent(key));
+    .filter(([key, _]) => !isReadOnly(key));
 }
 
 export {

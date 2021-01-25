@@ -1,6 +1,8 @@
 <template>
-  <draggable :list="array" tag="span">
-    <div v-for="item in array" :key="item">{{ item }}</div>
+  <draggable :list="array" tag="span" :item-key="key => key">
+    <template #item="{element}">
+      <div>{{ element }}</div>
+    </template>
   </draggable>
 </template>
 <script>
