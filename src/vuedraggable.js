@@ -64,6 +64,11 @@ const props = {
     type: Object,
     required: false,
     default: null
+  },
+  onDragSwap: {
+    type: Boolean,
+    required: false,
+    default: false
   }
 };
 
@@ -194,8 +199,19 @@ const draggableComponent = defineComponent({
     },
 
     updatePosition(oldIndex, newIndex) {
-      const updatePosition = list =>
-        list.splice(newIndex, 0, list.splice(oldIndex, 1)[0]);
+      var updatePosition;
+      // Swap two items without changing the other elements in the list
+      if (this.onDragSwap) {
+        updatePosition = list => {
+          const aux = list[newIndex];
+          list[newIndex] = list[oldIndex];
+          list[oldIndex] = aux;
+          return list;
+        };
+      } else { // Move every element forward
+        updatePosition = list =>
+          list.splice(newIndex, 0, list.splice(oldIndex, 1)[0]);
+      }
       this.alterList(updatePosition);
     },
 
