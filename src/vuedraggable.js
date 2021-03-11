@@ -21,7 +21,7 @@ function computeIndexes(slots, children, isTransition, footerOffset) {
 
   const elmFromNodes = slots.map(elt => elt.elm);
   const footerIndex = children.length - footerOffset;
-  const rawIndexes = [...children].map((elt, idx) =>
+  const rawIndexes = Array.from(children).map((elt, idx) =>
     idx >= footerIndex ? elmFromNodes.length : elmFromNodes.indexOf(elt)
   );
   return isTransition ? rawIndexes.filter(ind => ind !== -1) : rawIndexes;
