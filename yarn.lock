@@ -8822,10 +8822,10 @@ sort-keys@^1.0.0:
   dependencies:
     is-plain-obj "^1.0.0"
 
-sortablejs@^1.10.1:
-  version "1.12.0"
-  resolved "https://registry.yarnpkg.com/sortablejs/-/sortablejs-1.12.0.tgz#ee6d7ece3598c2af0feb1559d98595e5ea37cbd6"
-  integrity sha512-bPn57rCjBRlt2sC24RBsu40wZsmLkSo2XeqG8k6DC1zru5eObQUIPPZAQG7W2SJ8FZQYq+BEJmvuw1Zxb3chqg==
+sortablejs@1.10.2:
+  version "1.10.2"
+  resolved "https://registry.yarnpkg.com/sortablejs/-/sortablejs-1.10.2.tgz#6e40364d913f98b85a14f6678f92b5c1221f5290"
+  integrity sha512-YkPGufevysvfwn5rfdlGyrGjt7/CRHwvRPogD/lC+TnvcN29jDpCifKP+rBqf+LRldfXSTh+0CGLcSg0VIxq3A==
 
 source-list-map@^2.0.0:
   version "2.0.1"
@@ -9692,9 +9692,9 @@ url-loader@^1.1.2:
     schema-utils "^1.0.0"
 
 url-parse@^1.4.3:
-  version "1.4.7"
-  resolved "https://registry.yarnpkg.com/url-parse/-/url-parse-1.4.7.tgz#a8a83535e8c00a316e403a5db4ac1b9b853ae278"
-  integrity sha512-d3uaVyzDB9tQoSXFvuSUNFibTd9zxd2bkVrDRvF5TmvWWQwqE4lgYJ5m+x1DbecWkw+LK4RNl2CU1hHuOKPVlg==
+  version "1.5.1"
+  resolved "https://registry.yarnpkg.com/url-parse/-/url-parse-1.5.1.tgz#d5fa9890af8a5e1f274a2c98376510f6425f6e3b"
+  integrity sha512-HOfCOUJt7iSYzEx/UqgtwKRMC6EU91NFhsCHMv9oM03VJcVo2Qrp8T8kI9D7amFf1cu+/3CEhgb3rF9zL7k85Q==
   dependencies:
     querystringify "^2.1.1"
     requires-port "^1.0.0"
