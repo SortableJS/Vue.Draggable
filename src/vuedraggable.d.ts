@@ -29,6 +29,7 @@ declare module 'vuedraggable' {
     index: number;
     component: Vue;
     element: T;
+    list: T[];
   };
 
   export type Rectangle = {
