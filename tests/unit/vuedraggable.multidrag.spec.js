@@ -1,34 +1,20 @@
 import { mount, shallowMount } from "@vue/test-utils";
 import Sortable from "sortablejs";
 
-jest.genMockFromModule("sortablejs");
-jest.mock("sortablejs");
-const SortableFake = {
-  destroy: jest.fn(),
-  option: jest.fn(),
-};
-Sortable.mockImplementation(() => SortableFake);
-
 import draggable from "@/vuedraggable";
 import Vue from "vue";
 import Fake from "./helper/FakeComponent.js";
 import FakeFunctional from "./helper/FakeFunctionalComponent.js";
 
-function resetMocks() {
-  Sortable.mockClear();
-  SortableFake.destroy.mockClear();
-  SortableFake.option.mockClear();
-}
-
 function create(options) {
-  const { propsData: { items = [] } } = options;
+  const { propsData: { list: items = [] } } = options;
   const opts = Object.assign({
     attrs: {
       sortableOption: "value",
       "to-be-camelized": true,
     },
     slots: {
-      default: items.map((item) => `<div>${item}</div>`),
+      default: items.map((item) => `<div class="item">${item}</div>`),
       header: "<header/>",
       footer: "<footer/>",
     },
@@ -40,10 +26,6 @@ function create(options) {
 }
 
 describe("draggable.vue with multidrag plugin", () => {
-  beforeEach(() => {
-    resetMocks();
-  });
-
   describe("when initialized", () => {
     const { error } = console;
     const { warn } = console;
