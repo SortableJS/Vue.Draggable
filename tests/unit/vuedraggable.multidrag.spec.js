@@ -85,4 +85,43 @@ describe("draggable.vue with multidrag plugin", () => {
       expect(console.warn).not.toBeCalled();
     });
   });
+
+  describe("should have props", () => {
+    const { props } = create({
+      propsData: {
+        multiDrag: true,
+        selectedClass: 'selected',
+      },
+    });
+
+    test.each([
+      [
+        "multiDrag",
+        {
+          type: Boolean,
+          required: false,
+          default: false,
+        },
+      ],
+      [
+        "multiDragKey",
+        {
+          type: String,
+          required: false,
+          default: null,
+        },
+      ],
+      [
+        "selectedClass",
+        {
+          type: String,
+          required: false,
+          default: null,
+        },
+      ],
+    ])("%s equal to %o", (name, value) => {
+      const propsValue = props[name];
+      expect(propsValue).toEqual(value);
+    });
+  });
 });
