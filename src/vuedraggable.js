@@ -1,5 +1,8 @@
-import Sortable from "sortablejs";
+import Sortable, { MultiDrag } from "sortablejs";
 import { insertNodeAt, camelize, console, removeNode } from "./util/helper";
+
+// singleton of multidrag plugin for esm
+let multidragSingleton;
 
 function buildAttribute(object, propName, value) {
   if (value === undefined) {
@@ -143,7 +146,23 @@ const props = {
     type: Object,
     required: false,
     default: null
-  }
+  },
+  // plugin: multidrag
+  multiDrag: {
+    type: Boolean,
+    required: false,
+    default: false
+  },
+  multiDragKey: {
+    type: String,
+    required: false,
+    default: null
+  },
+  selectedClass: {
+    type: String,
+    required: false,
+    default: null
+  },
 };
 
 const draggableComponent = {
@@ -192,6 +211,12 @@ const draggableComponent = {
         "Options props is deprecated, add sortable options directly as vue.draggable item, or use v-bind. See https://github.com/SortableJS/Vue.Draggable/blob/master/documentation/migrate.md#options-props"
       );
     }
+
+    if (this.multiDrag && (this.selectedClass || "") === "") {
+      console.warn(
+        "selected-class must be set when multi-drag mode. See https://github.com/SortableJS/Sortable/wiki/Dragging-Multiple-Items-in-Sortable#enable-multi-drag"
+      );
+    }
   },
 
   mounted() {
@@ -223,6 +248,23 @@ const draggableComponent = {
       }
     });
     !("draggable" in options) && (options.draggable = ">*");
+
+    if (this.multiDrag) {
+      options.multiDrag = true;
+      options.selectedClass = this.selectedClass;
+      if (this.multiDragKey) {
+        options.multiDragKey = this.multiDragKey;
+      }
+      // create singleton for multidrag here
+      // note:
+      // - cjs ("sortable.js") mount MultiDrag automatically.
+      // - default esm ("sortable.esm") does not mount MultiDrag automatically, "sortable.complete.esm" does.
+      if (!multidragSingleton && MultiDrag) {
+        multidragSingleton = new MultiDrag();
+        Sortable.mount(multidragSingleton);
+      }
+    }
+
     this._sortable = new Sortable(this.rootContainer, options);
     this.computeIndexes();
   },
