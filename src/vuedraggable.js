@@ -102,7 +102,7 @@ function getComponentAttributes($attrs, componentData) {
 }
 
 const eventsListened = ["Start", "Add", "Remove", "Update", "End"];
-const eventsToEmit = ["Choose", "Unchoose", "Sort", "Filter", "Clone"];
+const eventsToEmit = ["Choose", "Unchoose", "Sort", "Filter", "Clone", "Select", "Deselect"];
 const readonlyProperties = ["Move", ...eventsListened, ...eventsToEmit].map(
   evt => "on" + evt
 );
