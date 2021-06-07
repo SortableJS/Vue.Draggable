@@ -5,7 +5,7 @@
 [![Coverage](https://codecov.io/gh/SortableJS/Vue.Draggable/branch/master/graph/badge.svg)](https://codecov.io/gh/SortableJS/Vue.Draggable)
 [![codebeat badge](https://codebeat.co/badges/7a6c27c8-2d0b-47b9-af55-c2eea966e713)](https://codebeat.co/projects/github-com-sortablejs-vue-draggable-master)
 [![GitHub open issues](https://img.shields.io/github/issues/SortableJS/Vue.Draggable.svg)](https://github.com/SortableJS/Vue.Draggable/issues?q=is%3Aopen+is%3Aissue)
-[![npm download](https://img.shields.io/npm/dt/vuedraggable.svg?maxAge=30)](https://www.npmjs.com/package/vuedraggable)
+[![npm download](https://img.shields.io/npm/dt/vuedraggable.svg)](https://www.npmjs.com/package/vuedraggable)
 [![npm download per month](https://img.shields.io/npm/dm/vuedraggable.svg)](https://www.npmjs.com/package/vuedraggable)
 [![npm version](https://img.shields.io/npm/v/vuedraggable.svg)](https://www.npmjs.com/package/vuedraggable)
 [![MIT License](https://img.shields.io/github/license/SortableJS/Vue.Draggable.svg)](https://github.com/SortableJS/Vue.Draggable/blob/master/LICENSE)
@@ -14,6 +14,10 @@
 Vue component (Vue.js 2.0) or directive (Vue.js 1.0) allowing drag-and-drop and synchronization with view model array.
 
 Based on and offering all features of [Sortable.js](https://github.com/RubaXa/Sortable)
+
+
+## For Vue 3
+   See [vue.draggable.next](https://github.com/SortableJS/vue.draggable.next)
 
 ## Demo
 
@@ -42,7 +46,7 @@ https://david-desmaisons.github.io/draggable-example/
 ## Backers
 
  <a href="https://flatlogic.com/admin-dashboards">
- <img width="190" style="margin-top: 10px;" src="https://flatlogic.com/assets/logo-d9e7751df5fddd11c911945a75b56bf72bcfe809a7f6dca0e32d7b407eacedae.svg">
+ <img style="margin-top: 10px;" src="https://flatlogic.com/assets/logo-b6ca6492a82bd9eddf58c40710235855b1c502097c23faae6306cd36973aaea8.svg">
  </a>
 
 Admin Dashboard Templates made with Vue, React and Angular.
@@ -126,7 +130,7 @@ Draggable component should directly wrap the draggable elements, or a `transitio
 ```
 ### With header slot:
 ``` html
-<draggable v-model="myArray" draggable=".item'">
+<draggable v-model="myArray" draggable=".item">
     <div v-for="element in myArray" :key="element.id" class="item">
         {{element.name}}
     </div>

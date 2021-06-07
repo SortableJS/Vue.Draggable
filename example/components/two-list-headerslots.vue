@@ -20,7 +20,7 @@
         </div>
 
         <div
-          slot="footer"
+          slot="header"
           class="btn-group list-group-item"
           role="group"
           aria-label="Basic example"
@@ -44,7 +44,7 @@
         </div>
 
         <div
-          slot="footer"
+          slot="header"
           class="btn-group list-group-item"
           role="group"
           aria-label="Basic example"
@@ -78,10 +78,7 @@ export default {
         { name: "Joao 2", id: 1 },
         { name: "Jean 3", id: 2 }
       ],
-      list2: [
-        { name: "Jonny 4", id: 3 },
-        { name: "Guisepe 5", id: 4 }
-      ]
+      list2: [{ name: "Jonny 4", id: 3 }, { name: "Guisepe 5", id: 4 }]
     };
   },
   methods: {
