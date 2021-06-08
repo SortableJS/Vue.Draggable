@@ -25,6 +25,20 @@ function create(options) {
   return { wrapper, vm, props, element };
 }
 
+/**
+ * @param {"addEventListener" | "removeEventListener"} listnerName 
+ * @param {GlobalEventHandlers[listnerName]} callback 
+ * @returns {jest.SpyInstance}
+ */
+function eventListnerDelegationMock(listnerName, callback) {
+  const instance = jest.spyOn(document, listnerName);
+  const actual = instance.getMockImplementation();
+  return instance.mockImplementation((type, listener, options) => {
+    actual.call(document, type, listener, options);
+    callback && callback(type, listener, options);
+  });
+}
+
 describe("draggable.vue with multidrag plugin", () => {
   describe("when initialized", () => {
     const { error } = console;
@@ -110,22 +124,20 @@ describe("draggable.vue with multidrag plugin", () => {
   describe("item select and deselect", () => {
     let wrapper;
     let vm;
-    const { addEventListener: originalAddEventListener, removeEventListener: originalRemoveEventListener } = document;
+    /** @type {jest.SpyInstance} */
+    let addEventListenerMock;
+    /** @type {jest.SpyInstance} */
+    let removeEventListenerMock;
 
     beforeEach(() => {
       // event listener delegation hack
-      document.addEventListener = (type, listener) => {
-        originalAddEventListener.call(document, type, listener);
-        if (wrapper) {
-          wrapper.element.addEventListener(type, listener);
-        }
-      };
-      document.removeEventListener = (type, listener) => {
-        originalRemoveEventListener.call(document, type, listener);
-        if (wrapper) {
-          wrapper.element.removeEventListener(type, listener);
-        }
-      };
+      addEventListenerMock = eventListnerDelegationMock("addEventListener", (type, listener, options) => {
+        wrapper?.element?.addEventListener(type, listener, options);
+      });
+      removeEventListenerMock = eventListnerDelegationMock("removeEventListener", (type, listener, options) => {
+        wrapper?.element?.removeEventListener(type, listener, options);
+      });
+
       // component
       const items = ["a", "b", "c", "d"];
       const { wrapper: _w, vm: _v } = create({
@@ -140,8 +152,8 @@ describe("draggable.vue with multidrag plugin", () => {
     });
 
     afterEach(() => {
-      document.addEventListener = originalAddEventListener;
-      document.removeEventListener = originalRemoveEventListener;
+      addEventListenerMock.mockRestore();
+      removeEventListenerMock.mockRestore();
     });
 
     it("should be selected", async () => {
