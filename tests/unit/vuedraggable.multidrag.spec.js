@@ -122,7 +122,9 @@ describe("draggable.vue with multidrag plugin", () => {
   });
 
   describe("item select and deselect", () => {
+    /** @type {import("@vue/test-utils").Wrapper<Vue>} */
     let wrapper;
+    /** @type {Vue} */
     let vm;
     /** @type {jest.SpyInstance} */
     let addEventListenerMock;
@@ -180,7 +182,9 @@ describe("draggable.vue with multidrag plugin", () => {
       expect(selectEmit).toHaveLength(2);
       const [[emitEvent1], [emitEvent2]] = selectEmit;
       expect(emitEvent1.items).toEqual([item1.element]);
+      expect(emitEvent1.newIndicies).toEqual([{ multiDragElement: item1.element, index: 1 }]);
       expect(emitEvent2.items).toEqual([item1.element, item2.element]);
+      expect(emitEvent2.newIndicies).toEqual([{ multiDragElement: item1.element, index: 1 }, { multiDragElement: item2.element, index: 4 }]);
     });
 
     it("should be deselected", async () => {
@@ -211,7 +215,9 @@ describe("draggable.vue with multidrag plugin", () => {
       expect(deselectEmit).toHaveLength(2);
       const [[emitEvent1], [emitEvent2]] = deselectEmit;
       expect(emitEvent1.items).toEqual([item2.element]);
+      expect(emitEvent1.newIndicies).toEqual([{ multiDragElement: item2.element, index: 4 }]);
       expect(emitEvent2.items).toEqual([]);
+      expect(emitEvent2.newIndicies).toEqual([]);
     });
   });
 });
