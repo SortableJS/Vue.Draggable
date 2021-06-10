@@ -220,4 +220,96 @@ describe("draggable.vue with multidrag plugin", () => {
       expect(emitEvent2.newIndicies).toEqual([]);
     });
   });
+
+  describe("multi item drag and drop", () => {
+    /** @type {import("@vue/test-utils").Wrapper<Vue>} */
+    let wrapper;
+    /** @type {Vue} */
+    let vm;
+    /** @type {jest.SpyInstance} */
+    let addEventListenerMock;
+    /** @type {jest.SpyInstance} */
+    let removeEventListenerMock;
+    /** @type {string[]} */
+    let items;
+    /** @type {(event: Event) => void} */
+    let onStart;
+    /** @type {(event: Event) => void} */
+    let onUpdate;
+
+    beforeEach(() => {
+      // event listener delegation hack
+      addEventListenerMock = eventListnerDelegationMock("addEventListener", (type, listener, options) => {
+        wrapper?.element?.addEventListener(type, listener, options);
+      });
+      removeEventListenerMock = eventListnerDelegationMock("removeEventListener", (type, listener, options) => {
+        wrapper?.element?.removeEventListener(type, listener, options);
+      });
+
+      // component
+      items = ["a", "b", "c", "d"];
+      const { wrapper: _w, vm: _v } = create({
+        propsData: {
+          list: items,
+          multiDrag: true,
+          selectedClass: 'selected',
+        },
+      });
+      wrapper = _w;
+      vm = _v;
+
+      onStart = vm._sortable.options.onStart;
+      onUpdate = vm._sortable.options.onUpdate;
+    });
+
+    afterEach(() => {
+      addEventListenerMock.mockRestore();
+      removeEventListenerMock.mockRestore();
+    });
+
+    describe("should work", () => {
+      it("when drop first and second into last", async () => {
+        const wrapperItems = wrapper.findAll('.item');
+        const item1 = wrapperItems.at(0);
+        const item2 = wrapperItems.at(1);
+  
+        // start drag from first item
+        const startEvent = {
+          item: item1.element,
+          items: [item1.element, item2.element],
+        };
+        onStart(startEvent);
+        await Vue.nextTick();
+
+        // drop to last item
+        const updateEvent = {
+          from: wrapper.element,
+          newIndex: 3,
+          newDraggableIndex: 3,
+          oldIndex: 1,
+          oldDraggableIndex: 1,
+          item: item1.element,
+          items: [item1.element, item2.element],
+          oldIndicies: [
+            { multiDragElement: item1.element, index: 1 },
+            { multiDragElement: item2.element, index: 2 },
+          ],
+          newIndicies: [
+            { multiDragElement: item1.element, index: 3 },
+            { multiDragElement: item2.element, index: 4 },
+          ],
+        };
+        onUpdate(updateEvent);
+        await Vue.nextTick();
+
+        // check items order
+        expect(vm.list).toEqual(["c", "d", "a", "b"]);
+
+        // check emit event
+        const { start: startEmit, update: updateEmit } = wrapper.emitted();
+        expect(startEmit).not.toBeUndefined();
+        expect(updateEmit).not.toBeUndefined();
+      });
+    });
+  });
 });

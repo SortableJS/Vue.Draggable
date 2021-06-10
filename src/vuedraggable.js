@@ -405,6 +405,21 @@ const draggableComponent = {
       this.alterList(updatePosition);
     },
 
+    /**
+     * @param {number[]} oldIndicies
+     * @param {number} newIndex
+     */
+    updatePositions(oldIndicies, newIndex) {
+      /** @type {<T = any>(list: T[]) => T[]} */
+      const updatePosition = list => {
+        // get selected items with correct order
+        // sort -> reverse (for prevent Array.splice side effect) -> splice -> reverse
+        const items = oldIndicies.sort().reverse().flatMap((oldIndex) => list.splice(oldIndex, 1)).reverse();
+        return list.splice(newIndex, 0, items);
+      };
+      this.alterList(updatePosition);
+    },
+
     getRelatedContextFromMoveEvent({ to, related }) {
       const component = this.getUnderlyingPotencialDraggableComponent(to);
       if (!component) {
@@ -443,6 +458,9 @@ const draggableComponent = {
     },
 
     onDragStart(evt) {
+      if (evt.items) {
+        this.multidragContexts = evt.items.map((e) => this.getUnderlyingVm(e));
+      }
       this.context = this.getUnderlyingVm(evt.item);
       evt.item._underlying_vm_ = this.clone(this.context.element);
       draggingElement = evt.item;
@@ -475,6 +493,47 @@ const draggableComponent = {
     },
 
     onDragUpdate(evt) {
+      if (evt.items) {
+        const { newIndicies, oldIndicies, items, from } = evt;
+        const evts = items.map((item) => {
+          const oldIndex = oldIndicies.find((e) => e.multiDragElement === item).index;
+          const newIndex = newIndicies.find((e) => e.multiDragElement === item).index;
+          return { from, item, oldIndex, newIndex };
+        });
+        this.onDragUpdateMulti(evts, this.multidragContexts);
+      } else {
+        this.onDragUpdateSingle(evt);
+      }
+    },
+
+    /**
+     * @param {{from: HTMLElement, item: HTMLElement, oldIndex: number, newIndex: number}[]} evts 
+     * @param {{index: number, element: any}[]} contexts 
+     */
+    onDragUpdateMulti(evts, contexts) {
+      // for match item index and element index
+      const elementIndexOffset = this.$slots.header.length || 0;
+      // sort evts
+      // note: "order by oldIndex asc" for prevent Node.insertBefore side effect
+      evts.sort(({ oldIndex: a }, { oldIndex: b }) => a - b)
+      // remove nodes
+      evts.forEach(({item}) => removeNode(item));
+      // insert nodes
+      evts.forEach(({from, item, oldIndex}) => insertNodeAt(from, item, oldIndex));
+      // move items
+      evts
+        .reverse()
+        .forEach((evt) => {
+          const context = contexts.find((e) => e.index + elementIndexOffset === evt.oldIndex);
+          const oldIndex = context.index;
+          const newIndex = this.getVmIndex(evt.newIndex);
+          this.updatePosition(oldIndex, newIndex);
+          const moved = { element: context.element, oldIndex, newIndex };
+          this.emitChanges({ moved });
+        });
+    },
+
+    onDragUpdateSingle(evt) {
       removeNode(evt.item);
       insertNodeAt(evt.from, evt.item, evt.oldIndex);
       const oldIndex = this.context.index;
