@@ -415,7 +415,7 @@ const draggableComponent = {
         // get selected items with correct order
         // sort -> reverse (for prevent Array.splice side effect) -> splice -> reverse
         const items = oldIndicies.sort().reverse().flatMap((oldIndex) => list.splice(oldIndex, 1)).reverse();
-        return list.splice(newIndex, 0, items);
+        return list.splice(newIndex, 0, ...items);
       };
       this.alterList(updatePosition);
     },
@@ -500,17 +500,18 @@ const draggableComponent = {
           const newIndex = newIndicies.find((e) => e.multiDragElement === item).index;
           return { from, item, oldIndex, newIndex };
         });
-        this.onDragUpdateMulti(evts, this.multidragContexts);
+        this.onDragUpdateMulti(evt, evts, this.multidragContexts);
       } else {
         this.onDragUpdateSingle(evt);
       }
     },
 
     /**
+     * @param {{newIndex: number}} originalEvent
      * @param {{from: HTMLElement, item: HTMLElement, oldIndex: number, newIndex: number}[]} evts 
      * @param {{index: number, element: any}[]} contexts 
      */
-    onDragUpdateMulti(evts, contexts) {
+    onDragUpdateMulti(originalEvent, evts, contexts) {
       // for match item index and element index
       const elementIndexOffset = this.$slots.header.length || 0;
       // sort evts
@@ -521,16 +522,15 @@ const draggableComponent = {
       // insert nodes
       evts.forEach(({from, item, oldIndex}) => insertNodeAt(from, item, oldIndex));
       // move items
-      evts
-        .reverse()
-        .forEach((evt) => {
-          const context = contexts.find((e) => e.index + elementIndexOffset === evt.oldIndex);
-          const oldIndex = context.index;
-          const newIndex = this.getVmIndex(evt.newIndex);
-          this.updatePosition(oldIndex, newIndex);
-          const moved = { element: context.element, oldIndex, newIndex };
-          this.emitChanges({ moved });
-        });
+      const oldIndicies = evts.map(({ oldIndex }) => oldIndex - elementIndexOffset);
+      const newIndex = this.getVmIndex(originalEvent.newIndex);
+      this.updatePositions(oldIndicies, newIndex);
+      // emit change
+      oldIndicies.forEach((oldIndex, index) => {
+        const context = contexts.find((e) => e.index === oldIndex);
+        const moved = { element: context.element, oldIndex, newIndex: newIndex + index };
+        this.emitChanges({ moved });
+      });
     },
 
     onDragUpdateSingle(evt) {

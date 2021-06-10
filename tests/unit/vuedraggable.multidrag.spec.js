@@ -224,14 +224,14 @@ describe("draggable.vue with multidrag plugin", () => {
   describe("multi item drag and drop", () => {
     /** @type {import("@vue/test-utils").Wrapper<Vue>} */
     let wrapper;
+    /** @type {import("@vue/test-utils").WrapperArray<Vue>} */
+    let wrapperItems;
     /** @type {Vue} */
     let vm;
     /** @type {jest.SpyInstance} */
     let addEventListenerMock;
     /** @type {jest.SpyInstance} */
     let removeEventListenerMock;
-    /** @type {string[]} */
-    let items;
     /** @type {(event: Event) => void} */
     let onStart;
     /** @type {(event: Event) => void} */
@@ -247,7 +247,7 @@ describe("draggable.vue with multidrag plugin", () => {
       });
 
       // component
-      items = ["a", "b", "c", "d"];
+      const items = ["a", "b", "c", "d"];
       const { wrapper: _w, vm: _v } = create({
         propsData: {
           list: items,
@@ -257,6 +257,7 @@ describe("draggable.vue with multidrag plugin", () => {
       });
       wrapper = _w;
       vm = _v;
+      wrapperItems = wrapper.findAll('.item');
 
       onStart = vm._sortable.options.onStart;
       onUpdate = vm._sortable.options.onUpdate;
@@ -269,7 +270,6 @@ describe("draggable.vue with multidrag plugin", () => {
 
     describe("should work", () => {
       it("when drop first and second into last", async () => {
-        const wrapperItems = wrapper.findAll('.item');
         const item1 = wrapperItems.at(0);
         const item2 = wrapperItems.at(1);
   
@@ -304,6 +304,91 @@ describe("draggable.vue with multidrag plugin", () => {
 
         // check items order
         expect(vm.list).toEqual(["c", "d", "a", "b"]);
+
+        // check emit event
+        const { start: startEmit, update: updateEmit } = wrapper.emitted();
+        expect(startEmit).not.toBeUndefined();
+        expect(updateEmit).not.toBeUndefined();
+      });
+
+      it("when drop second and first into last", async () => {
+        const item1 = wrapperItems.at(0);
+        const item2 = wrapperItems.at(1);
+  
+        // start drag from first item
+        const startEvent = {
+          item: item2.element,
+          items: [item2.element, item1.element],
+        };
+        onStart(startEvent);
+        await Vue.nextTick();
+
+        // drop to last item
+        const updateEvent = {
+          from: wrapper.element,
+          newIndex: 3,
+          newDraggableIndex: 3,
+          oldIndex: 1,
+          oldDraggableIndex: 1,
+          item: item1.element,
+          items: [item2.element, item1.element],
+          oldIndicies: [
+            { multiDragElement: item2.element, index: 2 },
+            { multiDragElement: item1.element, index: 1 },
+          ],
+          newIndicies: [
+            { multiDragElement: item2.element, index: 4 },
+            { multiDragElement: item1.element, index: 3 },
+          ],
+        };
+        onUpdate(updateEvent);
+        await Vue.nextTick();
+
+        // check items order
+        expect(vm.list).toEqual(["c", "d", "a", "b"]);
+
+        // check emit event
+        const { start: startEmit, update: updateEmit } = wrapper.emitted();
+        expect(startEmit).not.toBeUndefined();
+        expect(updateEmit).not.toBeUndefined();
+      });
+
+
+      it("when drop second and last into first", async () => {
+        const item1 = wrapperItems.at(1);
+        const item2 = wrapperItems.at(3);
+  
+        // start drag from first item
+        const startEvent = {
+          item: item1.element,
+          items: [item1.element, item2.element],
+        };
+        onStart(startEvent);
+        await Vue.nextTick();
+
+        // drop to last item
+        const updateEvent = {
+          from: wrapper.element,
+          newIndex: 1,
+          newDraggableIndex: 1,
+          oldIndex: 2,
+          oldDraggableIndex: 2,
+          item: item1.element,
+          items: [item2.element, item1.element],
+          oldIndicies: [
+            { multiDragElement: item1.element, index: 2 },
+            { multiDragElement: item2.element, index: 4 },
+          ],
+          newIndicies: [
+            { multiDragElement: item1.element, index: 1 },
+            { multiDragElement: item2.element, index: 2 },
+          ],
+        };
+        onUpdate(updateEvent);
+        await Vue.nextTick();
+
+        // check items order
+        expect(vm.list).toEqual(["b", "d", "a", "c"]);
 
         // check emit event
         const { start: startEmit, update: updateEmit } = wrapper.emitted();
