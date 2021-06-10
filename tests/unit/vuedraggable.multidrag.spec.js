@@ -226,6 +226,10 @@ describe("draggable.vue with multidrag plugin", () => {
     let wrapper;
     /** @type {import("@vue/test-utils").WrapperArray<Vue>} */
     let wrapperItems;
+    /** @type {import("@vue/test-utils").Wrapper<Vue>} */
+    let item1;
+    /** @type {import("@vue/test-utils").Wrapper<Vue>} */
+    let item2;
     /** @type {Vue} */
     let vm;
     /** @type {jest.SpyInstance} */
@@ -268,11 +272,11 @@ describe("draggable.vue with multidrag plugin", () => {
       removeEventListenerMock.mockRestore();
     });
 
-    describe("should work", () => {
-      it("when drop first and second into last", async () => {
-        const item1 = wrapperItems.at(0);
-        const item2 = wrapperItems.at(1);
-  
+    describe("when drop first and second into last", () => {
+      beforeEach(async () => {
+        item1 = wrapperItems.at(0);
+        item2 = wrapperItems.at(1);
+
         // start drag from first item
         const startEvent = {
           item: item1.element,
@@ -301,19 +305,24 @@ describe("draggable.vue with multidrag plugin", () => {
         };
         onUpdate(updateEvent);
         await Vue.nextTick();
-
-        // check items order
-        expect(vm.list).toEqual(["c", "d", "a", "b"]);
-
-        // check emit event
-        const { start: startEmit, update: updateEmit } = wrapper.emitted();
-        expect(startEmit).not.toBeUndefined();
-        expect(updateEmit).not.toBeUndefined();
       });
 
-      it("when drop second and first into last", async () => {
-        const item1 = wrapperItems.at(0);
-        const item2 = wrapperItems.at(1);
+      it("should changed", () => {
+        expect(vm.list).toEqual(["c", "d", "a", "b"]);
+      });
+
+      it("should send events", () => {
+        const { start: startEmit, update: updateEmit, change: changeEmit } = wrapper.emitted();
+        expect(startEmit).toHaveLength(1);
+        expect(updateEmit).toHaveLength(1);
+        expect(changeEmit).toHaveLength(2);
+      });
+    });
+
+    describe("when drop second and first into last", () => {
+      beforeEach(async () => {
+        item1 = wrapperItems.at(0);
+        item2 = wrapperItems.at(1);
   
         // start drag from first item
         const startEvent = {
@@ -343,22 +352,26 @@ describe("draggable.vue with multidrag plugin", () => {
         };
         onUpdate(updateEvent);
         await Vue.nextTick();
-
-        // check items order
-        expect(vm.list).toEqual(["c", "d", "a", "b"]);
-
-        // check emit event
-        const { start: startEmit, update: updateEmit } = wrapper.emitted();
-        expect(startEmit).not.toBeUndefined();
-        expect(updateEmit).not.toBeUndefined();
       });
 
+      it("should changed", () => {
+        expect(vm.list).toEqual(["c", "d", "a", "b"]);
+      });
 
-      it("when drop second and last into first", async () => {
-        const item1 = wrapperItems.at(1);
-        const item2 = wrapperItems.at(3);
+      it("should send events", () => {
+        const { start: startEmit, update: updateEmit, change: changeEmit } = wrapper.emitted();
+        expect(startEmit).toHaveLength(1);
+        expect(updateEmit).toHaveLength(1);
+        expect(changeEmit).toHaveLength(2);
+      });
+    });
+
+    describe("when drop second and last into first", () => {
+      beforeEach(async () => {
+        item1 = wrapperItems.at(1);
+        item2 = wrapperItems.at(3);
   
-        // start drag from first item
+        // start drag from second item
         const startEvent = {
           item: item1.element,
           items: [item1.element, item2.element],
@@ -366,7 +379,7 @@ describe("draggable.vue with multidrag plugin", () => {
         onStart(startEvent);
         await Vue.nextTick();
 
-        // drop to last item
+        // drop to first item
         const updateEvent = {
           from: wrapper.element,
           newIndex: 1,
@@ -386,14 +399,17 @@ describe("draggable.vue with multidrag plugin", () => {
         };
         onUpdate(updateEvent);
         await Vue.nextTick();
+      });
 
-        // check items order
+      it("should changed", () => {
         expect(vm.list).toEqual(["b", "d", "a", "c"]);
+      });
 
-        // check emit event
-        const { start: startEmit, update: updateEmit } = wrapper.emitted();
-        expect(startEmit).not.toBeUndefined();
-        expect(updateEmit).not.toBeUndefined();
+      it("should send events", () => {
+        const { start: startEmit, update: updateEmit, change: changeEmit } = wrapper.emitted();
+        expect(startEmit).toHaveLength(1);
+        expect(updateEmit).toHaveLength(1);
+        expect(changeEmit).toHaveLength(2);
       });
     });
   });
