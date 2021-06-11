@@ -475,7 +475,7 @@ const draggableComponent = {
     },
 
     onDragAdd(evt) {
-      if (evt.item._underlying_vm_multidrag_) {
+      if (evt.items) {
         this.onDragAddMulti(evt);
       } else {
         this.onDragAddSingle(evt);
@@ -513,6 +513,43 @@ const draggableComponent = {
     },
 
     onDragRemove(evt) {
+      if (evt.items) {
+        this.onDragRemoveMulti(evt);
+      } else {
+        this.onDragRemoveSingle(evt);
+      }
+    },
+
+    onDragRemoveMulti(evt) {
+      // for match item index and element index
+      const elementIndexOffset = this.$slots.header.length || 0;
+      // sort old indicies
+      // - "order by index asc" for prevent Node.insertBefore side effect
+      // - "order by index desc" (call reverse()) for prevent Array.splice side effect
+      const items = evt.oldIndicies.sort(({ index: a }, { index: b }) => a - b);
+      // restore nodes
+      items.forEach(({ multiDragElement: item, index }) => {
+        insertNodeAt(this.rootContainer, item, index);
+      });
+      // if clone
+      if (evt.pullMode === "clone") {
+        removeNode(evt.clone);
+        return;
+      }
+      // remove items
+      items.reverse().forEach(({ index }) => {
+        // remove
+        const oldIndex = index - elementIndexOffset;
+        this.spliceList(oldIndex, 1);
+        // emit change
+        const context = this.multidragContexts.find(e => e.index === oldIndex);
+        const removed = { element: context.element, oldIndex };
+        this.resetTransitionData(oldIndex);
+        this.emitChanges({ removed });
+      });
+    },
+
+    onDragRemoveSingle(evt) {
       insertNodeAt(this.rootContainer, evt.item, evt.oldIndex);
       if (evt.pullMode === "clone") {
         removeNode(evt.clone);

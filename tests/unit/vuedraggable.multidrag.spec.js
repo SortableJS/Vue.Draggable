@@ -452,5 +452,47 @@ describe('draggable.vue with multidrag plugin', () => {
         expect(changeEmit).toHaveLength(2);
       });
     });
+
+    describe('when drop to other (remove)', () => {
+      beforeEach(async () => {
+        item1 = wrapperItems.at(0);
+        item2 = wrapperItems.at(2);
+  
+        // start drag from first item
+        const startEvent = {
+          item: item1.element,
+          items: [item1.element, item2.element],
+        };
+        onStart(startEvent);
+        await Vue.nextTick();
+
+        wrapper.element.removeChild(item1.element);
+        wrapper.element.removeChild(item2.element);
+
+        // drop after last item
+        const removeEvent = {
+          newIndex: 5,
+          newDraggableIndex: 5,
+          item: item1,
+          items: [item1, item2],
+          oldIndicies: [
+            { multiDragElement: item1.element, index: 1 },
+            { multiDragElement: item2.element, index: 3 },
+          ],
+        };
+        onRemove(removeEvent);
+        await Vue.nextTick();
+      });
+
+      it('should removed', () => {
+        expect(vm.list).toEqual(['b', 'd']);
+      });
+
+      it('should send events', () => {
+        const { remove: removeEmit, change: changeEmit } = wrapper.emitted();
+        expect(removeEmit).toHaveLength(1);
+        expect(changeEmit).toHaveLength(2);
+      });
+    });
   });
 });
