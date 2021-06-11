@@ -493,10 +493,12 @@ const draggableComponent = {
       const newIndex = this.getVmIndex(evt.newIndex);
       this.spliceList(newIndex, 0, ...elements);
       this.computeIndexes();
-      elements.forEach((element, index) => {
-        const added = { element, newIndex: newIndex + index };
-        this.emitChanges({ added });
-      });
+      // emit change
+      const added = elements.map((element, index) => ({
+        element,
+        newIndex: newIndex + index
+      }));
+      this.emitChanges({ added });
     },
 
     onDragAddSingle(evt) {
@@ -525,7 +527,6 @@ const draggableComponent = {
       const elementIndexOffset = this.$slots.header.length || 0;
       // sort old indicies
       // - "order by index asc" for prevent Node.insertBefore side effect
-      // - "order by index desc" (call reverse()) for prevent Array.splice side effect
       const items = evt.oldIndicies.sort(({ index: a }, { index: b }) => a - b);
       // restore nodes
       items.forEach(({ multiDragElement: item, index }) => {
@@ -536,17 +537,22 @@ const draggableComponent = {
         removeNode(evt.clone);
         return;
       }
-      // remove items
-      items.reverse().forEach(({ index }) => {
-        // remove
+      // remove items and reset transition data
+      // - "order by index desc" (call reverse()) for prevent Array.splice side effect
+      Array.from(items)
+        .reverse()
+        .forEach(({ index }) => {
+          const oldIndex = index - elementIndexOffset;
+          this.spliceList(oldIndex, 1);
+          this.resetTransitionData(oldIndex);
+        });
+      // emit change
+      const removed = items.map(({ index }) => {
         const oldIndex = index - elementIndexOffset;
-        this.spliceList(oldIndex, 1);
-        // emit change
         const context = this.multidragContexts.find(e => e.index === oldIndex);
-        const removed = { element: context.element, oldIndex };
-        this.resetTransitionData(oldIndex);
-        this.emitChanges({ removed });
+        return { element: context.element, oldIndex };
       });
+      this.emitChanges({ removed });
     },
 
     onDragRemoveSingle(evt) {
@@ -580,11 +586,11 @@ const draggableComponent = {
       // remove nodes
       items.forEach(({ multiDragElement: item }) => removeNode(item));
       // insert nodes
-      items.forEach(({ multiDragElement: item, index }) => insertNodeAt(from, item, index));
-      // move items
-      const oldIndicies = items.map(
-        ({ index }) => index - elementIndexOffset
+      items.forEach(({ multiDragElement: item, index }) =>
+        insertNodeAt(from, item, index)
       );
+      // move items
+      const oldIndicies = items.map(({ index }) => index - elementIndexOffset);
       const newIndex = this.getVmIndex(evt.newIndex);
       // note: Array.from = prevent sort change side effect
       this.updatePositions(Array.from(oldIndicies), newIndex);
