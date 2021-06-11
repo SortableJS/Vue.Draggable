@@ -240,6 +240,10 @@ describe("draggable.vue with multidrag plugin", () => {
     let onStart;
     /** @type {(event: Event) => void} */
     let onUpdate;
+    /** @type {(event: Event) => void} */
+    let onAdd;
+    /** @type {(event: Event) => void} */
+    let onRemove;
 
     beforeEach(() => {
       // event listener delegation hack
@@ -265,6 +269,8 @@ describe("draggable.vue with multidrag plugin", () => {
 
       onStart = vm._sortable.options.onStart;
       onUpdate = vm._sortable.options.onUpdate;
+      onAdd = vm._sortable.options.onAdd;
+      onRemove = vm._sortable.options.onRemove;
     });
 
     afterEach(() => {
@@ -409,6 +415,42 @@ describe("draggable.vue with multidrag plugin", () => {
         const { start: startEmit, update: updateEmit, change: changeEmit } = wrapper.emitted();
         expect(startEmit).toHaveLength(1);
         expect(updateEmit).toHaveLength(1);
+        expect(changeEmit).toHaveLength(2);
+      });
+    });
+
+    describe("when drop from other (add)", () => {
+      /** @type {HTMLElement[]} */
+      let newElements;
+
+      beforeEach(async () => {
+        const newItems = ['x', 'y'];
+        newElements = newItems.map((item) => {
+          const element = document.createElement('div');
+          element.appendChild(document.createTextNode(item));
+          return element;
+        });
+        const newElement = newElements[0];
+        newElement._underlying_vm_multidrag_ = newItems;
+
+        // drop after last item
+        const addEvent = {
+          newIndex: 5,
+          newDraggableIndex: 5,
+          item: newElement,
+          items: newElements,
+        };
+        onAdd(addEvent);
+        await Vue.nextTick();
+      });
+
+      it("should added", () => {
+        expect(vm.list).toEqual(["a", "b", "c", "d", "x", "y"]);
+      });
+
+      it("should send events", () => {
+        const { add: addEmit, change: changeEmit } = wrapper.emitted();
+        expect(addEmit).toHaveLength(1);
         expect(changeEmit).toHaveLength(2);
       });
     });

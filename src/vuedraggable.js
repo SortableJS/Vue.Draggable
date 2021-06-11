@@ -464,6 +464,10 @@ const draggableComponent = {
     onDragStart(evt) {
       if (evt.items) {
         this.multidragContexts = evt.items.map(e => this.getUnderlyingVm(e));
+        const elements = this.multidragContexts
+          .sort(({ index: a }, { index: b }) => a - b)
+          .map(e => e.element);
+        evt.item._underlying_vm_multidrag_ = this.clone(elements);
       }
       this.context = this.getUnderlyingVm(evt.item);
       evt.item._underlying_vm_ = this.clone(this.context.element);
@@ -471,6 +475,31 @@ const draggableComponent = {
     },
 
     onDragAdd(evt) {
+      if (evt.item._underlying_vm_multidrag_) {
+        this.onDragAddMulti(evt);
+      } else {
+        this.onDragAddSingle(evt);
+      }
+    },
+
+    onDragAddMulti(evt) {
+      const elements = evt.item._underlying_vm_multidrag_;
+      if (elements === undefined) {
+        return;
+      }
+      // remove nodes
+      evt.items.forEach(e => removeNode(e));
+      // insert elements
+      const newIndex = this.getVmIndex(evt.newIndex);
+      this.spliceList(newIndex, 0, ...elements);
+      this.computeIndexes();
+      elements.forEach((element, index) => {
+        const added = { element, newIndex: newIndex + index };
+        this.emitChanges({ added });
+      });
+    },
+
+    onDragAddSingle(evt) {
       const element = evt.item._underlying_vm_;
       if (element === undefined) {
         return;
