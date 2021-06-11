@@ -300,12 +300,33 @@ methods: {
   }
 ```
 
+#### multiDrag
+Type: `boolean`<br>
+Required: `false`<br>
+Default: `false`<br>
+
+Set `true` for activate [MultiDrag](https://github.com/SortableJS/Sortable/wiki/Dragging-Multiple-Items-in-Sortable) plugin.
+
+#### multiDragKey
+Type: `string`<br>
+Required: `false`<br>
+Default: `undefined`<br>
+
+See "Selection key" part of [MultiDrag](https://github.com/SortableJS/Sortable/wiki/Dragging-Multiple-Items-in-Sortable) plugin.
+
+#### selectedClass
+Type: `string`<br>
+Required: `false`<br>
+Default: `sortable-selected` (from Sortable.js)<br>
+
+The selected class is the HTML class that will be applied to the selected elements in the list.
+
 ### Events
 
 * Support for Sortable events:
 
-  `start`, `add`, `remove`, `update`, `end`, `choose`, `unchoose`, `sort`, `filter`, `clone`<br>
-  Events are called whenever onStart, onAdd, onRemove, onUpdate, onEnd, onChoose, onUnchoose, onSort, onClone are fired by Sortable.js with the same argument.<br>
+  `start`, `add`, `remove`, `update`, `end`, `choose`, `unchoose`, `sort`, `filter`, `clone`, `select`, `deselect`<br>
+  Events are called whenever onStart, onAdd, onRemove, onUpdate, onEnd, onChoose, onUnchoose, onSort, onClone, onSelect, onDeselect are fired by Sortable.js with the same argument.<br>
   [See here for reference](https://github.com/RubaXa/Sortable#event-object-demo)
 
   Note that SortableJS OnMove callback is mapped with the [move prop](https://github.com/SortableJS/Vue.Draggable/blob/master/README.md#move)
