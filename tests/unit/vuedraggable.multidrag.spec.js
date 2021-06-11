@@ -52,31 +52,16 @@ describe('draggable.vue with multidrag plugin', () => {
       console.warn = warn;
     });
 
-    describe('with incorrect props', () => {
-      it('warns when multiDrag is true but selectedClass is not set', () => {
-        shallowMount(draggable, {
-          propsData: {
-            multiDrag: true,
-          },
-          slots: {
-            default: "",
-          },
-        });
-        expect(console.warn).toBeCalledWith(
-          'selected-class must be set when multi-drag mode. See https://github.com/SortableJS/Sortable/wiki/Dragging-Multiple-Items-in-Sortable#enable-multi-drag'
-        );
-      });
-    });
-
     it('instantiate without error', () => {
-      const { wrapper } = create({
+      const { wrapper, vm } = create({
         propsData: {
           multiDrag: true,
           selectedClass: 'selected',
         },
       });
-      expect(wrapper).not.toBeUndefined();
       expect(console.warn).not.toBeCalled();
+      expect(wrapper).not.toBeUndefined();
+      expect(vm._sortable.multiDrag).not.toBeUndefined();
     });
   });
 

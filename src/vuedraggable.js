@@ -219,12 +219,6 @@ const draggableComponent = {
         "Options props is deprecated, add sortable options directly as vue.draggable item, or use v-bind. See https://github.com/SortableJS/Vue.Draggable/blob/master/documentation/migrate.md#options-props"
       );
     }
-
-    if (this.multiDrag && (this.selectedClass || "") === "") {
-      console.warn(
-        "selected-class must be set when multi-drag mode. See https://github.com/SortableJS/Sortable/wiki/Dragging-Multiple-Items-in-Sortable#enable-multi-drag"
-      );
-    }
   },
 
   mounted() {
@@ -259,21 +253,26 @@ const draggableComponent = {
 
     if (this.multiDrag) {
       options.multiDrag = true;
-      options.selectedClass = this.selectedClass;
+      if (this.selectedClass) {
+        options.selectedClass = this.selectedClass;
+      }
       if (this.multiDragKey) {
         options.multiDragKey = this.multiDragKey;
-      }
-      // create singleton for multidrag here
-      // note:
-      // - cjs ("sortable.js") mount MultiDrag automatically.
-      // - default esm ("sortable.esm") does not mount MultiDrag automatically, "sortable.complete.esm" does.
-      if (!multidragSingleton && MultiDrag) {
-        multidragSingleton = new MultiDrag();
-        Sortable.mount(multidragSingleton);
       }
     }
 
     this._sortable = new Sortable(this.rootContainer, options);
+    // check multidrag plugin loaded
+    // - cjs ("sortable.js") and complete esm ("sortable.complete.esm") mount MultiDrag automatically.
+    // - default esm ("sortable.esm") does not mount MultiDrag automatically.
+    if (this.multiDrag && !this._sortable.multiDrag) {
+      // mount plugin if not mounted
+      Sortable.mount(new MultiDrag());
+      // destroy and recreate sortable.js instance
+      this._sortable.destroy();
+      this._sortable = new Sortable(this.rootContainer, options);
+    }
+
     this.computeIndexes();
   },
 
