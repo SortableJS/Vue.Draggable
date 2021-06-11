@@ -316,10 +316,17 @@ describe('draggable.vue with multidrag plugin', () => {
       });
 
       it('should send events', () => {
+        const expectedEvents = {
+          moved: [
+            { element: 'a', oldIndex: 0, newIndex: 2 },
+            { element: 'b', oldIndex: 1, newIndex: 3 }
+          ]
+        };
         const { start: startEmit, update: updateEmit, change: changeEmit } = wrapper.emitted();
         expect(startEmit).toHaveLength(1);
         expect(updateEmit).toHaveLength(1);
-        expect(changeEmit).toHaveLength(2);
+        expect(changeEmit).toHaveLength(1);
+        expect(changeEmit).toEqual([[expectedEvents]]);
       });
     });
 
@@ -363,10 +370,17 @@ describe('draggable.vue with multidrag plugin', () => {
       });
 
       it('should send events', () => {
+        const expectedEvents = {
+          moved: [
+            { element: 'a', oldIndex: 0, newIndex: 2 },
+            { element: 'b', oldIndex: 1, newIndex: 3 }
+          ]
+        };
         const { start: startEmit, update: updateEmit, change: changeEmit } = wrapper.emitted();
         expect(startEmit).toHaveLength(1);
         expect(updateEmit).toHaveLength(1);
-        expect(changeEmit).toHaveLength(2);
+        expect(changeEmit).toHaveLength(1);
+        expect(changeEmit).toEqual([[expectedEvents]]);
       });
     });
 
@@ -410,10 +424,17 @@ describe('draggable.vue with multidrag plugin', () => {
       });
 
       it('should send events', () => {
+        const expectedEvents = {
+          moved: [
+            { element: 'b', oldIndex: 1, newIndex: 0 },
+            { element: 'd', oldIndex: 3, newIndex: 1 }
+          ]
+        };
         const { start: startEmit, update: updateEmit, change: changeEmit } = wrapper.emitted();
         expect(startEmit).toHaveLength(1);
         expect(updateEmit).toHaveLength(1);
-        expect(changeEmit).toHaveLength(2);
+        expect(changeEmit).toHaveLength(1);
+        expect(changeEmit).toEqual([[expectedEvents]]);
       });
     });
 

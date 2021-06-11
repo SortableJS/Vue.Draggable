@@ -564,51 +564,40 @@ const draggableComponent = {
 
     onDragUpdate(evt) {
       if (evt.items) {
-        const { oldIndicies, items, from } = evt;
-        const evts = items.map(item => ({
-          from,
-          item,
-          oldIndex: oldIndicies.find(e => e.multiDragElement === item).index
-        }));
-        this.onDragUpdateMulti(evt, evts, this.multidragContexts);
+        this.onDragUpdateMulti(evt);
       } else {
         this.onDragUpdateSingle(evt);
       }
     },
 
-    /**
-     * @param {{newIndex: number}} originalEvent
-     * @param {{from: HTMLElement, item: HTMLElement, oldIndex: number, newIndex: number}[]} evts
-     * @param {{index: number, element: any}[]} contexts
-     */
-    onDragUpdateMulti(originalEvent, evts, contexts) {
+    onDragUpdateMulti(evt) {
+      const { oldIndicies: items, from } = evt;
       // for match item index and element index
       const elementIndexOffset = this.$slots.header.length || 0;
-      // sort evts
+      // sort items
       // note: "order by oldIndex asc" for prevent Node.insertBefore side effect
-      evts.sort(({ oldIndex: a }, { oldIndex: b }) => a - b);
+      items.sort(({ index: a }, { index: b }) => a - b);
       // remove nodes
-      evts.forEach(({ item }) => removeNode(item));
+      items.forEach(({ multiDragElement: item }) => removeNode(item));
       // insert nodes
-      evts.forEach(({ from, item, oldIndex }) =>
-        insertNodeAt(from, item, oldIndex)
-      );
+      items.forEach(({ multiDragElement: item, index }) => insertNodeAt(from, item, index));
       // move items
-      const oldIndicies = evts.map(
-        ({ oldIndex }) => oldIndex - elementIndexOffset
+      const oldIndicies = items.map(
+        ({ index }) => index - elementIndexOffset
       );
-      const newIndex = this.getVmIndex(originalEvent.newIndex);
-      this.updatePositions(oldIndicies, newIndex);
+      const newIndex = this.getVmIndex(evt.newIndex);
+      // note: Array.from = prevent sort change side effect
+      this.updatePositions(Array.from(oldIndicies), newIndex);
       // emit change
-      oldIndicies.forEach((oldIndex, index) => {
-        const context = contexts.find(e => e.index === oldIndex);
-        const moved = {
+      const moved = oldIndicies.map((oldIndex, index) => {
+        const context = this.multidragContexts.find(e => e.index === oldIndex);
+        return {
           element: context.element,
           oldIndex,
           newIndex: newIndex + index
         };
-        this.emitChanges({ moved });
       });
+      this.emitChanges({ moved });
     },
 
     onDragUpdateSingle(evt) {
