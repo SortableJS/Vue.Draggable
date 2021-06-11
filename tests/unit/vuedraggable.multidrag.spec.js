@@ -1,22 +1,20 @@
-import { mount, shallowMount } from "@vue/test-utils";
-import Sortable from "sortablejs";
+import { shallowMount } from '@vue/test-utils';
+import Sortable from 'sortablejs';
 
-import draggable from "@/vuedraggable";
-import Vue from "vue";
-import Fake from "./helper/FakeComponent.js";
-import FakeFunctional from "./helper/FakeFunctionalComponent.js";
+import draggable from '@/vuedraggable';
+import Vue from 'vue';
 
 function create(options) {
   const { propsData: { list: items = [] } } = options;
   const opts = Object.assign({
     attrs: {
-      sortableOption: "value",
-      "to-be-camelized": true,
+      sortableOption: 'value',
+      'to-be-camelized': true,
     },
     slots: {
       default: items.map((item) => `<div class="item">${item}</div>`),
-      header: "<header/>",
-      footer: "<footer/>",
+      header: '<header/>',
+      footer: '<footer/>',
     },
   }, options);
   const wrapper = shallowMount(draggable, opts);
@@ -26,7 +24,7 @@ function create(options) {
 }
 
 /**
- * @param {"addEventListener" | "removeEventListener"} listnerName 
+ * @param {'addEventListener' | 'removeEventListener'} listnerName 
  * @param {GlobalEventHandlers[listnerName]} callback 
  * @returns {jest.SpyInstance}
  */
@@ -39,8 +37,8 @@ function eventListnerDelegationMock(listnerName, callback) {
   });
 }
 
-describe("draggable.vue with multidrag plugin", () => {
-  describe("when initialized", () => {
+describe('draggable.vue with multidrag plugin', () => {
+  describe('when initialized', () => {
     const { error } = console;
     const { warn } = console;
 
@@ -54,8 +52,8 @@ describe("draggable.vue with multidrag plugin", () => {
       console.warn = warn;
     });
 
-    describe("with incorrect props", () => {
-      it("warns when multiDrag is true but selectedClass is not set", () => {
+    describe('with incorrect props', () => {
+      it('warns when multiDrag is true but selectedClass is not set', () => {
         shallowMount(draggable, {
           propsData: {
             multiDrag: true,
@@ -65,12 +63,12 @@ describe("draggable.vue with multidrag plugin", () => {
           },
         });
         expect(console.warn).toBeCalledWith(
-          "selected-class must be set when multi-drag mode. See https://github.com/SortableJS/Sortable/wiki/Dragging-Multiple-Items-in-Sortable#enable-multi-drag"
+          'selected-class must be set when multi-drag mode. See https://github.com/SortableJS/Sortable/wiki/Dragging-Multiple-Items-in-Sortable#enable-multi-drag'
         );
       });
     });
 
-    it("instantiate without error", () => {
+    it('instantiate without error', () => {
       const { wrapper } = create({
         propsData: {
           multiDrag: true,
@@ -82,7 +80,7 @@ describe("draggable.vue with multidrag plugin", () => {
     });
   });
 
-  describe("should have props", () => {
+  describe('should have props', () => {
     const { props } = create({
       propsData: {
         multiDrag: true,
@@ -92,7 +90,7 @@ describe("draggable.vue with multidrag plugin", () => {
 
     test.each([
       [
-        "multiDrag",
+        'multiDrag',
         {
           type: Boolean,
           required: false,
@@ -100,7 +98,7 @@ describe("draggable.vue with multidrag plugin", () => {
         },
       ],
       [
-        "multiDragKey",
+        'multiDragKey',
         {
           type: String,
           required: false,
@@ -108,21 +106,21 @@ describe("draggable.vue with multidrag plugin", () => {
         },
       ],
       [
-        "selectedClass",
+        'selectedClass',
         {
           type: String,
           required: false,
           default: null,
         },
       ],
-    ])("%s equal to %o", (name, value) => {
+    ])('%s equal to %o', (name, value) => {
       const propsValue = props[name];
       expect(propsValue).toEqual(value);
     });
   });
 
-  describe("item select and deselect", () => {
-    /** @type {import("@vue/test-utils").Wrapper<Vue>} */
+  describe('item select and deselect', () => {
+    /** @type {import('@vue/test-utils').Wrapper<Vue>} */
     let wrapper;
     /** @type {Vue} */
     let vm;
@@ -133,15 +131,15 @@ describe("draggable.vue with multidrag plugin", () => {
 
     beforeEach(() => {
       // event listener delegation hack
-      addEventListenerMock = eventListnerDelegationMock("addEventListener", (type, listener, options) => {
+      addEventListenerMock = eventListnerDelegationMock('addEventListener', (type, listener, options) => {
         wrapper?.element?.addEventListener(type, listener, options);
       });
-      removeEventListenerMock = eventListnerDelegationMock("removeEventListener", (type, listener, options) => {
+      removeEventListenerMock = eventListnerDelegationMock('removeEventListener', (type, listener, options) => {
         wrapper?.element?.removeEventListener(type, listener, options);
       });
 
       // component
-      const items = ["a", "b", "c", "d"];
+      const items = ['a', 'b', 'c', 'd'];
       const { wrapper: _w, vm: _v } = create({
         propsData: {
           list: items,
@@ -158,7 +156,7 @@ describe("draggable.vue with multidrag plugin", () => {
       removeEventListenerMock.mockRestore();
     });
 
-    it("should be selected", async () => {
+    it('should be selected', async () => {
       const wrapperItems = wrapper.findAll('.item');
       const item1 = wrapperItems.at(0);
       const item2 = wrapperItems.at(wrapperItems.length - 1);
@@ -187,7 +185,7 @@ describe("draggable.vue with multidrag plugin", () => {
       expect(emitEvent2.newIndicies).toEqual([{ multiDragElement: item1.element, index: 1 }, { multiDragElement: item2.element, index: 4 }]);
     });
 
-    it("should be deselected", async () => {
+    it('should be deselected', async () => {
       const wrapperItems = wrapper.findAll('.item');
       const item1 = wrapperItems.at(0);
       const item2 = wrapperItems.at(wrapperItems.length - 1);
@@ -221,14 +219,14 @@ describe("draggable.vue with multidrag plugin", () => {
     });
   });
 
-  describe("multi item drag and drop", () => {
-    /** @type {import("@vue/test-utils").Wrapper<Vue>} */
+  describe('multi item drag and drop', () => {
+    /** @type {import('@vue/test-utils').Wrapper<Vue>} */
     let wrapper;
-    /** @type {import("@vue/test-utils").WrapperArray<Vue>} */
+    /** @type {import('@vue/test-utils').WrapperArray<Vue>} */
     let wrapperItems;
-    /** @type {import("@vue/test-utils").Wrapper<Vue>} */
+    /** @type {import('@vue/test-utils').Wrapper<Vue>} */
     let item1;
-    /** @type {import("@vue/test-utils").Wrapper<Vue>} */
+    /** @type {import('@vue/test-utils').Wrapper<Vue>} */
     let item2;
     /** @type {Vue} */
     let vm;
@@ -247,15 +245,15 @@ describe("draggable.vue with multidrag plugin", () => {
 
     beforeEach(() => {
       // event listener delegation hack
-      addEventListenerMock = eventListnerDelegationMock("addEventListener", (type, listener, options) => {
+      addEventListenerMock = eventListnerDelegationMock('addEventListener', (type, listener, options) => {
         wrapper?.element?.addEventListener(type, listener, options);
       });
-      removeEventListenerMock = eventListnerDelegationMock("removeEventListener", (type, listener, options) => {
+      removeEventListenerMock = eventListnerDelegationMock('removeEventListener', (type, listener, options) => {
         wrapper?.element?.removeEventListener(type, listener, options);
       });
 
       // component
-      const items = ["a", "b", "c", "d"];
+      const items = ['a', 'b', 'c', 'd'];
       const { wrapper: _w, vm: _v } = create({
         propsData: {
           list: items,
@@ -278,7 +276,7 @@ describe("draggable.vue with multidrag plugin", () => {
       removeEventListenerMock.mockRestore();
     });
 
-    describe("when drop first and second into last", () => {
+    describe('when drop first and second into last', () => {
       beforeEach(async () => {
         item1 = wrapperItems.at(0);
         item2 = wrapperItems.at(1);
@@ -313,11 +311,11 @@ describe("draggable.vue with multidrag plugin", () => {
         await Vue.nextTick();
       });
 
-      it("should changed", () => {
-        expect(vm.list).toEqual(["c", "d", "a", "b"]);
+      it('should changed', () => {
+        expect(vm.list).toEqual(['c', 'd', 'a', 'b']);
       });
 
-      it("should send events", () => {
+      it('should send events', () => {
         const { start: startEmit, update: updateEmit, change: changeEmit } = wrapper.emitted();
         expect(startEmit).toHaveLength(1);
         expect(updateEmit).toHaveLength(1);
@@ -325,7 +323,7 @@ describe("draggable.vue with multidrag plugin", () => {
       });
     });
 
-    describe("when drop second and first into last", () => {
+    describe('when drop second and first into last', () => {
       beforeEach(async () => {
         item1 = wrapperItems.at(0);
         item2 = wrapperItems.at(1);
@@ -360,11 +358,11 @@ describe("draggable.vue with multidrag plugin", () => {
         await Vue.nextTick();
       });
 
-      it("should changed", () => {
-        expect(vm.list).toEqual(["c", "d", "a", "b"]);
+      it('should changed', () => {
+        expect(vm.list).toEqual(['c', 'd', 'a', 'b']);
       });
 
-      it("should send events", () => {
+      it('should send events', () => {
         const { start: startEmit, update: updateEmit, change: changeEmit } = wrapper.emitted();
         expect(startEmit).toHaveLength(1);
         expect(updateEmit).toHaveLength(1);
@@ -372,7 +370,7 @@ describe("draggable.vue with multidrag plugin", () => {
       });
     });
 
-    describe("when drop second and last into first", () => {
+    describe('when drop second and last into first', () => {
       beforeEach(async () => {
         item1 = wrapperItems.at(1);
         item2 = wrapperItems.at(3);
@@ -407,11 +405,11 @@ describe("draggable.vue with multidrag plugin", () => {
         await Vue.nextTick();
       });
 
-      it("should changed", () => {
-        expect(vm.list).toEqual(["b", "d", "a", "c"]);
+      it('should changed', () => {
+        expect(vm.list).toEqual(['b', 'd', 'a', 'c']);
       });
 
-      it("should send events", () => {
+      it('should send events', () => {
         const { start: startEmit, update: updateEmit, change: changeEmit } = wrapper.emitted();
         expect(startEmit).toHaveLength(1);
         expect(updateEmit).toHaveLength(1);
@@ -419,7 +417,7 @@ describe("draggable.vue with multidrag plugin", () => {
       });
     });
 
-    describe("when drop from other (add)", () => {
+    describe('when drop from other (add)', () => {
       /** @type {HTMLElement[]} */
       let newElements;
 
@@ -444,11 +442,11 @@ describe("draggable.vue with multidrag plugin", () => {
         await Vue.nextTick();
       });
 
-      it("should added", () => {
-        expect(vm.list).toEqual(["a", "b", "c", "d", "x", "y"]);
+      it('should added', () => {
+        expect(vm.list).toEqual(['a', 'b', 'c', 'd', 'x', 'y']);
       });
 
-      it("should send events", () => {
+      it('should send events', () => {
         const { add: addEmit, change: changeEmit } = wrapper.emitted();
         expect(addEmit).toHaveLength(1);
         expect(changeEmit).toHaveLength(2);
