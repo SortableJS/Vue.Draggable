@@ -1,8 +1,21 @@
 import Sortable, { MultiDrag } from "sortablejs";
 import { insertNodeAt, camelize, console, removeNode } from "./util/helper";
 
-// singleton of multidrag plugin for esm
-let multidragSingleton;
+function createSortableInstance(rootContainer, options) {
+  const sortable = new Sortable(rootContainer, options);
+  // check multidrag plugin loaded
+  // - cjs ("sortable.js") and complete esm ("sortable.complete.esm") mount MultiDrag automatically.
+  // - default esm ("sortable.esm") does not mount MultiDrag automatically.
+  if (options.multiDrag && !sortable.multiDrag) {
+    // mount plugin if not mounted
+    Sortable.mount(new MultiDrag());
+    // destroy and recreate sortable.js instance
+    sortable.destroy();
+    return createSortableInstance(rootContainer, options);
+  } else {
+    return sortable;
+  }
+}
 
 function buildAttribute(object, propName, value) {
   if (value === undefined) {
@@ -244,35 +257,29 @@ const draggableComponent = {
       return res;
     }, {});
 
-    const options = Object.assign({}, this.options, attributes, optionsAdded, {
-      onMove: (evt, originalEvent) => {
-        return this.onDragMove(evt, originalEvent);
+    const pluginOptions = {};
+    if (this.multiDrag) {
+      pluginOptions.multiDrag = this.multiDrag;
+      ["selectedClass", "multiDragKey"]
+        .filter(key => this[key])
+        .forEach(key => (pluginOptions[key] = this[key]));
+    }
+
+    const options = Object.assign(
+      {},
+      this.options,
+      attributes,
+      optionsAdded,
+      pluginOptions,
+      {
+        onMove: (evt, originalEvent) => {
+          return this.onDragMove(evt, originalEvent);
+        }
       }
-    });
+    );
     !("draggable" in options) && (options.draggable = ">*");
 
-    if (this.multiDrag) {
-      options.multiDrag = true;
-      if (this.selectedClass) {
-        options.selectedClass = this.selectedClass;
-      }
-      if (this.multiDragKey) {
-        options.multiDragKey = this.multiDragKey;
-      }
-    }
-
-    this._sortable = new Sortable(this.rootContainer, options);
-    // check multidrag plugin loaded
-    // - cjs ("sortable.js") and complete esm ("sortable.complete.esm") mount MultiDrag automatically.
-    // - default esm ("sortable.esm") does not mount MultiDrag automatically.
-    if (this.multiDrag && !this._sortable.multiDrag) {
-      // mount plugin if not mounted
-      Sortable.mount(new MultiDrag());
-      // destroy and recreate sortable.js instance
-      this._sortable.destroy();
-      this._sortable = new Sortable(this.rootContainer, options);
-    }
-
+    this._sortable = createSortableInstance(this.rootContainer, options);
     this.computeIndexes();
   },
 
