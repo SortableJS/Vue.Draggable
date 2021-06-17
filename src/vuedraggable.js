@@ -257,26 +257,18 @@ const draggableComponent = {
       return res;
     }, {});
 
-    const pluginOptions = {};
     if (this.multiDrag) {
-      pluginOptions.multiDrag = this.multiDrag;
+      optionsAdded.multiDrag = this.multiDrag;
       ["selectedClass", "multiDragKey"]
         .filter(key => this[key])
-        .forEach(key => (pluginOptions[key] = this[key]));
+        .forEach(key => (optionsAdded[key] = this[key]));
     }
 
-    const options = Object.assign(
-      {},
-      this.options,
-      attributes,
-      optionsAdded,
-      pluginOptions,
-      {
-        onMove: (evt, originalEvent) => {
-          return this.onDragMove(evt, originalEvent);
-        }
+    const options = Object.assign({}, this.options, attributes, optionsAdded, {
+      onMove: (evt, originalEvent) => {
+        return this.onDragMove(evt, originalEvent);
       }
-    );
+    });
     !("draggable" in options) && (options.draggable = ">*");
 
     this._sortable = createSortableInstance(this.rootContainer, options);
