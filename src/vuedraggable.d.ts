@@ -68,6 +68,10 @@ declare module 'vuedraggable' {
       tag?: string | null;
       move: any;
       componentData: any;
+      // plugin: multidrag
+      multiDrag?: boolean;
+      multiDragKey?: string;
+      selectedClass?: string;
     }
   >;
 

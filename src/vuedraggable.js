@@ -1,5 +1,21 @@
-import Sortable from "sortablejs";
+import Sortable, { MultiDrag } from "sortablejs";
 import { insertNodeAt, camelize, console, removeNode } from "./util/helper";
+
+function createSortableInstance(rootContainer, options) {
+  const sortable = new Sortable(rootContainer, options);
+  // check multidrag plugin loaded
+  // - cjs ("sortable.js") and complete esm ("sortable.complete.esm") mount MultiDrag automatically.
+  // - default esm ("sortable.esm") does not mount MultiDrag automatically.
+  if (options.multiDrag && !sortable.multiDrag) {
+    // mount plugin if not mounted
+    Sortable.mount(new MultiDrag());
+    // destroy and recreate sortable.js instance
+    sortable.destroy();
+    return createSortableInstance(rootContainer, options);
+  } else {
+    return sortable;
+  }
+}
 
 function buildAttribute(object, propName, value) {
   if (value === undefined) {
@@ -98,8 +114,22 @@ function getComponentAttributes($attrs, componentData) {
   return attributes;
 }
 
+function getIndiciesToRemove(items, offset) {
+  return Array.from(items)
+    .reverse()
+    .map(({ index }) => index - offset);
+}
+
 const eventsListened = ["Start", "Add", "Remove", "Update", "End"];
-const eventsToEmit = ["Choose", "Unchoose", "Sort", "Filter", "Clone"];
+const eventsToEmit = [
+  "Choose",
+  "Unchoose",
+  "Sort",
+  "Filter",
+  "Clone",
+  "Select",
+  "Deselect"
+];
 const readonlyProperties = ["Move", ...eventsListened, ...eventsToEmit].map(
   evt => "on" + evt
 );
@@ -141,6 +171,22 @@ const props = {
   },
   componentData: {
     type: Object,
+    required: false,
+    default: null
+  },
+  // plugin: multidrag
+  multiDrag: {
+    type: Boolean,
+    required: false,
+    default: false
+  },
+  multiDragKey: {
+    type: String,
+    required: false,
+    default: null
+  },
+  selectedClass: {
+    type: String,
     required: false,
     default: null
   }
@@ -217,13 +263,21 @@ const draggableComponent = {
       return res;
     }, {});
 
+    if (this.multiDrag) {
+      optionsAdded.multiDrag = this.multiDrag;
+      ["selectedClass", "multiDragKey"]
+        .filter(key => this[key])
+        .forEach(key => (optionsAdded[key] = this[key]));
+    }
+
     const options = Object.assign({}, this.options, attributes, optionsAdded, {
       onMove: (evt, originalEvent) => {
         return this.onDragMove(evt, originalEvent);
       }
     });
     !("draggable" in options) && (options.draggable = ">*");
-    this._sortable = new Sortable(this.rootContainer, options);
+
+    this._sortable = createSortableInstance(this.rootContainer, options);
     this.computeIndexes();
   },
 
@@ -349,9 +403,34 @@ const draggableComponent = {
       this.alterList(spliceList);
     },
 
+    removeAllFromList(indicies) {
+      const spliceList = list =>
+        indicies.forEach(index => list.splice(index, 1));
+      this.alterList(spliceList);
+    },
+
     updatePosition(oldIndex, newIndex) {
       const updatePosition = list =>
         list.splice(newIndex, 0, list.splice(oldIndex, 1)[0]);
+      this.alterList(updatePosition);
+    },
+
+    /**
+     * @param {number[]} oldIndicies
+     * @param {number} newIndex
+     */
+    updatePositions(oldIndicies, newIndex) {
+      /** @type {<T = any>(list: T[]) => T[]} */
+      const updatePosition = list => {
+        // get selected items with correct order
+        // sort -> reverse (for prevent Array.splice side effect) -> splice -> reverse
+        const items = oldIndicies
+          .sort()
+          .reverse()
+          .flatMap(oldIndex => list.splice(oldIndex, 1))
+          .reverse();
+        return list.splice(newIndex, 0, ...items);
+      };
       this.alterList(updatePosition);
     },
 
@@ -393,12 +472,46 @@ const draggableComponent = {
     },
 
     onDragStart(evt) {
+      if (evt.items) {
+        this.multidragContexts = evt.items.map(e => this.getUnderlyingVm(e));
+        const elements = this.multidragContexts
+          .sort(({ index: a }, { index: b }) => a - b)
+          .map(e => e.element);
+        evt.item._underlying_vm_multidrag_ = this.clone(elements);
+      }
       this.context = this.getUnderlyingVm(evt.item);
       evt.item._underlying_vm_ = this.clone(this.context.element);
       draggingElement = evt.item;
     },
 
     onDragAdd(evt) {
+      if (evt.items) {
+        this.onDragAddMulti(evt);
+      } else {
+        this.onDragAddSingle(evt);
+      }
+    },
+
+    onDragAddMulti(evt) {
+      const elements = evt.item._underlying_vm_multidrag_;
+      if (elements === undefined) {
+        return;
+      }
+      // remove nodes
+      evt.items.forEach(e => removeNode(e));
+      // insert elements
+      const newIndex = this.getVmIndex(evt.newIndex);
+      this.spliceList(newIndex, 0, ...elements);
+      this.computeIndexes();
+      // emit change
+      const added = elements.map((element, index) => ({
+        element,
+        newIndex: newIndex + index
+      }));
+      this.emitChanges({ added });
+    },
+
+    onDragAddSingle(evt) {
       const element = evt.item._underlying_vm_;
       if (element === undefined) {
         return;
@@ -412,6 +525,45 @@ const draggableComponent = {
     },
 
     onDragRemove(evt) {
+      if (evt.items) {
+        this.onDragRemoveMulti(evt);
+      } else {
+        this.onDragRemoveSingle(evt);
+      }
+    },
+
+    onDragRemoveMulti(evt) {
+      // for match item index and element index
+      const headerSize = (this.$slots.header || []).length || 0;
+      // sort old indicies
+      // - "order by index asc" for prevent Node.insertBefore side effect
+      const items = evt.oldIndicies.sort(({ index: a }, { index: b }) => a - b);
+      // restore nodes
+      items.forEach(({ multiDragElement: item, index }) => {
+        insertNodeAt(this.rootContainer, item, index);
+        if (item.parentNode) {
+          Sortable.utils.deselect(item);
+        }
+      });
+      // if clone
+      if (evt.pullMode === "clone") {
+        removeNode(evt.clone);
+        return;
+      }
+      // remove items and reset transition data
+      // - "order by index desc" (call reverse()) for prevent Array.splice side effect
+      const indiciesToRemove = getIndiciesToRemove(items, headerSize);
+      indiciesToRemove.forEach(oldIndex => this.resetTransitionData(oldIndex));
+      this.removeAllFromList(indiciesToRemove);
+      // emit change
+      const removed = indiciesToRemove.sort().map(oldIndex => {
+        const context = this.multidragContexts.find(e => e.index === oldIndex);
+        return { element: context.element, oldIndex };
+      });
+      this.emitChanges({ removed });
+    },
+
+    onDragRemoveSingle(evt) {
       insertNodeAt(this.rootContainer, evt.item, evt.oldIndex);
       if (evt.pullMode === "clone") {
         removeNode(evt.clone);
@@ -425,6 +577,46 @@ const draggableComponent = {
     },
 
     onDragUpdate(evt) {
+      if (evt.items) {
+        this.onDragUpdateMulti(evt);
+      } else {
+        this.onDragUpdateSingle(evt);
+      }
+    },
+
+    onDragUpdateMulti(evt) {
+      const { items, from } = evt;
+      // for match item index and element index
+      const headerSize = (this.$slots.header || []).length || 0;
+      // remove nodes
+      items.forEach(item => removeNode(item));
+      // sort items
+      // note: "order by oldIndex asc" for prevent Node.insertBefore side effect
+      const itemsWithIndex = Array.from(evt.oldIndicies).sort(
+        ({ index: a }, { index: b }) => a - b
+      );
+      // insert nodes
+      itemsWithIndex.forEach(e =>
+        insertNodeAt(from, e.multiDragElement, e.index)
+      );
+      // move items
+      const oldIndicies = itemsWithIndex.map(({ index }) => index - headerSize);
+      const newIndex = this.getVmIndex(evt.newIndex);
+      // note: Array.from = prevent sort change side effect
+      this.updatePositions(Array.from(oldIndicies), newIndex);
+      // emit change
+      const moved = oldIndicies.map((oldIndex, index) => {
+        const context = this.multidragContexts.find(e => e.index === oldIndex);
+        return {
+          element: context.element,
+          oldIndex,
+          newIndex: newIndex + index
+        };
+      });
+      this.emitChanges({ moved });
+    },
+
+    onDragUpdateSingle(evt) {
       removeNode(evt.item);
       insertNodeAt(evt.from, evt.item, evt.oldIndex);
       const oldIndex = this.context.index;
