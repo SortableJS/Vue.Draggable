@@ -528,7 +528,7 @@ const draggableComponent = {
 
     onDragRemoveMulti(evt) {
       // for match item index and element index
-      const elementIndexOffset = (this.$slots.header || []).length || 0;
+      const headerSize = (this.$slots.header || []).length || 0;
       // sort old indicies
       // - "order by index asc" for prevent Node.insertBefore side effect
       const items = evt.oldIndicies.sort(({ index: a }, { index: b }) => a - b);
@@ -548,12 +548,12 @@ const draggableComponent = {
       // - "order by index desc" (call reverse()) for prevent Array.splice side effect
       const indiciesToRemove = Array.from(items)
         .reverse()
-        .map(({ index }) => index - elementIndexOffset);
+        .map(({ index }) => index - headerSize);
       indiciesToRemove.forEach(oldIndex => this.resetTransitionData(oldIndex));
       this.removeAllFromList(indiciesToRemove);
       // emit change
       const removed = items.map(({ index }) => {
-        const oldIndex = index - elementIndexOffset;
+        const oldIndex = index - headerSize;
         const context = this.multidragContexts.find(e => e.index === oldIndex);
         return { element: context.element, oldIndex };
       });
@@ -584,7 +584,7 @@ const draggableComponent = {
     onDragUpdateMulti(evt) {
       const { oldIndicies: itemsWithIndex, items, from } = evt;
       // for match item index and element index
-      const headerSize = this.$slots.header.length || 0;
+      const headerSize = (this.$slots.header || []).length || 0;
       // remove nodes
       items.forEach(item => removeNode(item));
       // sort items
