@@ -535,6 +535,9 @@ const draggableComponent = {
       // restore nodes
       items.forEach(({ multiDragElement: item, index }) => {
         insertNodeAt(this.rootContainer, item, index);
+        if (item.parentNode) {
+          Sortable.utils.deselect(item);
+        }
       });
       // if clone
       if (evt.pullMode === "clone") {
