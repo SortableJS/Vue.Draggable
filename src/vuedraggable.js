@@ -585,14 +585,16 @@ const draggableComponent = {
     },
 
     onDragUpdateMulti(evt) {
-      const { oldIndicies: itemsWithIndex, items, from } = evt;
+      const { items, from } = evt;
       // for match item index and element index
       const headerSize = (this.$slots.header || []).length || 0;
       // remove nodes
       items.forEach(item => removeNode(item));
       // sort items
       // note: "order by oldIndex asc" for prevent Node.insertBefore side effect
-      itemsWithIndex.sort(({ index: a }, { index: b }) => a - b);
+      const itemsWithIndex = Array.from(evt.oldIndicies).sort(
+        ({ index: a }, { index: b }) => a - b
+      );
       // insert nodes
       itemsWithIndex.forEach(e =>
         insertNodeAt(from, e.multiDragElement, e.index)
