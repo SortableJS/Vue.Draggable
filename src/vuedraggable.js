@@ -114,6 +114,12 @@ function getComponentAttributes($attrs, componentData) {
   return attributes;
 }
 
+function getIndiciesToRemove(items, offset) {
+  return Array.from(items)
+    .reverse()
+    .map(({ index }) => index - offset);
+}
+
 const eventsListened = ["Start", "Add", "Remove", "Update", "End"];
 const eventsToEmit = [
   "Choose",
@@ -546,14 +552,11 @@ const draggableComponent = {
       }
       // remove items and reset transition data
       // - "order by index desc" (call reverse()) for prevent Array.splice side effect
-      const indiciesToRemove = Array.from(items)
-        .reverse()
-        .map(({ index }) => index - headerSize);
+      const indiciesToRemove = getIndiciesToRemove(items, headerSize);
       indiciesToRemove.forEach(oldIndex => this.resetTransitionData(oldIndex));
       this.removeAllFromList(indiciesToRemove);
       // emit change
-      const removed = items.map(({ index }) => {
-        const oldIndex = index - headerSize;
+      const removed = indiciesToRemove.sort().map(oldIndex => {
         const context = this.multidragContexts.find(e => e.index === oldIndex);
         return { element: context.element, oldIndex };
       });
