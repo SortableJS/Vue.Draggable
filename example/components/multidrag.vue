@@ -4,7 +4,7 @@
       <h3>Draggable 1</h3>
       <draggable
         class="list-group"
-        :list="list1"
+        v-model="list1"
         group="people"
         multi-drag
         selected-class="selected"
@@ -26,7 +26,7 @@
       <h3>Draggable 2</h3>
       <draggable
         class="list-group"
-        :list="list2"
+        v-model="list2"
         group="people"
         multi-drag
         selected-class="selected"

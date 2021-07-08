@@ -397,6 +397,12 @@ const draggableComponent = {
       this.alterList(spliceList);
     },
 
+    removeAllFromList(indicies) {
+      const spliceList = list =>
+        indicies.forEach(index => list.splice(index, 1));
+      this.alterList(spliceList);
+    },
+
     updatePosition(oldIndex, newIndex) {
       const updatePosition = list =>
         list.splice(newIndex, 0, list.splice(oldIndex, 1)[0]);
@@ -522,7 +528,7 @@ const draggableComponent = {
 
     onDragRemoveMulti(evt) {
       // for match item index and element index
-      const elementIndexOffset = this.$slots.header.length || 0;
+      const elementIndexOffset = (this.$slots.header || []).length || 0;
       // sort old indicies
       // - "order by index asc" for prevent Node.insertBefore side effect
       const items = evt.oldIndicies.sort(({ index: a }, { index: b }) => a - b);
@@ -537,13 +543,11 @@ const draggableComponent = {
       }
       // remove items and reset transition data
       // - "order by index desc" (call reverse()) for prevent Array.splice side effect
-      Array.from(items)
+      const indiciesToRemove = Array.from(items)
         .reverse()
-        .forEach(({ index }) => {
-          const oldIndex = index - elementIndexOffset;
-          this.spliceList(oldIndex, 1);
-          this.resetTransitionData(oldIndex);
-        });
+        .map(({ index }) => index - elementIndexOffset);
+      indiciesToRemove.forEach(oldIndex => this.resetTransitionData(oldIndex));
+      this.removeAllFromList(indiciesToRemove);
       // emit change
       const removed = items.map(({ index }) => {
         const oldIndex = index - elementIndexOffset;
