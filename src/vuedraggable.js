@@ -41,7 +41,7 @@ function delegateAndEmit(evtName) {
 }
 
 function isTransitionName(name) {
-  return ["transition-group", "TransitionGroup"].includes(name);
+  return ["transition-group", "TransitionGroup"].indexOf(name) > -1;
 }
 
 function isTransition(slots) {

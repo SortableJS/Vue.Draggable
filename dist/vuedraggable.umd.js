@@ -548,26 +548,6 @@ module.exports = function (it) {
 
 /***/ }),
 
-/***/ "2fdb":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-// 21.1.3.7 String.prototype.includes(searchString, position = 0)
-
-var $export = __webpack_require__("5ca1");
-var context = __webpack_require__("d2c8");
-var INCLUDES = 'includes';
-
-$export($export.P + $export.F * __webpack_require__("5147")(INCLUDES), 'String', {
-  includes: function includes(searchString /* , position = 0 */) {
-    return !!~context(this, searchString, INCLUDES)
-      .indexOf(searchString, arguments.length > 1 ? arguments[1] : undefined);
-  }
-});
-
-
-/***/ }),
-
 /***/ "32e9":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -909,26 +889,6 @@ var cof = __webpack_require__("2d95");
 module.exports = Object('z').propertyIsEnumerable(0) ? Object : function (it) {
   return cof(it) == 'String' ? it.split('') : Object(it);
 };
-
-
-/***/ }),
-
-/***/ "6762":
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-// https://github.com/tc39/Array.prototype.includes
-var $export = __webpack_require__("5ca1");
-var $includes = __webpack_require__("c366")(true);
-
-$export($export.P, 'Array', {
-  includes: function includes(el /* , fromIndex = 0 */) {
-    return $includes(this, el, arguments.length > 1 ? arguments[1] : undefined);
-  }
-});
-
-__webpack_require__("9c6c")('includes');
 
 
 /***/ }),
@@ -1886,12 +1846,6 @@ function _nonIterableRest() {
 function _slicedToArray(arr, i) {
   return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest();
 }
-// EXTERNAL MODULE: ./node_modules/core-js/modules/es7.array.includes.js
-var es7_array_includes = __webpack_require__("6762");
-
-// EXTERNAL MODULE: ./node_modules/core-js/modules/es6.string.includes.js
-var es6_string_includes = __webpack_require__("2fdb");
-
 // CONCATENATED MODULE: ./node_modules/@babel/runtime/helpers/esm/arrayWithoutHoles.js
 
 function _arrayWithoutHoles(arr) {
@@ -1921,8 +1875,6 @@ var external_commonjs_sortablejs_commonjs2_sortablejs_amd_sortablejs_root_Sortab
 var helper = __webpack_require__("c649");
 
 // CONCATENATED MODULE: ./src/vuedraggable.js
-
-
 
 
 
@@ -1989,7 +1941,7 @@ function delegateAndEmit(evtName) {
 }
 
 function isTransitionName(name) {
-  return ["transition-group", "TransitionGroup"].includes(name);
+  return ["transition-group", "TransitionGroup"].indexOf(name) > -1;
 }
 
 function vuedraggable_isTransition(slots) {
