@@ -1,13 +1,13 @@
 {
-  "name": "vuedraggable",
-  "version": "2.24.3",
+  "name": "vue-swap-draggable",
+  "version": "0.0.3",
   "description": "draggable component for vue",
   "license": "MIT",
   "main": "dist/vuedraggable.umd.min.js",
   "types": "src/vuedraggable.d.ts",
   "repository": {
     "type": "git",
-    "url": "https://github.com/SortableJS/Vue.Draggable.git"
+    "url": "https://github.com/novlan1/Vue.Draggable"
   },
   "private": false,
   "scripts": {
@@ -15,7 +15,6 @@
     "build:doc": "vue-cli-service build ./example/main.js --dest docs --mode development",
     "build": "vue-cli-service build --name vuedraggable --entry ./src/vuedraggable.js --target lib",
     "lint": "vue-cli-service lint src example",
-    "prepublishOnly": "npm run lint && npm run test:unit && npm run build:doc && npm run build",
     "test:unit": "vue-cli-service test:unit --coverage",
     "test:coverage": "vue-cli-service test:unit --coverage --verbose && codecov"
   },
@@ -31,6 +30,7 @@
     "nested"
   ],
   "dependencies": {
+    "better-sortable": "^1.14.0",
     "sortablejs": "1.10.2"
   },
   "devDependencies": {

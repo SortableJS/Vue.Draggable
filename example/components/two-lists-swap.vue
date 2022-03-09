@@ -7,7 +7,8 @@
         :list="list1"
         group="people"
         @change="log"
-        :onDragSwap="true"
+        :swap="true"
+        :swap-class="'highlight'"
       >
         <div
           class="list-group-item"
@@ -26,7 +27,8 @@
         :list="list2"
         group="people"
         @change="log"
-        :onDragSwap="true"
+        :swap="true"
+        :swap-class="'highlight'"
       >
         <div
           class="list-group-item"
@@ -45,10 +47,9 @@
 </template>
 <script>
 import draggable from "@/vuedraggable";
-
 export default {
-  name: "two-lists",
-  display: "Two Lists",
+  name: "two-lists-swap",
+  display: "Two Lists Swap",
   order: 1,
   components: {
     draggable
@@ -86,3 +87,9 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+.highlight {
+  background-color: red;
+}
+</style>
