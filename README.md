@@ -166,7 +166,7 @@ Default: `null`
 
 Input array to draggable component. Typically same array as referenced by inner element v-for directive.<br>
 This is the preferred way to use Vue.draggable as it is compatible with Vuex.<br>
-It should not be used directly but only though the `v-model` directive:
+It should not be used directly but only through the `v-model` directive:
 ```html
 <draggable v-model="myArray">
 ```
