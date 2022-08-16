@@ -290,19 +290,19 @@ describe("draggable.vue when initialized with list", () => {
     });
 
     it("pass data to tag child", async () => {
-      const fakeChild = wrapper.find(Fake);
+      const fakeChild = wrapper.findComponent(Fake);
       expect(fakeChild.props("prop1")).toEqual("info");
     });
 
     it("pass event listener to tag child", async () => {
-      const child = wrapper.find(Fake);
+      const child = wrapper.findComponent(Fake);
       const evt = { data: 33 };
       child.vm.$emit("input", evt);
       expect(input).toHaveBeenCalledWith(evt);
     });
 
     it("pass attributes to tag child", async () => {
-      const child = wrapper.find(Fake);
+      const child = wrapper.findComponent(Fake);
       const attrValue = child.attributes("attribute1");
       expect(attrValue).toEqual("value1");
     });
@@ -853,9 +853,9 @@ describe("draggable.vue when initialized with list", () => {
       },
     });
 
-    const element = wrapper.find("#my-id");
-    expect(element.is("div")).toBe(true);
-    expect(element.html()).toEqual(wrapper.html());
+    const component = wrapper.findComponent("#my-id");
+    expect(component.element.tagName).toBe("DIV");
+    expect(component.html()).toEqual(wrapper.html());
   });
 
   test.each([
@@ -876,9 +876,9 @@ describe("draggable.vue when initialized with list", () => {
           default: "",
         },
       });
-      const element = wrapper.find(`[${attribute}='${value}']`);
-      expect(element.is("div")).toBe(true);
-      expect(element.html()).toEqual(wrapper.html());
+      const component = wrapper.findComponent(`[${attribute}='${value}']`);
+      expect(component.element.tagName).toBe("DIV");
+      expect(component.html()).toEqual(wrapper.html());
     }
   );
 });

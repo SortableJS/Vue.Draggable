@@ -5,6 +5,7 @@
   "license": "MIT",
   "main": "dist/vuedraggable.umd.min.js",
   "types": "src/vuedraggable.d.ts",
+  "module": "dist/vuedraggable.umd.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/SortableJS/Vue.Draggable.git"
@@ -31,7 +32,7 @@
     "nested"
   ],
   "dependencies": {
-    "sortablejs": "1.10.2"
+    "sortablejs": "^1.15.0"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.11.0",
@@ -41,21 +42,21 @@
     "@vue/eslint-config-prettier": "^4.0.1",
     "@vue/test-utils": "^1.1.0",
     "babel-core": "7.0.0-bridge.0",
-    "babel-eslint": "^10.0.1",
-    "babel-jest": "^23.6.0",
+    "babel-eslint": "^10.1.0",
+    "babel-jest": "^28.1.3",
     "bootstrap": "^4.3.1",
-    "codecov": "^3.2.0",
+    "codecov": "^3.8.3",
     "component-fixture": "^0.4.1",
-    "element-ui": "^2.5.4",
+    "element-ui": "^2.15.9",
     "eslint": "^5.8.0",
     "eslint-plugin-vue": "^5.0.0",
     "font-awesome": "^4.7.0",
-    "jquery": "^3.5.1",
+    "jquery": "^3.6.0",
     "vue": "^2.6.12",
-    "vue-cli-plugin-component": "^1.10.5",
+    "vue-cli-plugin-component": "^1.12.2",
     "vue-router": "^3.0.2",
-    "vue-server-renderer": "^2.6.12",
-    "vue-template-compiler": "^2.6.12",
+    "vue-server-renderer": "^2.7.8",
+    "vue-template-compiler": "^2.7.8",
     "vuetify": "^1.5.16",
     "vuex": "^3.1.1"
   },
@@ -88,6 +89,5 @@
     "dist/*.map",
     "dist/*.js",
     "src/*"
-  ],
-  "module": "dist/vuedraggable.umd.js"
+  ]
 }
