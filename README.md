@@ -45,12 +45,7 @@ https://david-desmaisons.github.io/draggable-example/
 
 ## Backers
 
- <a href="https://flatlogic.com/admin-dashboards">
- <img style="margin-top: 10px;" src="https://flatlogic.com/assets/logo-b6ca6492a82bd9eddf58c40710235855b1c502097c23faae6306cd36973aaea8.svg">
- </a>
-
-Admin Dashboard Templates made with Vue, React and Angular.
-
+Looking for backers!
 
 ## Donate
 
