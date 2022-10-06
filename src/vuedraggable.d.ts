@@ -67,7 +67,17 @@ declare module 'vuedraggable' {
       clone: any;
       tag?: string | null;
       move: any;
-      componentData: any;
+      componentData: null | {
+        props?: {
+          [key: string]: any
+        }
+        attrs?: {
+          [key: string]: any
+        }
+        on?: {
+          [key: string]: any
+        }
+      };
     }
   >;
 
