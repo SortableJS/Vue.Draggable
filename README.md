@@ -133,6 +133,8 @@ Draggable component should directly wrap the draggable elements, or a `transitio
 </draggable>
 ```
 
+Known Issue: If the header-slot is placed before the draggable item class, the dragging will not work as expected.
+
 ### With Vuex:
 
 ```html
