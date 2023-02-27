@@ -58,7 +58,7 @@ export default {
     removeAt(idx) {
       this.list.splice(idx, 1);
     },
-    add: function() {
+    add() {
       id++;
       this.list.push({ name: "Juan " + id, id, text: "" });
     }
