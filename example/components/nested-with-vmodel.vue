@@ -1,7 +1,7 @@
 <template>
   <div class="justify-content-between row">
-    <nested-test class="col-8" v-model="elements" />
-    <raw-displayer class="col-4" :title="'Vuex Store'" :value="elements" />
+    <nested-test class="col-8" v-model="list" />
+    <raw-displayer class="col-4" :title="'Vuex Store'" :value="list" />
   </div>
 </template>
 
@@ -17,14 +17,17 @@ export default {
     NestedTest,
     rawDisplayer
   },
-  computed: {
-    elements: {
-      get() {
-        return this.$store.state.nested.elements;
+  data: function() {
+    return {
+      list: this.$store.state.nested.elements
+    };
+  },
+  watch: {
+    list: {
+      handler: function(val) {
+        this.$store.dispatch("nested/updateElements", val);
       },
-      set(value) {
-        this.$store.dispatch("nested/updateElements", value);
-      }
+      deep: true
     }
   },
   methods: {}
