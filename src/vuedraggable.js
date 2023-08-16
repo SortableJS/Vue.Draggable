@@ -11,7 +11,10 @@ function buildAttribute(object, propName, value) {
 }
 
 function computeVmIndex(vnodes, element) {
-  return vnodes.map(elt => elt.elm).indexOf(element);
+  return vnodes
+  .map(elt => elt.elm)
+  .filter(elt => elt.nodeName !== '#comment')
+  .indexOf(element);
 }
 
 function computeIndexes(slots, children, isTransition, footerOffset) {
@@ -19,7 +22,7 @@ function computeIndexes(slots, children, isTransition, footerOffset) {
     return [];
   }
 
-  const elmFromNodes = slots.map(elt => elt.elm);
+  const elmFromNodes = slots.map(elt => elt.elm).filter(elt => elt.nodeName !== '#comment');
   const footerIndex = children.length - footerOffset;
   const rawIndexes = [...children].map((elt, idx) =>
     idx >= footerIndex ? elmFromNodes.length : elmFromNodes.indexOf(elt)
