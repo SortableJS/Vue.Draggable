@@ -139,6 +139,10 @@ const props = {
     type: Function,
     default: null
   },
+  isReplace: {
+    type: Boolean,
+    default: false
+  },
   componentData: {
     type: Object,
     required: false,
@@ -405,7 +409,12 @@ const draggableComponent = {
       }
       removeNode(evt.item);
       const newIndex = this.getVmIndex(evt.newIndex);
-      this.spliceList(newIndex, 0, element);
+      // 是否替换
+      if (this.isReplace) {
+        this.spliceList(newIndex, 1, element);
+      } else {
+        this.spliceList(newIndex, 0, element);
+      }
       this.computeIndexes();
       const added = { element, newIndex };
       this.emitChanges({ added });
