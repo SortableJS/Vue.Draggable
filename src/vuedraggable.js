@@ -238,6 +238,10 @@ const draggableComponent = {
 
     realList() {
       return this.list ? this.list : this.value;
+    },
+
+    ghost() {
+      return Sortable.ghost
     }
   },
 

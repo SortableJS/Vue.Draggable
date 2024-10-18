@@ -56,7 +56,7 @@ Find this project useful? You can buy me a :coffee: or a :beer:
 
 ## Installation
 
-### With npm or yarn 
+### With npm or yarn
 
 ```bash
 yarn add vuedraggable
@@ -66,7 +66,7 @@ npm i -S vuedraggable
 
 **Beware it is vuedraggable for Vue 2.0 and not vue-draggable which is for version 1.0**
 
-### with direct link 
+### with direct link
 ```html
 
 <script src="//cdnjs.cloudflare.com/ajax/libs/vue/2.5.2/vue.min.js"></script>
@@ -137,7 +137,7 @@ Draggable component should directly wrap the draggable elements, or a `transitio
 
 ```html
 <draggable v-model='myList'>
-``` 
+```
 
 ```javascript
 computed: {
@@ -184,7 +184,7 @@ This means that all [sortable option](https://github.com/RubaXa/Sortable#options
 
 kebab-case propery are supported: for example `ghost-class` props will be converted to `ghostClass` sortable option.
 
-Example setting handle, sortable and a group option:
+Example setting handle, sortable, setData, and a group option:
 ```HTML
 <draggable
         v-model="list"
@@ -192,10 +192,32 @@ Example setting handle, sortable and a group option:
         :group="{ name: 'people', pull: 'clone', put: false }"
         ghost-class="ghost"
         :sort="false"
+        :set-data="overrideGhostImage"
         @change="log"
       >
       <!-- -->
 </draggable>
+```
+
+Example accessing the `ghost` element in fallback mode:
+```HTML
+<draggable
+        v-model="list"
+        ref="draggable"
+        :force-fallback="true"
+        @start="dragStart"
+        @change="log"
+      >
+      <!-- -->
+</draggable>
+```
+
+```javascript
+methods: {
+    dragStart(): {
+      this.$refs.draggable.ghost.innerText = "I'm being dragged!"
+    }
+}
 ```
 
 #### tag
@@ -359,22 +381,22 @@ Ex:
 </draggable>
 ```
  ### Gotchas
- 
+
  - Vue.draggable children should always map the list or value prop using a v-for directive
    * You may use [header](https://github.com/SortableJS/Vue.Draggable#header) and [footer](https://github.com/SortableJS/Vue.Draggable#footer) slot to by-pass this limitation.
- 
+
  - Children elements inside v-for should be keyed as any element in Vue.js. Be carefull to provide revelant key values in particular:
     * typically providing array index as keys won't work as key should be linked to the items content
     * cloned elements should provide updated keys, it is doable using the [clone props](#clone) for example
 
 
- ### Example 
+ ### Example
   * [Clone](https://sortablejs.github.io/Vue.Draggable/#/custom-clone)
   * [Handle](https://sortablejs.github.io/Vue.Draggable/#/handle)
   * [Transition](https://sortablejs.github.io/Vue.Draggable/#/transition-example-2)
   * [Nested](https://sortablejs.github.io/Vue.Draggable/#/nested-example)
   * [Table](https://sortablejs.github.io/Vue.Draggable/#/table-example)
- 
+
  ### Full demo example
 
 [draggable-example](https://github.com/David-Desmaisons/draggable-example)
