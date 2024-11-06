@@ -367,6 +367,8 @@ Ex:
     * typically providing array index as keys won't work as key should be linked to the items content
     * cloned elements should provide updated keys, it is doable using the [clone props](#clone) for example
 
+ - With strict Content Security Policy (CSP) enabled in report only mode, Vue.draggable will cause a warning in the console.  However, with a strict CSP in enforcement mode, [this exception is caught](https://github.com/SortableJS/Vue.Draggable/blob/master/dist/vuedraggable.common.js#L1517) and the component works normally.
+
 
  ### Example 
   * [Clone](https://sortablejs.github.io/Vue.Draggable/#/custom-clone)
